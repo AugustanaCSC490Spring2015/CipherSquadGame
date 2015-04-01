@@ -1,7 +1,14 @@
 package game;
 
 
+import edu.augustana.csc490.gamestarter.Line;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Path;
+
 import maze.*;
+
+import java.util.ArrayList;
 import java.util.Random;
 /**
  * Created by Ethan Halsall on 3/30/2015.
@@ -10,6 +17,7 @@ public class Game {
 
     //game data
     private Maze maze;
+    private MazeLineArray mazeWalls;
 
     private Path playerPath;
     private Path[] AISolutions;
@@ -52,7 +60,7 @@ public class Game {
 
     //creates a new game with the standard game data defined above in the final feilds
     public Game(){
-
+        rand = new Random();
         playerMouse = new PlayerMouse();
 
         initializeGame(WIDTH, HEIGHT, rand.nextInt(NUM_MAZE_TYPES), TIME, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
@@ -64,6 +72,8 @@ public class Game {
         this.time = time;
         this.numOpponents = numOpponents;
         this.AIDifficulty = AIDifficulty;
+        opponentMice = new Mouse[numOpponents];
+
         this.isNetworked = isNetworked;
         for (int i = 0; i < numOpponents; i++) {
             if (isNetworked) {
@@ -91,5 +101,23 @@ public class Game {
                 mazeGen = new RecursiveBacktrackerMaze(width, height);
         }
         return mazeGen.getMaze();
+    }
+
+
+
+    public void paintMaze(Canvas c, Paint p, int screenWidth, int screenHeight){
+        Cell start = maze.getStart();
+        Cell end = maze.getEnd();
+
+        //check to see if the maze line array needs to be generated or regenerated.
+        if(mazeWalls == null){
+            mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
+        } else if(screenHeight != mazeWalls.getScreenHeight() || screenWidth != mazeWalls.getScreenWidth()) {
+            mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
+        } else if(!mazeWalls.getMaze().equals(maze)){
+            mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
+        }
+        //paint maze line array
+
     }
 }

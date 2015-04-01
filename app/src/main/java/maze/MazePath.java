@@ -1,11 +1,11 @@
 package maze;
 
 import java.util.LinkedList;
-public class Path {
+public class MazePath {
 
 	private static LinkedList<Cell> path;
 	
-	public Path(){
+	public MazePath(){
 		path = new LinkedList<Cell>();
 	}
 	

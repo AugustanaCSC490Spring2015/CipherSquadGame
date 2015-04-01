@@ -3,6 +3,9 @@ package maze;
 import java.io.PrintStream;
 import java.util.Arrays;
 
+import edu.augustana.csc490.gamestarter.Line;
+import java.util.ArrayList;
+
 public class Maze {
 
 
@@ -29,6 +32,7 @@ public class Maze {
 
 	private boolean[] horizWalls;
 	private boolean[] vertWalls;
+
 
 	//constructs a maze given a start and an end
 	public Maze(int width, int height, Cell start, Cell end){
@@ -159,10 +163,19 @@ public class Maze {
 	public Cell getEnd(){
 		return end;
 	}
-	
-	
-	
-	/**
+
+    public boolean equals(Maze maze){
+        if(this.getClass().equals(maze)){
+            if (this.horizWalls.equals(maze.getHorizWalls()) && this.vertWalls.equals(maze.getVertWalls()) && this.getStart().equals(maze.getStart()) && this.getEnd().equals(maze.getEnd())){
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
 	 * Prints the maze. The following characters are used for each part.
 	 * <ul>
 	 * <li><code>'-'</code> for horizontal walls</li>
@@ -173,7 +186,9 @@ public class Maze {
 	 * @param out
 	 *            the target {@link PrintStream}
 	 */
-	public void print(PrintStream out) {
+
+
+    public void print(PrintStream out) {
 		int startX = start.getX();
 		int startY = start.getY();
 		int endX = end.getX();
