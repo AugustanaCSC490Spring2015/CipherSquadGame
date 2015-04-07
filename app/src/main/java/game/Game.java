@@ -5,6 +5,7 @@ import edu.augustana.csc490.gamestarter.Line;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.util.Log;
 
 import maze.*;
 
@@ -62,8 +63,12 @@ public class Game {
     public Game(){
         rand = new Random();
         playerMouse = new PlayerMouse();
-
         initializeGame(WIDTH, HEIGHT, rand.nextInt(NUM_MAZE_TYPES), TIME, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
+    }
+
+    public Game(int width, int height, int mazeType){
+        playerMouse = new PlayerMouse();
+        initializeGame(width, height, mazeType, TIME, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
     }
 
     private void initializeGame(int mazeWidth, int mazeHeight, int mazeType, int time, int numOpponents, int AIDifficulty, boolean isNetworked){
@@ -82,7 +87,7 @@ public class Game {
                 opponentMice[i] = new AIMouse();
             }
         }
-
+       // mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
     }
 
     private Maze createMaze(int width, int height, int mazeType){
@@ -114,10 +119,15 @@ public class Game {
             mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
         } else if(screenHeight != mazeWalls.getScreenHeight() || screenWidth != mazeWalls.getScreenWidth()) {
             mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
-        } else if(!mazeWalls.getMaze().equals(maze)){
+        } else if(!maze.equals(mazeWalls.getMaze())){
             mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
         }
-        //paint maze line array
+
+        for (int i = 0; i < mazeWalls.getSize(); i++){
+            Line line = mazeWalls.getLineAtIndex(i);
+            c.drawLine(line.startX, line.startY, line.endX, line.endY, p);
+            //Log.i("line", line.startX + " " + line.startY + " " + line.endX + " " +line.endY);
+        }
 
     }
 }

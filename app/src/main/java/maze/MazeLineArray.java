@@ -53,35 +53,57 @@ public class MazeLineArray {
         mazeLineArray = new ArrayList<Line>();
 
         int rowBase;
-        /*for (int y = 0; y < height; y++) {
-            // Print a row of horizontal walls
+        int width = maze.getWidth();
+        int height = maze.getHeight();
+        boolean[] horizWalls = maze.getHorizWalls();
+        boolean[] vertWalls = maze.getVertWalls();
+        Line temp;
+        int widthSpacing = screenWidth / width;
+        int heightSpacing = screenHeight / height;
+        int tempX = 0;
+        int tempY = 0;
 
+        for (int y = 0; y < height; y++) {
+            // Print a row of horizontal walls
             rowBase = y * width;
+            tempX = 0;
+            tempY = y * heightSpacing;
+
             for (int x = 0; x < width; x++) {
-                out.print('*');
-                out.print(horizWalls[rowBase + x] ? '-' : ' ');
+                //out.print('*');
+                if(horizWalls[rowBase + x]){
+                    mazeLineArray.add(new Line(tempX, tempY, tempX + widthSpacing, tempY));
+                }
+                tempX+=widthSpacing;
             }
-            out.println('*');
+            //out.println('*');
 
             // Print a row of vertical walls
 
             rowBase = y * (width + 1);
-            for (int x = 0; x < width; x++) {
-                out.print(vertWalls[rowBase + x] ? '|' : ' ');
-                out.print(' ');
+            tempX = 0;
+            for (int x = 0; x <= width; x++) {
+                if(vertWalls[rowBase + x]){
+                    mazeLineArray.add(new Line(tempX, tempY, tempX, tempY + heightSpacing));
+                };
+                tempX+=widthSpacing;
+                //out.print(' ');
 
             }
-                out.println(vertWalls[rowBase + width] ? '|' : ' ');
+                //out.println(vertWalls[rowBase + width] ? '|' : ' ');
             }
 
         // Print the last row of horizontal walls
 
         rowBase = height * width;
+        tempX = 0;
+        tempY = width * heightSpacing;
         for (int x = 0; x < width; x++) {
-            out.print('*');
-            out.print(horizWalls[rowBase + x] ? '-' : ' ');
-
+            if(horizWalls[rowBase + x]){
+                mazeLineArray.add(new Line(tempX, tempY, tempX + widthSpacing, tempY));
+            }
+            tempX+=widthSpacing;
         }
-        out.println('*');*/
+        //out.println('*');
     }
 }

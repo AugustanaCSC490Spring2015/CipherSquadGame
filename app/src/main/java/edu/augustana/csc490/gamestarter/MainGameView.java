@@ -51,7 +51,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         backgroundPaint.setColor(Color.WHITE);
         mazePaint = new Paint();
         mazePaint.setColor(Color.GREEN);
-        mazePaint.setStrokeWidth(10);
+        mazePaint.setStrokeWidth(3);
     }
 
     // called when the size changes (and first time, when view is created)
@@ -70,7 +70,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     {
         this.x = 25;
         this.y = 25;
-        game = new Game();
+        game = new Game(50, 50, 2);
 
         if (isGameOver)
         {
@@ -89,9 +89,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     public void updateView(Canvas canvas)
     {
         if (canvas != null) {
-            //canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
+            canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
             game.paintMaze(canvas, mazePaint, screenWidth, screenHeight);
-            //canvas.drawCircle(x, y, 20, myPaint);
+            //canvas.drawCircle(x, y, 20, mazePaint);
         }
     }
 
