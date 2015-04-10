@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GameStarter.iml" filepath="$PROJECT_DIR$/GameStarter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MazeGenerator.iml" filepath="$PROJECT_DIR$/MazeGenerator.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

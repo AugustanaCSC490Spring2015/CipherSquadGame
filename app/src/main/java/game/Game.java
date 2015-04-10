@@ -5,6 +5,7 @@ import edu.augustana.csc490.gamestarter.Line;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Picture;
 import android.util.Log;
 
 import maze.*;
@@ -36,6 +37,10 @@ public class Game {
 
     private Random rand;
 
+    //mouse data
+    public Picture playerMouseImage = new Picture();
+    public Paint playerMousePaint = new Paint();
+
     //default game settings
 
     //maze dimensions
@@ -43,9 +48,9 @@ public class Game {
     public static final int WIDTH = 10;
     //maze types
     public static final int NUM_MAZE_TYPES = 3;
-    public static final int PRIM_MAZE = 1;
-    public static final int RECURSIVE_BACKTRACKER_MAZE = 2;
-    public static final int HUNT_AND_KILL_MAZE = 3;
+    public static final int RECURSIVE_BACKTRACKER_MAZE = 1;
+    public static final int HUNT_AND_KILL_MAZE = 2;
+    public static final int PRIM_MAZE = 3;
 
     //player settings
     public static final int NUM_OPPONENTS = 3;
@@ -62,12 +67,10 @@ public class Game {
     //creates a new game with the standard game data defined above in the final feilds
     public Game(){
         rand = new Random();
-        playerMouse = new PlayerMouse();
         initializeGame(WIDTH, HEIGHT, rand.nextInt(NUM_MAZE_TYPES), TIME, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
     }
 
     public Game(int width, int height, int mazeType){
-        playerMouse = new PlayerMouse();
         initializeGame(width, height, mazeType, TIME, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
     }
 
@@ -77,6 +80,7 @@ public class Game {
         this.time = time;
         this.numOpponents = numOpponents;
         this.AIDifficulty = AIDifficulty;
+        playerMouse = new PlayerMouse(playerMousePaint, playerMouseImage);
         opponentMice = new Mouse[numOpponents];
 
         this.isNetworked = isNetworked;
@@ -108,6 +112,12 @@ public class Game {
         return mazeGen.getMaze();
     }
 
+    public boolean movePlayerMouse(int x, int y, int direction){
+        if(!maze.isWallPresent(x, y, direction)){
+            return playerMouse.moveMouse(x, y);
+        }
+        return false;
+    }
 
 
     public void paintMaze(Canvas c, Paint p, int screenWidth, int screenHeight){

@@ -9,8 +9,76 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Launch Game!"
+        android:text="Generate Maze!"
         android:id="@+id/launchButton"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/heightEditText"
+        android:layout_marginTop="51dp"
+        android:layout_below="@+id/launchButton"
+        android:layout_centerHorizontal="true"
+        android:text="20" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/widthEditText"
+        android:layout_below="@+id/heightEditText"
+        android:layout_centerHorizontal="true"
+        android:text="20" />
+
+    <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/widthView"
+        android:layout_alignLeft="@+id/widthView"
+        android:layout_alignStart="@+id/widthView"
+        android:layout_marginTop="30dp">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recursive Backtracker Algorithm"
+            android:id="@+id/algo1"
+            android:checked="true" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hunt and Kill Algorithm"
+            android:id="@+id/algo2" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/algo3"
+            android:text="Prim Algorithm" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Height"
+        android:id="@+id/heightView"
+        android:layout_alignBottom="@+id/heightEditText"
+        android:layout_toLeftOf="@+id/heightEditText"
+        android:layout_toStartOf="@+id/heightEditText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Width"
+        android:id="@+id/widthView"
+        android:layout_alignBottom="@+id/widthEditText"
+        android:layout_toLeftOf="@+id/widthEditText"
+        android:layout_toStartOf="@+id/widthEditText" />
+
 </RelativeLayout>

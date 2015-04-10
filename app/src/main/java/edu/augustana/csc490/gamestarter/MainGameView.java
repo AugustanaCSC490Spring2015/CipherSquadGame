@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,6 +17,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+
 import game.*;
 
 public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
@@ -36,6 +41,11 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     private Paint mazePaint;
     private Paint backgroundPaint;
 
+    private int height;
+    private int width;
+    private int algorithm;
+
+
     private Game game;
 
     public MainGameView(Context context, AttributeSet atts)
@@ -50,8 +60,17 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.WHITE);
         mazePaint = new Paint();
-        mazePaint.setColor(Color.GREEN);
+        mazePaint.setColor(Color.BLUE);
         mazePaint.setStrokeWidth(3);
+
+        Intent i =  mainActivity.getIntent();
+        height = i.getIntExtra("height", 20);
+        width = i.getIntExtra("width", 20);
+        algorithm = i.getIntExtra("algorithm", 1);
+
+
+
+
     }
 
     // called when the size changes (and first time, when view is created)
@@ -70,7 +89,11 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     {
         this.x = 25;
         this.y = 25;
-        game = new Game(50, 50, 2);
+
+
+
+
+        game = new Game(width, height, algorithm);
 
         if (isGameOver)
         {
@@ -91,7 +114,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         if (canvas != null) {
             canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
             game.paintMaze(canvas, mazePaint, screenWidth, screenHeight);
-            //canvas.drawCircle(x, y, 20, mazePaint);
+            //canvas.drawCircle(x, y, game.playerMouse.getCircleSize(), playerMouse.getPaint());
         }
     }
 
