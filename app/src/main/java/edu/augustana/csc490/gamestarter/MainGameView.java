@@ -1,5 +1,6 @@
 package edu.augustana.csc490.gamestarter;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -20,6 +22,7 @@ import android.view.SurfaceView;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import game.*;
 
@@ -45,8 +48,30 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     private int width;
     private int algorithm;
 
+    TextView timerTextView;
+    long startTime = System.currentTimeMillis();
+
+    //runs without a timer by reposting this handler at the end of the runnable
+    //Adapted from http://stackoverflow.com/questions/4597690/android-timer-how
+    Handler timerHandler = new Handler();
+    Runnable timerRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            long millis = System.currentTimeMillis() - startTime;
+            int seconds = (int) (millis / 1000);
+            int minutes = seconds / 60;
+            seconds = seconds % 60;
+
+            ActionBar actionBar = mainActivity.getActionBar();
+            actionBar.setTitle(String.format("%d:%02d", minutes, seconds));
+
+            timerHandler.postDelayed(this, 500);
+        }
+    };
 
     private Game game;
+
 
     public MainGameView(Context context, AttributeSet atts)
     {
@@ -66,7 +91,6 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         Intent i =  mainActivity.getIntent();
         height = i.getIntExtra("height", 20);
         width = i.getIntExtra("width", 20);
-        algorithm = i.getIntExtra("algorithm", 1);
 
 
 
@@ -107,6 +131,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     private void gameStep()
     {
         x++;
+
+        //This statement was taken from http://stackoverflow.com/questions/4597690/android-timer-how
+        timerHandler.postDelayed(timerRunnable, 0);
+
     }
 
     public void updateView(Canvas canvas)
