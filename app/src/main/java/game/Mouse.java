@@ -30,11 +30,11 @@ public abstract class Mouse {
     private int posY;
 
 
-    public void paintMouse(){
+    public void paintMouse() {
 
     }
 
-    public void initMouse(Paint p, Picture mouseImage){
+    public void initMouse(Paint p, Picture mouseImage) {
         this.mousePaint = p;
         this.mouseImage = mouseImage;
         posX = 0;
@@ -43,34 +43,34 @@ public abstract class Mouse {
         circleTestMouse(20);
     }
 
-    private void circleTestMouse(int size){
+    private void circleTestMouse(int size) {
         circleSize = size;
 
     }
 
-    public int getCircleSize(){
+    public int getCircleSize() {
         return circleSize;
     }
 
-    public int getPosX(){
+    public int getPosX() {
         return posX;
     }
 
-    public int getPosY(){
+    public int getPosY() {
         return posY;
     }
 
-    public Paint getMousePaint(){
+    public Paint getMousePaint() {
         return mousePaint;
     }
 
-    public boolean moveMouse(int x, int y){
+    public boolean moveMouse(int x, int y) {
         posX = x;
         posY = y;
         return true;
     }
 
-    public boolean moveMouse(Point p){
+    public boolean moveMouse(Point p) {
         posX = p.x;
         posY = p.y;
         return true;

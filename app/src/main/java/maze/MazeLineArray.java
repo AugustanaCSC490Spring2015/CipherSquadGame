@@ -6,9 +6,8 @@ import java.util.ArrayList;
 
 /**
  * Created by Ethan Halsall on 4/1/2015.
- *
+ * <p/>
  * Creates an array of lines that represents the maze walls to that a the maze can be easily drawn on the canvas
- *
  */
 public class MazeLineArray {
     //stores information for the maze line array
@@ -46,9 +45,13 @@ public class MazeLineArray {
         return screenHeight;
     }
 
-    public int getWidthSpacing() { return widthSpacing;}
+    public int getWidthSpacing() {
+        return widthSpacing;
+    }
 
-    public int getHeightSpacing() { return heightSpacing;}
+    public int getHeightSpacing() {
+        return heightSpacing;
+    }
 
     public Line getLineAtIndex(int index) {
         return mazeLineArray.get(index);
@@ -58,11 +61,11 @@ public class MazeLineArray {
         return mazeLineArray.size();
     }
 
-    public Maze getMaze(){
+    public Maze getMaze() {
         return maze;
     }
 
-    public Point screenToMazePos(int screenX, int screenY){
+    public Point screenToMazePos(int screenX, int screenY) {
         int mazeX = screenX / (screenWidth + widthSpacing / 2);
         int mazeY = screenY / (screenHeight + heightSpacing / 2);
         return new Point(mazeX, mazeY);
@@ -88,10 +91,10 @@ public class MazeLineArray {
 
             for (int x = 0; x < width; x++) {
                 //out.print('*');
-                if(horizWalls[rowBase + x]){
+                if (horizWalls[rowBase + x]) {
                     mazeLineArray.add(new Line(tempX, tempY, tempX + widthSpacing, tempY));
                 }
-                tempX+=widthSpacing;
+                tempX += widthSpacing;
             }
             //out.println('*');
 
@@ -100,15 +103,16 @@ public class MazeLineArray {
             rowBase = y * (width + 1);
             tempX = 0;
             for (int x = 0; x <= width; x++) {
-                if(vertWalls[rowBase + x]){
+                if (vertWalls[rowBase + x]) {
                     mazeLineArray.add(new Line(tempX, tempY, tempX, tempY + heightSpacing));
-                };
-                tempX+=widthSpacing;
+                }
+                ;
+                tempX += widthSpacing;
                 //out.print(' ');
 
             }
-                //out.println(vertWalls[rowBase + width] ? '|' : ' ');
-            }
+            //out.println(vertWalls[rowBase + width] ? '|' : ' ');
+        }
 
         // Print the last row of horizontal walls
 
@@ -116,10 +120,10 @@ public class MazeLineArray {
         tempX = 0;
         tempY = width * heightSpacing;
         for (int x = 0; x < width; x++) {
-            if(horizWalls[rowBase + x]){
+            if (horizWalls[rowBase + x]) {
                 mazeLineArray.add(new Line(tempX, tempY, tempX + widthSpacing, tempY));
             }
-            tempX+=widthSpacing;
+            tempX += widthSpacing;
         }
         //out.println('*');
     }
