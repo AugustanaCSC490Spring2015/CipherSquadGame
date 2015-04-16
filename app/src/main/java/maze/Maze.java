@@ -1,10 +1,9 @@
 package maze;
 
+import android.graphics.Point;
+
 import java.io.PrintStream;
 import java.util.Arrays;
-
-import edu.augustana.csc490.gamestarter.Line;
-import java.util.ArrayList;
 
 public class Maze {
 
@@ -70,10 +69,10 @@ public class Maze {
 		if (x < 0 || width <= x) {
 			System.out.println(x);
 			System.out.println(width);
-			throw new IndexOutOfBoundsException("X out of range: " + x);
+			//throw new IndexOutOfBoundsException("X out of range: " + x);
 		}
 		if (y < 0 || height <= y) {
-			throw new IndexOutOfBoundsException("Y out of range: " + y);
+			//throw new IndexOutOfBoundsException("Y out of range: " + y);
 		}
 	}
 	
@@ -101,6 +100,19 @@ public class Maze {
 				throw new IllegalArgumentException("Bad direction: " + direction);
 			}
 		}
+
+    public int getDirection(int prevX, int prevY, int newX, int newY){
+        if (prevX == newX  && prevY < newY) {
+            return DOWN;
+        } else if (prevX == newX && prevY > newY) {
+            return UP;
+        } else if (prevX > newX && prevY == newY){
+            return LEFT;
+        } else if (prevX < newX && prevY == newY){
+            return RIGHT;
+        }
+        return 0;
+    }
 	
 	public boolean isWallPresent(int x, int y, int direction) {
 
@@ -156,12 +168,13 @@ public class Maze {
 		return height;
 	}
 	
-	public Cell getStart(){
-		return start;
+	public Point getStart(){
+        return new Point(start.getX(), start.getY());
 	}
 
-	public Cell getEnd(){
-		return end;
+	public Point getEnd(){
+
+        return new Point(start.getX(), start.getY());
 	}
 
     public boolean equals(Maze maze){

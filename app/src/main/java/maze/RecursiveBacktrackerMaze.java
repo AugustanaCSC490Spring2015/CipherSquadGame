@@ -16,8 +16,8 @@ public class RecursiveBacktrackerMaze extends MazeGenerator {
 	//creates a Recursive Backtracker Maze given a width and height
 	public RecursiveBacktrackerMaze(int width, int height) {
 		maze = new Maze(width, height);
-		startX = maze.getStart().getX();
-		startY = maze.getStart().getY();
+		startX = maze.getStart().x;
+		startY = maze.getStart().y;
 		generate();
 	}
 	
@@ -33,8 +33,8 @@ public class RecursiveBacktrackerMaze extends MazeGenerator {
 	//creates a Recursive Backtracker Maze given an existing maze
 	public RecursiveBacktrackerMaze(Maze maze){
 		this.maze = maze;
-		startX = maze.getStart().getX();
-		startY = maze.getStart().getY();
+		startX = maze.getStart().x;
+		startY = maze.getStart().y;
 		generate();
 	}
 

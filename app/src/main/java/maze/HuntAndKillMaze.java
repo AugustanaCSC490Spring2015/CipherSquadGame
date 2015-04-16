@@ -10,8 +10,8 @@ public class HuntAndKillMaze extends MazeGenerator{
 	//creates a Hunt And Kill Maze given a width and height
 	public HuntAndKillMaze(int width, int height) {
 		maze = new Maze(width, height);
-		startX = maze.getStart().getX();
-		startY = maze.getStart().getY();
+		startX = maze.getStart().x;
+		startY = maze.getStart().y;
 		generate();
 	}
 	
@@ -27,8 +27,8 @@ public class HuntAndKillMaze extends MazeGenerator{
 	//creates a Hunt And Kill Maze given an existing maze
 		public HuntAndKillMaze(Maze maze){
 			this.maze = maze;
-			startX = maze.getStart().getX();
-			startY = maze.getStart().getY();
+			startX = maze.getStart().x;
+			startY = maze.getStart().y;
 			generate();
 		}
 

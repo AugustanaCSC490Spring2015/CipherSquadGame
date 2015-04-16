@@ -3,6 +3,7 @@ package game;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Picture;
+import android.graphics.Point;
 import android.media.Image;
 
 
@@ -66,6 +67,12 @@ public abstract class Mouse {
     public boolean moveMouse(int x, int y){
         posX = x;
         posY = y;
+        return true;
+    }
+
+    public boolean moveMouse(Point p){
+        posX = p.x;
+        posY = p.y;
         return true;
     }
 

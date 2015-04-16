@@ -1,8 +1,8 @@
 package maze;
 
-import java.util.ArrayList;
+import android.graphics.Point;
 
-import edu.augustana.csc490.gamestarter.Line;
+import java.util.ArrayList;
 
 /**
  * Created by Ethan Halsall on 4/1/2015.
@@ -16,12 +16,25 @@ public class MazeLineArray {
     private ArrayList<Line> mazeLineArray;
     private int screenWidth;
     private int screenHeight;
+    private int width;
+    private int height;
+    private boolean[] horizWalls;
+    private boolean[] vertWalls;
+    private int widthSpacing;
+    private int heightSpacing;
+
 
     //uses the screen dimensions to scale the size of the lines
     public MazeLineArray(Maze maze, int screenWidth, int screenHeight) {
         this.maze = maze;
         this.screenHeight = screenHeight;
         this.screenWidth = screenWidth;
+        width = maze.getWidth();
+        height = maze.getHeight();
+        horizWalls = maze.getHorizWalls();
+        vertWalls = maze.getVertWalls();
+        widthSpacing = screenWidth / width;
+        heightSpacing = screenHeight / height;
         createMazeLineArray();
     }
 
@@ -32,6 +45,10 @@ public class MazeLineArray {
     public int getScreenHeight() {
         return screenHeight;
     }
+
+    public int getWidthSpacing() { return widthSpacing;}
+
+    public int getHeightSpacing() { return heightSpacing;}
 
     public Line getLineAtIndex(int index) {
         return mazeLineArray.get(index);
@@ -45,6 +62,12 @@ public class MazeLineArray {
         return maze;
     }
 
+    public Point screenToMazePos(int screenX, int screenY){
+        int mazeX = screenX / (screenWidth + widthSpacing / 2);
+        int mazeY = screenY / (screenHeight + heightSpacing / 2);
+        return new Point(mazeX, mazeY);
+    }
+
     /*public ArrayList<Line> getMazeLineArray() {
         return mazeLineArray;
     }*/
@@ -53,13 +76,7 @@ public class MazeLineArray {
         mazeLineArray = new ArrayList<Line>();
 
         int rowBase;
-        int width = maze.getWidth();
-        int height = maze.getHeight();
-        boolean[] horizWalls = maze.getHorizWalls();
-        boolean[] vertWalls = maze.getVertWalls();
-        Line temp;
-        int widthSpacing = screenWidth / width;
-        int heightSpacing = screenHeight / height;
+
         int tempX = 0;
         int tempY = 0;
 

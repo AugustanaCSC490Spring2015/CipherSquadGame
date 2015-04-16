@@ -1,5 +1,5 @@
 
-package edu.augustana.csc490.gamestarter;
+package maze;
 
 import android.graphics.Point;
 
