@@ -109,8 +109,12 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
         game = new Game(width, height, algorithm);
         Point initPosPlayerMouse = game.getPlayerMousePos();
+
         this.x = initPosPlayerMouse.x;
         this.y = initPosPlayerMouse.y;
+
+        //This statement was taken from http://stackoverflow.com/questions/4597690/android-timer-how
+        timerHandler.postDelayed(timerRunnable, 0);
 
         if (isGameOver) {
             isGameOver = false;
@@ -121,8 +125,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
 
     private void gameStep() {
-        //This statement was taken from http://stackoverflow.com/questions/4597690/android-timer-how
-        timerHandler.postDelayed(timerRunnable, 0);
+
     }
 
     public void updateView(Canvas canvas) {
