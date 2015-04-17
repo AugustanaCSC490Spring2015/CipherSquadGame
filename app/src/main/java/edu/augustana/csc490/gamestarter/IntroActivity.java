@@ -30,12 +30,12 @@ public class IntroActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
         Button launchButton = (Button) findViewById(R.id.launchButton);
-        heightEditText = (EditText)findViewById(R.id.heightEditText);
-        widthEditText = (EditText)findViewById(R.id.widthEditText);
+        heightEditText = (EditText) findViewById(R.id.heightEditText);
+        widthEditText = (EditText) findViewById(R.id.widthEditText);
 
         //algo1 = (RadioButton)findViewById(R.id.algo1);
-        algo2 = (RadioButton)findViewById(R.id.algo2);
-        algo3 = (RadioButton)findViewById(R.id.algo3);
+        algo2 = (RadioButton) findViewById(R.id.algo2);
+        algo3 = (RadioButton) findViewById(R.id.algo3);
 
 
         launchButton.setOnClickListener(clickHandler);
@@ -43,15 +43,15 @@ public class IntroActivity extends Activity {
 
     View.OnClickListener clickHandler = new View.OnClickListener() {
         @Override
-        public void onClick(View view){
+        public void onClick(View view) {
             Intent intent = new Intent(IntroActivity.this, MainActivity.class);
             height = Integer.parseInt(heightEditText.getText().toString());
             width = Integer.parseInt(widthEditText.getText().toString());
 
             algorithm = 1;
-            if(algo2.isChecked()){
+            if (algo2.isChecked()) {
                 algorithm = 2;
-            }else if(algo3.isChecked()){
+            } else if (algo3.isChecked()) {
                 algorithm = 3;
             }
 

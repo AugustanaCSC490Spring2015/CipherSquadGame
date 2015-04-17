@@ -1,17 +1,18 @@
 package game;
 
 
-import edu.augustana.csc490.gamestarter.Line;
+import maze.Line;
+
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Picture;
-import android.util.Log;
+import android.graphics.Point;
 
 import maze.*;
 
-import java.util.ArrayList;
 import java.util.Random;
+
 /**
  * Created by Ethan Halsall on 3/30/2015.
  */
@@ -19,7 +20,19 @@ public class Game {
 
     //game data
     private Maze maze;
-    private MazeLineArray mazeWalls;
+    private MazeLineArray mazeLineArray;
+
+    //maze line array data
+    private int screenWidth;
+    private int screenHeight;
+
+
+    //maze data
+    private int cellWidth;
+    private int cellHeight;
+    private int width;
+    private int height;
+
 
     private Path playerPath;
     private Path[] AISolutions;
@@ -27,7 +40,7 @@ public class Game {
 
     private int[] playerPoints;
     private int time;
-    private Mouse playerMouse;
+    public Mouse playerMouse;
     private Mouse[] opponentMice;
     private PowerUpMap powerUps;
 
@@ -63,18 +76,19 @@ public class Game {
     public static final boolean IS_NETWORKED = false;
 
 
-
     //creates a new game with the standard game data defined above in the final feilds
-    public Game(){
+    public Game() {
         rand = new Random();
         initializeGame(WIDTH, HEIGHT, rand.nextInt(NUM_MAZE_TYPES), TIME, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
     }
 
-    public Game(int width, int height, int mazeType){
+    public Game(int width, int height, int mazeType) {
         initializeGame(width, height, mazeType, TIME, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
     }
 
-    private void initializeGame(int mazeWidth, int mazeHeight, int mazeType, int time, int numOpponents, int AIDifficulty, boolean isNetworked){
+    private void initializeGame(int mazeWidth, int mazeHeight, int mazeType, int time, int numOpponents, int AIDifficulty, boolean isNetworked) {
+        height = mazeHeight;
+        width = mazeWidth;
         maze = createMaze(mazeWidth, mazeHeight, mazeType);
         powerUps = new PowerUpMap(maze);
         this.time = time;
@@ -87,16 +101,21 @@ public class Game {
         for (int i = 0; i < numOpponents; i++) {
             if (isNetworked) {
                 opponentMice[i] = new NetworkedMouse();
-            }else {
+            } else {
                 opponentMice[i] = new AIMouse();
             }
         }
-       // mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
+        // mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
     }
 
-    private Maze createMaze(int width, int height, int mazeType){
+    private boolean levelUp() {
+
+        return true;
+    }
+
+    private Maze createMaze(int width, int height, int mazeType) {
         MazeGenerator mazeGen;
-        switch (mazeType){
+        switch (mazeType) {
             case PRIM_MAZE:
                 mazeGen = new PrimMaze(width, height);
                 break;
@@ -112,29 +131,61 @@ public class Game {
         return mazeGen.getMaze();
     }
 
-    public boolean movePlayerMouse(int x, int y, int direction){
-        if(!maze.isWallPresent(x, y, direction)){
-            return playerMouse.moveMouse(x, y);
+    public boolean movePlayerMouse(int prevX, int prevY, int newX, int newY) {
+        int prevMazeX = prevX / cellWidth;
+        int prevMazeY = prevY / cellHeight;
+        int newMazeX = newX / cellWidth;
+        int newMazeY = newY / cellHeight;
+
+        if (prevMazeX == newMazeX && prevMazeY == newMazeY) {
+            playerMouse.moveMouse(newX, newY);
+            return true;
+        }
+
+        //prevent player from hopping walls
+        if (prevMazeX > newMazeX + 1 || prevMazeX < newMazeX - 1 || prevMazeY > newMazeY + 1 || prevMazeY < newMazeY - 1 || newMazeX < 0 || newMazeY < 0 || newMazeX > width || newMazeY > height) {
+            return false;
+        }
+        /*if((prevMazeX > newMazeX + 1 && prevMazeY > newMazeY + 1) || (prevMazeX < newMazeX + 1 && prevMazeY < newMazeY + 1)){
+            return false;
+        }*/
+
+        int direction = maze.getDirection(prevMazeX, prevMazeY, newMazeX, newMazeY);
+
+        if (!maze.isWallPresent(prevMazeX, prevMazeY, direction)) {
+            playerMouse.moveMouse(newX, newY);
+            return true;
         }
         return false;
     }
 
+    public Point getPlayerMousePos() {
+        return new Point(playerMouse.getPosX(), playerMouse.getPosY());
+    }
 
-    public void paintMaze(Canvas c, Paint p, int screenWidth, int screenHeight){
-        Cell start = maze.getStart();
-        Cell end = maze.getEnd();
+    public void generateMazeLineArray(int screenW, int screenH) {
+        mazeLineArray = new MazeLineArray(maze, screenW, screenH);
+        screenWidth = mazeLineArray.getScreenWidth();
+        screenHeight = mazeLineArray.getScreenHeight();
+        cellWidth = mazeLineArray.getWidthSpacing();
+        cellHeight = mazeLineArray.getHeightSpacing();
+    }
+
+    public void paintMaze(Canvas c, Paint p, int screenWidth, int screenHeight) {
+        //Cell start = maze.getStart();
+        //Cell end = maze.getEnd();
 
         //check to see if the maze line array needs to be generated or regenerated.
-        if(mazeWalls == null){
-            mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
-        } else if(screenHeight != mazeWalls.getScreenHeight() || screenWidth != mazeWalls.getScreenWidth()) {
-            mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
-        } else if(!maze.equals(mazeWalls.getMaze())){
-            mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
+        if (mazeLineArray == null) {
+            generateMazeLineArray(screenWidth, screenHeight);
+        } else if (screenHeight != mazeLineArray.getScreenHeight() || screenWidth != mazeLineArray.getScreenWidth()) {
+            generateMazeLineArray(screenWidth, screenHeight);
+        } else if (!maze.equals(mazeLineArray.getMaze())) {
+            generateMazeLineArray(screenWidth, screenHeight);
         }
 
-        for (int i = 0; i < mazeWalls.getSize(); i++){
-            Line line = mazeWalls.getLineAtIndex(i);
+        for (int i = 0; i < mazeLineArray.getSize(); i++) {
+            Line line = mazeLineArray.getLineAtIndex(i);
             c.drawLine(line.startX, line.startY, line.endX, line.endY, p);
             //Log.i("line", line.startX + " " + line.startY + " " + line.endX + " " +line.endY);
         }

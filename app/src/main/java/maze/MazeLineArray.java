@@ -1,14 +1,13 @@
 package maze;
 
-import java.util.ArrayList;
+import android.graphics.Point;
 
-import edu.augustana.csc490.gamestarter.Line;
+import java.util.ArrayList;
 
 /**
  * Created by Ethan Halsall on 4/1/2015.
- *
+ * <p/>
  * Creates an array of lines that represents the maze walls to that a the maze can be easily drawn on the canvas
- *
  */
 public class MazeLineArray {
     //stores information for the maze line array
@@ -16,12 +15,25 @@ public class MazeLineArray {
     private ArrayList<Line> mazeLineArray;
     private int screenWidth;
     private int screenHeight;
+    private int width;
+    private int height;
+    private boolean[] horizWalls;
+    private boolean[] vertWalls;
+    private int widthSpacing;
+    private int heightSpacing;
+
 
     //uses the screen dimensions to scale the size of the lines
     public MazeLineArray(Maze maze, int screenWidth, int screenHeight) {
         this.maze = maze;
         this.screenHeight = screenHeight;
         this.screenWidth = screenWidth;
+        width = maze.getWidth();
+        height = maze.getHeight();
+        horizWalls = maze.getHorizWalls();
+        vertWalls = maze.getVertWalls();
+        widthSpacing = screenWidth / width;
+        heightSpacing = screenHeight / height;
         createMazeLineArray();
     }
 
@@ -33,6 +45,14 @@ public class MazeLineArray {
         return screenHeight;
     }
 
+    public int getWidthSpacing() {
+        return widthSpacing;
+    }
+
+    public int getHeightSpacing() {
+        return heightSpacing;
+    }
+
     public Line getLineAtIndex(int index) {
         return mazeLineArray.get(index);
     }
@@ -41,8 +61,14 @@ public class MazeLineArray {
         return mazeLineArray.size();
     }
 
-    public Maze getMaze(){
+    public Maze getMaze() {
         return maze;
+    }
+
+    public Point screenToMazePos(int screenX, int screenY) {
+        int mazeX = screenX / (screenWidth + widthSpacing / 2);
+        int mazeY = screenY / (screenHeight + heightSpacing / 2);
+        return new Point(mazeX, mazeY);
     }
 
     /*public ArrayList<Line> getMazeLineArray() {
@@ -53,13 +79,7 @@ public class MazeLineArray {
         mazeLineArray = new ArrayList<Line>();
 
         int rowBase;
-        int width = maze.getWidth();
-        int height = maze.getHeight();
-        boolean[] horizWalls = maze.getHorizWalls();
-        boolean[] vertWalls = maze.getVertWalls();
-        Line temp;
-        int widthSpacing = screenWidth / width;
-        int heightSpacing = screenHeight / height;
+
         int tempX = 0;
         int tempY = 0;
 
@@ -71,10 +91,10 @@ public class MazeLineArray {
 
             for (int x = 0; x < width; x++) {
                 //out.print('*');
-                if(horizWalls[rowBase + x]){
+                if (horizWalls[rowBase + x]) {
                     mazeLineArray.add(new Line(tempX, tempY, tempX + widthSpacing, tempY));
                 }
-                tempX+=widthSpacing;
+                tempX += widthSpacing;
             }
             //out.println('*');
 
@@ -83,15 +103,16 @@ public class MazeLineArray {
             rowBase = y * (width + 1);
             tempX = 0;
             for (int x = 0; x <= width; x++) {
-                if(vertWalls[rowBase + x]){
+                if (vertWalls[rowBase + x]) {
                     mazeLineArray.add(new Line(tempX, tempY, tempX, tempY + heightSpacing));
-                };
-                tempX+=widthSpacing;
+                }
+                ;
+                tempX += widthSpacing;
                 //out.print(' ');
 
             }
-                //out.println(vertWalls[rowBase + width] ? '|' : ' ');
-            }
+            //out.println(vertWalls[rowBase + width] ? '|' : ' ');
+        }
 
         // Print the last row of horizontal walls
 
@@ -99,10 +120,10 @@ public class MazeLineArray {
         tempX = 0;
         tempY = width * heightSpacing;
         for (int x = 0; x < width; x++) {
-            if(horizWalls[rowBase + x]){
+            if (horizWalls[rowBase + x]) {
                 mazeLineArray.add(new Line(tempX, tempY, tempX + widthSpacing, tempY));
             }
-            tempX+=widthSpacing;
+            tempX += widthSpacing;
         }
         //out.println('*');
     }

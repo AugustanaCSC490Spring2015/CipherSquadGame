@@ -6,9 +6,9 @@ import android.graphics.Picture;
 /**
  * Created by Ethan Halsall on 3/30/2015.
  */
-public class PlayerMouse extends Mouse{
+public class PlayerMouse extends Mouse {
 
-    public PlayerMouse(Paint p, Picture mouseImage){
+    public PlayerMouse(Paint p, Picture mouseImage) {
         initMouse(p, mouseImage);
     }
 

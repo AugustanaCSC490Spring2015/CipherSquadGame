@@ -26,8 +26,7 @@ import android.widget.TextView;
 
 import game.*;
 
-public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
-{
+public class MainGameView extends SurfaceView implements SurfaceHolder.Callback {
     private static final String TAG = "GameStarter"; // for Log.w(TAG, ...)
 
     private GameThread gameThread; // runs the main game loop
@@ -70,11 +69,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         }
     };
 
+
     private Game game;
 
-
-    public MainGameView(Context context, AttributeSet atts)
-    {
+    public MainGameView(Context context, AttributeSet atts) {
         super(context, atts);
         mainActivity = (Activity) context;
 
@@ -88,19 +86,17 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         mazePaint.setColor(Color.BLUE);
         mazePaint.setStrokeWidth(3);
 
-        Intent i =  mainActivity.getIntent();
+        Intent i = mainActivity.getIntent();
         height = i.getIntExtra("height", 20);
         width = i.getIntExtra("width", 20);
-
-
+        algorithm = i.getIntExtra("algorithm", 1);
 
 
     }
 
     // called when the size changes (and first time, when view is created)
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh)
-    {
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
         screenWidth = w;
@@ -109,18 +105,18 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         startNewGame();
     }
 
-    public void startNewGame()
-    {
-        this.x = 25;
-        this.y = 25;
-
-
-
+    public void startNewGame() {
 
         game = new Game(width, height, algorithm);
+        Point initPosPlayerMouse = game.getPlayerMousePos();
 
-        if (isGameOver)
-        {
+        this.x = initPosPlayerMouse.x;
+        this.y = initPosPlayerMouse.y;
+
+        //This statement was taken from http://stackoverflow.com/questions/4597690/android-timer-how
+        timerHandler.postDelayed(timerRunnable, 0);
+
+        if (isGameOver) {
             isGameOver = false;
             gameThread = new GameThread(getHolder());
             gameThread.start(); // start the main game loop going
@@ -128,40 +124,31 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     }
 
 
-    private void gameStep()
-    {
-        x++;
-
-        //This statement was taken from http://stackoverflow.com/questions/4597690/android-timer-how
-        timerHandler.postDelayed(timerRunnable, 0);
+    private void gameStep() {
 
     }
 
-    public void updateView(Canvas canvas)
-    {
+    public void updateView(Canvas canvas) {
         if (canvas != null) {
             canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
             game.paintMaze(canvas, mazePaint, screenWidth, screenHeight);
-            //canvas.drawCircle(x, y, game.playerMouse.getCircleSize(), playerMouse.getPaint());
+            canvas.drawCircle(game.getPlayerMousePos().x, game.getPlayerMousePos().y, game.playerMouse.getCircleSize(), game.playerMouse.getMousePaint());
         }
     }
 
     // stop the game; may be called by the MainGameFragment onPause
-    public void stopGame()
-    {
+    public void stopGame() {
         if (gameThread != null)
             gameThread.setRunning(false);
     }
 
     // release resources; may be called by MainGameFragment onDestroy
-    public void releaseResources()
-    {
+    public void releaseResources() {
         // release any resources (e.g. SoundPool stuff)
     }
 
     @Override
-    public void surfaceCreated(SurfaceHolder holder)
-    {
+    public void surfaceCreated(SurfaceHolder holder) {
     }
 
     @Override
@@ -171,80 +158,66 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
 
     // called when the surface is destroyed
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder)
-    {
+    public void surfaceDestroyed(SurfaceHolder holder) {
         // ensure that thread terminates properly
         boolean retry = true;
         gameThread.setRunning(false); // terminate gameThread
 
-        while (retry)
-        {
-            try
-            {
+        while (retry) {
+            try {
                 gameThread.join(); // wait for gameThread to finish
                 retry = false;
-            }
-            catch (InterruptedException e)
-            {
+            } catch (InterruptedException e) {
                 Log.e(TAG, "Thread interrupted", e);
             }
         }
     }
 
-        @Override
-    public boolean onTouchEvent(MotionEvent e)
-    {
-        if (e.getAction() == MotionEvent.ACTION_DOWN)
-        {
-            this.x = (int) e.getX();
-            this.y = (int) e.getY();
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        if (e.getAction() == MotionEvent.ACTION_MOVE) {
+            int actionX = (int) e.getX();
+            int actionY = (int) e.getY();
+            game.movePlayerMouse(game.getPlayerMousePos().x, game.getPlayerMousePos().y, actionX, actionY);
         }
 
         return true;
     }
 
     // Thread subclass to run the main game loop
-    private class GameThread extends Thread
-    {
+    private class GameThread extends Thread {
         private SurfaceHolder surfaceHolder; // for manipulating canvas
         private boolean threadIsRunning = true; // running by default
 
         // initializes the surface holder
-        public GameThread(SurfaceHolder holder)
-        {
+        public GameThread(SurfaceHolder holder) {
             surfaceHolder = holder;
             setName("GameThread");
         }
 
         // changes running state
-        public void setRunning(boolean running)
-        {
+        public void setRunning(boolean running) {
             threadIsRunning = running;
         }
 
         @Override
-        public void run()
-        {
+        public void run() {
             Canvas canvas = null;
 
-            while (threadIsRunning)
-            {
-                try
-                {
+            while (threadIsRunning) {
+                try {
                     // get Canvas for exclusive drawing from this thread
                     canvas = surfaceHolder.lockCanvas(null);
 
                     // lock the surfaceHolder for drawing
-                    synchronized(surfaceHolder)
-                    {
+                    synchronized (surfaceHolder) {
                         gameStep();         // update game state
                         updateView(canvas); // draw using the canvas
                     }
                     Thread.sleep(10); // if you want to slow down the action...
                 } catch (InterruptedException ex) {
-                    Log.e(TAG,ex.toString());
-                }
-                finally  // regardless if any errors happen...
+                    Log.e(TAG, ex.toString());
+                } finally  // regardless if any errors happen...
                 {
                     // make sure we unlock canvas so other threads can use it
                     if (canvas != null)
