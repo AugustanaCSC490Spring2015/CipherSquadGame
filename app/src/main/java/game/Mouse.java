@@ -5,6 +5,8 @@ import android.graphics.Paint;
 import android.graphics.Picture;
 import android.media.Image;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by Ethan Halsall on 3/30/2015.
@@ -27,6 +29,10 @@ public abstract class Mouse {
     //data for mouse
     private int posX;
     private int posY;
+    boolean finished = false;
+
+    private int mousePoints = 0;
+    private ArrayList<PowerUp> powerUpList = new ArrayList();
 
 
     public void paintMouse(){
@@ -68,5 +74,23 @@ public abstract class Mouse {
         posY = y;
         return true;
     }
+
+    public void addPoints(int points) {
+        mousePoints = mousePoints + points;
+    }
+
+    public void setCompletionTime(double time) {
+
+    }
+
+    public void finished() {
+
+    }
+
+    public void setFinished() {
+        finished = true;
+    }
+
+
 
 }

@@ -12,6 +12,7 @@ import android.graphics.Path;
 import android.graphics.Picture;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.util.Log;
 
 import maze.*;
@@ -49,7 +50,6 @@ public class Game {
 
     private int[] playerPoints;
     private int level;
-    private int levelPointRelationship;
     private int time;
     public Mouse playerMouse;
     private Mouse[] opponentMice;
@@ -89,7 +89,7 @@ public class Game {
     public static final boolean IS_NETWORKED = false;
 
 
-    //creates a new game with the standard game data defined above in the final fields
+    //creates a new game with the standard game data defined above in the final feilds
     public Game() {
         rand = new Random();
         initializeGame(WIDTH, HEIGHT, rand.nextInt(NUM_MAZE_TYPES), TIME, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
@@ -108,6 +108,7 @@ public class Game {
         this.time = time;
         this.numOpponents = numOpponents;
         this.AIDifficulty = AIDifficulty;
+        //playerMouseImage
         playerMouse = new PlayerMouse(playerMousePaint, playerMouseImage);
         opponentMice = new Mouse[numOpponents];
         level = 1;
