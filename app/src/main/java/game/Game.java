@@ -51,6 +51,7 @@ public class Game {
     private int[] playerPoints;
     private int level;
     private int time;
+    private int levelPointRelationship;
     public Mouse playerMouse;
     private Mouse[] opponentMice;
     private PowerUpMap powerUps;
@@ -128,10 +129,10 @@ public class Game {
     public void mouseFinished(Mouse mouse, long currentTime){
         //keeps track of each player's points and adds points depending on the level they are on and the time they completed the maze
         int points = levelPointRelationship - (int) currentTime / 60000;
-        mouse.setCompletionTime(currentTime);
+        mouse.setTotalTime(currentTime);
         if (points > 0){ mouse.addPoints(points);}
-        mouse.setFinished();
-        if (playerMouse.getFinished){ //add for loop here for each mouse if we have multiple players
+        mouse.setFinished(true);
+        if (playerMouse.getFinished()){ //add for loop here for each mouse if we have multiple players
             levelUp();
         }
     }

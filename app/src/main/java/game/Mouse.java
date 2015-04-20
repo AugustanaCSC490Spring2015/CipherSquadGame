@@ -29,7 +29,8 @@ public abstract class Mouse {
     //data for mouse
     private int posX;
     private int posY;
-    boolean finished = false;
+    private boolean finished;
+    private long totalTime;
 
     private int mousePoints = 0;
     private ArrayList<PowerUp> powerUpList = new ArrayList();
@@ -42,6 +43,8 @@ public abstract class Mouse {
     public void initMouse(Paint p, Picture mouseImage){
         this.mousePaint = p;
         this.mouseImage = mouseImage;
+        totalTime = 0;
+        finished = false;
         posX = 0;
         posY = 0;
         p.setColor(Color.BLACK);
@@ -79,16 +82,16 @@ public abstract class Mouse {
         mousePoints = mousePoints + points;
     }
 
-    public void setCompletionTime(double time) {
-
+    public void setTotalTime(long time) {
+        totalTime = time;
     }
 
-    public void finished() {
-
+    public boolean getFinished() {
+        return finished;
     }
 
-    public void setFinished() {
-        finished = true;
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 
 
