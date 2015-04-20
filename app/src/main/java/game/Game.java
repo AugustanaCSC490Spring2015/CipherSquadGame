@@ -1,6 +1,7 @@
 package game;
 
 
+import edu.augustana.csc490.gamestarter.MainGameView;
 import maze.Line;
 
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.graphics.Path;
 import android.graphics.Picture;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.util.Log;
 
 import maze.*;
@@ -49,6 +51,7 @@ public class Game {
     private int[] playerPoints;
     private int level;
     private int time;
+    private int levelPointRelationship;
     public Mouse playerMouse;
     private Mouse[] opponentMice;
     private PowerUpMap powerUps;
@@ -106,9 +109,11 @@ public class Game {
         this.time = time;
         this.numOpponents = numOpponents;
         this.AIDifficulty = AIDifficulty;
+        //playerMouseImage
         playerMouse = new PlayerMouse(playerMousePaint, playerMouseImage);
         opponentMice = new Mouse[numOpponents];
         level = 1;
+        levelPointRelationship = 1000;
 
         this.isNetworked = isNetworked;
         for (int i = 0; i < numOpponents; i++) {
@@ -121,13 +126,27 @@ public class Game {
         // mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
     }
 
+    public void mouseFinished(Mouse mouse, long currentTime){
+        //keeps track of each player's points and adds points depending on the level they are on and the time they completed the maze
+        int points = levelPointRelationship - (int) currentTime / 60000;
+        mouse.setTotalTime(currentTime);
+        if (points > 0){ mouse.addPoints(points);}
+        mouse.setFinished(true);
+        if (playerMouse.getFinished()){ //add for loop here for each mouse if we have multiple players
+            levelUp();
+        }
+    }
+
     private boolean levelUp() {
+
+        //reset the game with a larger maze
         playerMouse.moveMouse(MOUSE_START_POS.x, MOUSE_START_POS.y);
         height = height + 3;
         width = width + 3;
         maze = createMaze(width, height, mazeType);
         powerUps = new PowerUpMap(maze);
         level++;
+        levelPointRelationship *= 2;
         setTime(0);
 
         return true;
