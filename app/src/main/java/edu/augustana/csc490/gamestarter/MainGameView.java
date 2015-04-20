@@ -48,7 +48,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     private int algorithm;
 
     TextView timerTextView;
-    long startTime = System.currentTimeMillis();
+    long startTime;
+    long millis;
 
     //runs without a timer by reposting this handler at the end of the runnable
     //Adapted from http://stackoverflow.com/questions/4597690/android-timer-how
@@ -57,7 +58,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
         @Override
         public void run() {
-            long millis = System.currentTimeMillis() - startTime;
+            millis = System.currentTimeMillis() - startTime;
             int seconds = (int) (millis / 1000);
             int minutes = seconds / 60;
             seconds = seconds % 60;
@@ -105,9 +106,15 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         startNewGame();
     }
 
+    public long getMillis(){
+        return millis;
+    }
+
     public void startNewGame() {
 
         game = new Game(width, height, algorithm);
+        startTime = System.currentTimeMillis();
+        millis = 0;
         Point initPosPlayerMouse = game.getPlayerMousePos();
 
         this.x = initPosPlayerMouse.x;
