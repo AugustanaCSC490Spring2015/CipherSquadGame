@@ -149,13 +149,9 @@ public class Game {
             return true;
         }
 
-        //prevent player from hopping walls
-        if (prevMazeX > newMazeX + 1 || prevMazeX < newMazeX - 1 || prevMazeY > newMazeY + 1 || prevMazeY < newMazeY - 1 || newMazeX < 0 || newMazeY < 0 || newMazeX > width || newMazeY > height) {
+        if (Math.abs(newMazeX - prevMazeX) + Math.abs(newMazeY - prevMazeY) != 1){
             return false;
         }
-        /*if((prevMazeX > newMazeX + 1 && prevMazeY > newMazeY + 1) || (prevMazeX < newMazeX + 1 && prevMazeY < newMazeY + 1)){
-            return false;
-        }*/
 
         int direction = maze.getDirection(prevMazeX, prevMazeY, newMazeX, newMazeY);
 
