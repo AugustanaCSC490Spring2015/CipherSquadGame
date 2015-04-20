@@ -49,7 +49,6 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     private int width;
     private int algorithm;
 
-    TextView timerTextView;
     long startTime;
     long millis;
 
@@ -152,6 +151,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     public void stopGame() {
         if (gameThread != null)
             gameThread.setRunning(false);
+            timerHandler.removeCallbacks(timerRunnable);
     }
 
     // release resources; may be called by MainGameFragment onDestroy

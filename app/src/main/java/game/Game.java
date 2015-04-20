@@ -180,6 +180,11 @@ public class Game {
         int newMazeX = newX / cellWidth;
         int newMazeY = newY / cellHeight;
 
+        //will check if mouse has reached the end of the maze prior to moving
+        if(maze.getEnd().equals(prevMazeX,prevMazeY)){
+            levelUp();
+        }
+
         if (prevMazeX == newMazeX && prevMazeY == newMazeY) {
             playerMouse.moveMouse(newX, newY);
             return true;
