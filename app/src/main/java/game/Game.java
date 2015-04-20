@@ -1,6 +1,8 @@
 package game;
 
 
+import edu.augustana.csc490.gamestarter.MainActivity;
+import edu.augustana.csc490.gamestarter.MainGameView;
 import maze.Line;
 
 import android.graphics.Bitmap;
@@ -12,6 +14,7 @@ import android.graphics.Picture;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
+import android.widget.Toast;
 
 import maze.*;
 
@@ -63,6 +66,7 @@ public class Game {
     public Picture playerMouseImage = new Picture();
     public Paint playerMousePaint = new Paint();
     public final Point MOUSE_START_POS= new Point(0, 0);
+    public final Point MOUSE_END_POS= new Point(width, height);
 
 
     //default game settings
@@ -161,6 +165,12 @@ public class Game {
         int newMazeX = newX / cellWidth;
         int newMazeY = newY / cellHeight;
 
+        //check if mouse has reached end of the maze before allowing to move
+        if(maze.getEnd().equals(newMazeX,newMazeY)){
+            Log.d("tag", "Leveling Up");
+            levelUp();
+        }
+
         if (prevMazeX == newMazeX && prevMazeY == newMazeY) {
             playerMouse.moveMouse(newX, newY);
             return true;
@@ -176,6 +186,7 @@ public class Game {
             playerMouse.moveMouse(newX, newY);
             return true;
         }
+
         return false;
     }
 

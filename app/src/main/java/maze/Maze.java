@@ -176,7 +176,7 @@ public class Maze {
 
     public Point getEnd() {
 
-        return new Point(start.getX(), start.getY());
+        return new Point(end.getX(), end.getY());
     }
 
     public boolean equals(Maze maze) {
