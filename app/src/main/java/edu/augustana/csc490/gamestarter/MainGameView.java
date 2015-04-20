@@ -89,8 +89,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         mazePaint.setStrokeWidth(3);
 
         Intent i = mainActivity.getIntent();
-        height = i.getIntExtra("height", 20);
-        width = i.getIntExtra("width", 20);
+        height = i.getIntExtra("size", 20);
+        width = i.getIntExtra("size", 20);
         algorithm = i.getIntExtra("algorithm", 1);
 
 

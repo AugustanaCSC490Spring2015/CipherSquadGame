@@ -3,11 +3,15 @@ package game;
 
 import maze.Line;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Picture;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 
 import maze.*;
 
@@ -25,6 +29,9 @@ public class Game {
     //maze line array data
     private int screenWidth;
     private int screenHeight;
+
+    //graphics
+    public Bitmap mazeBitmap;
 
 
     //maze data
@@ -142,13 +149,9 @@ public class Game {
             return true;
         }
 
-        //prevent player from hopping walls
-        if (prevMazeX > newMazeX + 1 || prevMazeX < newMazeX - 1 || prevMazeY > newMazeY + 1 || prevMazeY < newMazeY - 1 || newMazeX < 0 || newMazeY < 0 || newMazeX > width || newMazeY > height) {
+        if (Math.abs(newMazeX - prevMazeX) + Math.abs(newMazeY - prevMazeY) != 1){
             return false;
         }
-        /*if((prevMazeX > newMazeX + 1 && prevMazeY > newMazeY + 1) || (prevMazeX < newMazeX + 1 && prevMazeY < newMazeY + 1)){
-            return false;
-        }*/
 
         int direction = maze.getDirection(prevMazeX, prevMazeY, newMazeX, newMazeY);
 
@@ -163,12 +166,22 @@ public class Game {
         return new Point(playerMouse.getPosX(), playerMouse.getPosY());
     }
 
-    public void generateMazeLineArray(int screenW, int screenH) {
+    private Bitmap generateMazeLineArrayBitmap(Paint p, int screenW, int screenH) {
         mazeLineArray = new MazeLineArray(maze, screenW, screenH);
         screenWidth = mazeLineArray.getScreenWidth();
         screenHeight = mazeLineArray.getScreenHeight();
         cellWidth = mazeLineArray.getWidthSpacing();
         cellHeight = mazeLineArray.getHeightSpacing();
+
+        mazeBitmap = Bitmap.createBitmap(screenW, screenH, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(mazeBitmap);
+
+        for (int i = 0; i < mazeLineArray.getSize(); i++) {
+            Line line = mazeLineArray.getLineAtIndex(i);
+            c.drawLine(line.startX, line.startY, line.endX, line.endY, p);
+            //Log.i("line", line.startX + " " + line.startY + " " + line.endX + " " +line.endY);
+        }
+        return mazeBitmap;
     }
 
     public void paintMaze(Canvas c, Paint p, int screenWidth, int screenHeight) {
@@ -177,18 +190,18 @@ public class Game {
 
         //check to see if the maze line array needs to be generated or regenerated.
         if (mazeLineArray == null) {
-            generateMazeLineArray(screenWidth, screenHeight);
+            generateMazeLineArrayBitmap(p, screenWidth, screenHeight);
+            //Log.i("mazeLineArrayGenerator", "Null");
         } else if (screenHeight != mazeLineArray.getScreenHeight() || screenWidth != mazeLineArray.getScreenWidth()) {
-            generateMazeLineArray(screenWidth, screenHeight);
-        } else if (!maze.equals(mazeLineArray.getMaze())) {
-            generateMazeLineArray(screenWidth, screenHeight);
-        }
+            generateMazeLineArrayBitmap(p, screenWidth, screenHeight);
+            //Log.i("mazeLineArrayGenerator", "Screen size change");
+        }/* else if (!maze.equals(mazeLineArray.getMaze())) {
+            generateMazeLineArrayBitmap(p, screenWidth, screenHeight);
+            Log.i("mazeLineArrayGenerator", "Equals method");
+        }*/
+        c.drawBitmap(mazeBitmap, 0, 0, p);
 
-        for (int i = 0; i < mazeLineArray.getSize(); i++) {
-            Line line = mazeLineArray.getLineAtIndex(i);
-            c.drawLine(line.startX, line.startY, line.endX, line.endY, p);
-            //Log.i("line", line.startX + " " + line.startY + " " + line.endX + " " +line.endY);
-        }
+
 
     }
 }
