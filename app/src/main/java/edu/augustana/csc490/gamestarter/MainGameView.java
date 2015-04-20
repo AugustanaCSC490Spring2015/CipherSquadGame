@@ -106,10 +106,6 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         startNewGame();
     }
 
-    public long getMillis(){
-        return millis;
-    }
-
     public void startNewGame() {
 
         game = new Game(width, height, algorithm);
@@ -133,6 +129,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     private void gameStep() {
 
+    }
+
+    public long getCurrentTime(){
+        return millis;
     }
 
     public void updateView(Canvas canvas) {

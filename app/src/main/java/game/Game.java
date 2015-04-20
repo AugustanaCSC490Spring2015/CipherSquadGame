@@ -1,6 +1,7 @@
 package game;
 
 
+import edu.augustana.csc490.gamestarter.MainGameView;
 import maze.Line;
 
 import android.graphics.Bitmap;
@@ -48,6 +49,7 @@ public class Game {
 
     private int[] playerPoints;
     private int level;
+    private int levelPointRelationship;
     private int time;
     public Mouse playerMouse;
     private Mouse[] opponentMice;
@@ -87,7 +89,7 @@ public class Game {
     public static final boolean IS_NETWORKED = false;
 
 
-    //creates a new game with the standard game data defined above in the final feilds
+    //creates a new game with the standard game data defined above in the final fields
     public Game() {
         rand = new Random();
         initializeGame(WIDTH, HEIGHT, rand.nextInt(NUM_MAZE_TYPES), TIME, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
@@ -109,6 +111,7 @@ public class Game {
         playerMouse = new PlayerMouse(playerMousePaint, playerMouseImage);
         opponentMice = new Mouse[numOpponents];
         level = 1;
+        levelPointRelationship = 1000;
 
         this.isNetworked = isNetworked;
         for (int i = 0; i < numOpponents; i++) {
@@ -121,13 +124,27 @@ public class Game {
         // mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
     }
 
+    public void mouseFinished(Mouse mouse, long currentTime){
+        //keeps track of each player's points and adds points depending on the level they are on and the time they completed the maze
+        int points = levelPointRelationship - (int) currentTime / 60000;
+        mouse.setCompletionTime(currentTime);
+        if (points > 0){ mouse.addPoints(points);}
+        mouse.setFinished();
+        if (playerMouse.getFinished){ //add for loop here for each mouse if we have multiple players
+            levelUp();
+        }
+    }
+
     private boolean levelUp() {
+
+        //reset the game with a larger maze
         playerMouse.moveMouse(MOUSE_START_POS.x, MOUSE_START_POS.y);
         height = height + 3;
         width = width + 3;
         maze = createMaze(width, height, mazeType);
         powerUps = new PowerUpMap(maze);
         level++;
+        levelPointRelationship *= 2;
         setTime(0);
 
         return true;
