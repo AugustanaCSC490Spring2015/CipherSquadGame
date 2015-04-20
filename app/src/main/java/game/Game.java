@@ -42,6 +42,7 @@ public class Game {
     private int cellHeight;
     private int width;
     private int height;
+    private int mazeType;
 
 
     private Path playerPath;
@@ -49,6 +50,7 @@ public class Game {
     private Path[] AIPaths;
 
     private int[] playerPoints;
+    private int level;
     private int time;
     public Mouse playerMouse;
     private Mouse[] opponentMice;
@@ -63,6 +65,8 @@ public class Game {
     //mouse data
     public Picture playerMouseImage = new Picture();
     public Paint playerMousePaint = new Paint();
+    public final Point MOUSE_START_POS= new Point(0, 0);
+
 
     //default game settings
 
@@ -99,6 +103,7 @@ public class Game {
     private void initializeGame(int mazeWidth, int mazeHeight, int mazeType, int time, int numOpponents, int AIDifficulty, boolean isNetworked) {
         height = mazeHeight;
         width = mazeWidth;
+        this.mazeType = mazeType;
         maze = createMaze(mazeWidth, mazeHeight, mazeType);
         powerUps = new PowerUpMap(maze);
         this.time = time;
@@ -107,6 +112,7 @@ public class Game {
         //playerMouseImage
         playerMouse = new PlayerMouse(playerMousePaint, playerMouseImage);
         opponentMice = new Mouse[numOpponents];
+        level = 1;
 
         this.isNetworked = isNetworked;
         for (int i = 0; i < numOpponents; i++) {
@@ -120,8 +126,19 @@ public class Game {
     }
 
     private boolean levelUp() {
+        playerMouse.moveMouse(MOUSE_START_POS.x, MOUSE_START_POS.y);
+        height = height + 3;
+        width = width + 3;
+        maze = createMaze(width, height, mazeType);
+        powerUps = new PowerUpMap(maze);
+        level++;
+        setTime(0);
 
         return true;
+    }
+
+    private void setTime(int t){
+        time = t;
     }
 
     private Maze createMaze(int width, int height, int mazeType) {
