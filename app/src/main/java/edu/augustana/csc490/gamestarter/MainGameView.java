@@ -8,6 +8,8 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -106,10 +108,6 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         startNewGame();
     }
 
-    public long getMillis(){
-        return millis;
-    }
-
     public void startNewGame() {
 
         game = new Game(width, height, algorithm);
@@ -135,10 +133,17 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     }
 
+    public long getCurrentTime(){
+        return millis;
+    }
+
     public void updateView(Canvas canvas) {
         if (canvas != null) {
             canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
             game.paintMaze(canvas, mazePaint, screenWidth, screenHeight);
+
+            //canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.raw.simplemousedown), 10, 10, null);
+
             canvas.drawCircle(game.getPlayerMousePos().x, game.getPlayerMousePos().y, game.playerMouse.getCircleSize(), game.playerMouse.getMousePaint());
         }
     }
