@@ -135,7 +135,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
             canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
             game.paintMaze(canvas, mazePaint, screenWidth, screenHeight);
 
-            //canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.raw.t9ratty_trans), 10, 10, null);
+            //canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.raw.simplemousedown), 10, 10, null);
 
             canvas.drawCircle(game.getPlayerMousePos().x, game.getPlayerMousePos().y, game.playerMouse.getCircleSize(), game.playerMouse.getMousePaint());
         }

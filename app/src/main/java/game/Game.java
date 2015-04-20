@@ -1,6 +1,8 @@
 package game;
 
 
+import edu.augustana.csc490.gamestarter.MainGameView;
+import edu.augustana.csc490.gamestarter.R;
 import maze.Line;
 
 import android.graphics.Bitmap;
@@ -11,6 +13,7 @@ import android.graphics.Path;
 import android.graphics.Picture;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.util.Log;
 
 import maze.*;
@@ -101,6 +104,7 @@ public class Game {
         this.time = time;
         this.numOpponents = numOpponents;
         this.AIDifficulty = AIDifficulty;
+        //playerMouseImage
         playerMouse = new PlayerMouse(playerMousePaint, playerMouseImage);
         opponentMice = new Mouse[numOpponents];
 
