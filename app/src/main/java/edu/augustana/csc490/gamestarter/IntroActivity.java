@@ -1,7 +1,6 @@
 package edu.augustana.csc490.gamestarter;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,10 +15,11 @@ public class IntroActivity extends Activity {
 
     int height;
     int width;
+    int size;
     int algorithm;
 
-    EditText heightEditText;
-    EditText widthEditText;
+    EditText sizeEditText;
+   // EditText widthEditText;
 
     //RadioButton algo1;
     RadioButton algo2;
@@ -30,8 +30,8 @@ public class IntroActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
         Button launchButton = (Button) findViewById(R.id.launchButton);
-        heightEditText = (EditText) findViewById(R.id.heightEditText);
-        widthEditText = (EditText) findViewById(R.id.widthEditText);
+        sizeEditText = (EditText) findViewById(R.id.sizeEditText);
+        //widthEditText = (EditText) findViewById(R.id.widthEditText);
 
         //algo1 = (RadioButton)findViewById(R.id.algo1);
         algo2 = (RadioButton) findViewById(R.id.algo2);
@@ -45,8 +45,9 @@ public class IntroActivity extends Activity {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(IntroActivity.this, MainActivity.class);
-            height = Integer.parseInt(heightEditText.getText().toString());
-            width = Integer.parseInt(widthEditText.getText().toString());
+            //height = Integer.parseInt(sizeEditText.getText().toString());
+            //width = Integer.parseInt(sizeEditText.getText().toString());
+            size = Integer.parseInt(sizeEditText.getText().toString());
 
             algorithm = 1;
             if (algo2.isChecked()) {
@@ -55,8 +56,9 @@ public class IntroActivity extends Activity {
                 algorithm = 3;
             }
 
-            intent.putExtra("height", height);
-            intent.putExtra("width", width);
+            //intent.putExtra("height", height);
+            //intent.putExtra("width", width);
+            intent.putExtra("size", size);
             intent.putExtra("algorithm", algorithm);
             startActivity(intent);
         }
