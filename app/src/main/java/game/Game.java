@@ -50,7 +50,7 @@ public class Game {
 
     private int[] playerPoints;
     private int level;
-    private int time;
+    private long currentTime;
     private int levelPointRelationship;
     public Mouse playerMouse;
     private Mouse[] opponentMice;
@@ -81,7 +81,6 @@ public class Game {
 
     //player settings
     public static final int NUM_OPPONENTS = 3;
-    public static final int TIME = 120;
 
     //AI settings
     public static final int AI_DIFFICULTY = 5;
@@ -90,23 +89,22 @@ public class Game {
     public static final boolean IS_NETWORKED = false;
 
 
-    //creates a new game with the standard game data defined above in the final feilds
+    //creates a new game with the standard game data defined above in the final fields
     public Game() {
         rand = new Random();
-        initializeGame(WIDTH, HEIGHT, rand.nextInt(NUM_MAZE_TYPES), TIME, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
+        initializeGame(WIDTH, HEIGHT, rand.nextInt(NUM_MAZE_TYPES), NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
     }
 
     public Game(int width, int height, int mazeType) {
-        initializeGame(width, height, mazeType, TIME, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
+        initializeGame(width, height, mazeType, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
     }
 
-    private void initializeGame(int mazeWidth, int mazeHeight, int mazeType, int time, int numOpponents, int AIDifficulty, boolean isNetworked) {
+    private void initializeGame(int mazeWidth, int mazeHeight, int mazeType, int numOpponents, int AIDifficulty, boolean isNetworked) {
         height = mazeHeight;
         width = mazeWidth;
         this.mazeType = mazeType;
         maze = createMaze(mazeWidth, mazeHeight, mazeType);
         powerUps = new PowerUpMap(maze);
-        this.time = time;
         this.numOpponents = numOpponents;
         this.AIDifficulty = AIDifficulty;
         //playerMouseImage
@@ -126,21 +124,23 @@ public class Game {
         // mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
     }
 
-    public void mouseFinished(Mouse mouse, long currentTime){
+    public void mouseFinished(Mouse mouse) {
         //keeps track of each player's points and adds points depending on the level they are on and the time they completed the maze
         int points = levelPointRelationship - (int) currentTime / 60000;
         mouse.setTotalTime(currentTime);
         if (points > 0){ mouse.addPoints(points);}
         mouse.setFinished(true);
-        if (playerMouse.getFinished()){ //add for loop here for each mouse if we have multiple players
-            levelUp();
-        }
+
     }
 
-    private boolean levelUp() {
-
+    public boolean levelUp() {
+        //display player stats
         //reset the game with a larger maze
+        if (!playerMouse.getFinished()) { //add for loop here for each mouse if we have multiple players
+            return false;
+        }
         playerMouse.moveMouse(MOUSE_START_POS.x, MOUSE_START_POS.y);
+        playerMouse.setFinished(false);
         height = height + 3;
         width = width + 3;
         maze = createMaze(width, height, mazeType);
@@ -152,8 +152,8 @@ public class Game {
         return true;
     }
 
-    private void setTime(int t){
-        time = t;
+    public void setTime(long t) {
+        currentTime = t;
     }
 
     private Maze createMaze(int width, int height, int mazeType) {
@@ -182,7 +182,7 @@ public class Game {
 
         //will check if mouse has reached the end of the maze prior to moving
         if(maze.getEnd().equals(prevMazeX,prevMazeY)){
-            levelUp();
+            mouseFinished(playerMouse);
         }
 
         if (prevMazeX == newMazeX && prevMazeY == newMazeY) {
@@ -236,10 +236,10 @@ public class Game {
         } else if (screenHeight != mazeLineArray.getScreenHeight() || screenWidth != mazeLineArray.getScreenWidth()) {
             generateMazeLineArrayBitmap(p, screenWidth, screenHeight);
             //Log.i("mazeLineArrayGenerator", "Screen size change");
-        }/* else if (!maze.equals(mazeLineArray.getMaze())) {
+        } else if (!maze.equals(mazeLineArray.getMaze())) {
             generateMazeLineArrayBitmap(p, screenWidth, screenHeight);
             Log.i("mazeLineArrayGenerator", "Equals method");
-        }*/
+        }
         c.drawBitmap(mazeBitmap, 0, 0, p);
 
 
