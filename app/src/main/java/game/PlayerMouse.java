@@ -9,8 +9,8 @@ import android.graphics.Picture;
  */
 public class PlayerMouse extends Mouse {
 
-    public PlayerMouse(Paint p, Bitmap mouseImage) {
-        initMouse(p, mouseImage);
+    public PlayerMouse(Bitmap mouseImage) {
+        initMouse(mouseImage);
     }
 
 }

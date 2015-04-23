@@ -13,13 +13,16 @@ import java.util.ArrayList;
 
 public abstract class Mouse {
 
-    private Paint mousePaint;
     private Bitmap mouseImage;
 
     public void setMouseImage(Bitmap mouseImage) {
         this.mouseImage = mouseImage;
     }
 
+
+    public Bitmap getMouseImage() {
+        return mouseImage;
+    }
     //default mouse data
     protected final int COLOR = Color.GRAY;
     //protected final Bitmap MOUSE_IMAGE;
@@ -42,24 +45,12 @@ public abstract class Mouse {
 
     }
 
-    public void initMouse(Paint p, Bitmap mouseImage){
-        this.mousePaint = p;
+    public void initMouse(Bitmap mouseImage) {
         this.mouseImage = mouseImage;
         totalTime = 0;
         finished = false;
         posX = 0;
         posY = 0;
-        p.setColor(Color.BLACK);
-        circleTestMouse(20);
-    }
-
-    private void circleTestMouse(int size){
-        circleSize = size;
-
-    }
-
-    public int getCircleSize(){
-        return circleSize;
     }
 
     public int getPosX(){
@@ -70,9 +61,10 @@ public abstract class Mouse {
         return posY;
     }
 
-    public Paint getMousePaint(){
-        return mousePaint;
+    public Bitmap getImage() {
+        return mouseImage;
     }
+
 
     public boolean moveMouse(int x, int y){
         posX = x;

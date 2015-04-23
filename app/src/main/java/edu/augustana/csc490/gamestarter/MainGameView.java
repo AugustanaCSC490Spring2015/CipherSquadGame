@@ -61,14 +61,15 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         @Override
         public void run() {
             millis = System.currentTimeMillis() - startTime;
+            int centiSeconds = (int) (millis / 10);
             int seconds = (int) (millis / 1000);
             int minutes = seconds / 60;
             seconds = seconds % 60;
+            centiSeconds = centiSeconds % 100;
 
             ActionBar actionBar = mainActivity.getActionBar();
-            actionBar.setTitle(String.format("%d:%02d", minutes, seconds));
-
-            timerHandler.postDelayed(this, 500);
+            actionBar.setTitle(String.format("%d:%02d:%02d", minutes, seconds, centiSeconds));
+            timerHandler.postDelayed(this, 5);
         }
     };
 
@@ -110,8 +111,13 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     }
 
     public void startNewGame() {
+        int numOpponents = 0;
+        Bitmap miceImageArray[] = new Bitmap[numOpponents + 1];
 
-        game = new Game(width, height, algorithm);
+        miceImageArray[0] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousedown);
+        miceImageArray[0] = miceImageArray[0].createScaledBitmap(miceImageArray[0], 150, 150, false);
+
+        game = new Game(width, height, algorithm, miceImageArray);
         startTime = System.currentTimeMillis();
         millis = 0;
         Point initPosPlayerMouse = game.getPlayerMousePos();
@@ -141,12 +147,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         if (canvas != null) {
             canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
             game.paintMaze(canvas, mazePaint, screenWidth, screenHeight);
+            game.drawMice(canvas, screenWidth, screenHeight);
 
 
-            Bitmap test = BitmapFactory.decodeResource(getResources(), R.raw.simplemousedown);
-            test = test.createScaledBitmap(test,50,50,false);
-
-            canvas.drawBitmap(test, game.getPlayerMousePos().x - (test.getWidth()/2), game.getPlayerMousePos().y - (test.getHeight()/2), null);
+            //canvas.drawBitmap(playerMouse.getImage(), game.getPlayerMousePos().x - (test.getWidth()/2), game.getPlayerMousePos().y - (test.getHeight()/2), null);
 
             //canvas.drawCircle(game.getPlayerMousePos().x, game.getPlayerMousePos().y, game.playerMouse.getCircleSize(), game.playerMouse.getMousePaint());
         }

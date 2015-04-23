@@ -64,8 +64,10 @@ public class Game {
     private Random rand;
 
     //mouse data
-    public Bitmap playerMouseImage;
-    public Paint playerMousePaint = new Paint();
+    private Bitmap playerMouseImage;
+    private Bitmap[] opponentMiceImages;
+    //public Paint playerMousePaint = new Paint();
+
     public final Point MOUSE_START_POS= new Point(0, 0);
 
 
@@ -81,7 +83,7 @@ public class Game {
     public static final int PRIM_MAZE = 3;
 
     //player settings
-    public static final int NUM_OPPONENTS = 3;
+    public static final int NUM_OPPONENTS = 0;
 
     //AI settings
     public static final int AI_DIFFICULTY = 5;
@@ -91,16 +93,16 @@ public class Game {
 
 
     //creates a new game with the standard game data defined above in the final fields
-    public Game() {
+    public Game(Bitmap[] miceImageArray) {
         rand = new Random();
-        initializeGame(WIDTH, HEIGHT, rand.nextInt(NUM_MAZE_TYPES), NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
+        initializeGame(WIDTH, HEIGHT, rand.nextInt(NUM_MAZE_TYPES), miceImageArray, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
     }
 
-    public Game(int width, int height, int mazeType) {
-        initializeGame(width, height, mazeType, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
+    public Game(int width, int height, int mazeType, Bitmap[] miceImageArray) {
+        initializeGame(width, height, mazeType, miceImageArray, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
     }
 
-    private void initializeGame(int mazeWidth, int mazeHeight, int mazeType, int numOpponents, int AIDifficulty, boolean isNetworked) {
+    private void initializeGame(int mazeWidth, int mazeHeight, int mazeType, Bitmap[] miceImageArray, int numOpponents, int AIDifficulty, boolean isNetworked) {
         height = mazeHeight;
         width = mazeWidth;
         this.mazeType = mazeType;
@@ -108,9 +110,15 @@ public class Game {
         powerUps = new PowerUpMap(maze);
         this.numOpponents = numOpponents;
         this.AIDifficulty = AIDifficulty;
+        //add the mouse images
+        playerMouseImage = miceImageArray[0];
+        for (int i = 1; i <= miceImageArray.length; i++) {
+            //opponentMiceImages[i - 1] = miceImageArray[i];
+        }
+
         //Picture playerMouseImage = new Picture();
         Bitmap playerMouseImage = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.simplemousedown);
-        playerMouse = new PlayerMouse(playerMousePaint, playerMouseImage);
+        playerMouse = new PlayerMouse(playerMouseImage);
         opponentMice = new Mouse[numOpponents];
         level = 1;
         levelPointRelationship = 1000;
@@ -243,8 +251,9 @@ public class Game {
             Log.i("mazeLineArrayGenerator", "Equals method");
         }
         c.drawBitmap(mazeBitmap, 0, 0, p);
+    }
 
-
-
+    public void drawMice(Canvas c, int screenWidth, int screenHeight) {
+        c.drawBitmap(playerMouseImage, getPlayerMousePos().x - (playerMouseImage.getWidth() / 2), getPlayerMousePos().y - (playerMouseImage.getHeight() / 2), null);
     }
 }
