@@ -129,17 +129,17 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
 
     private void gameStep() {
-
-    }
-
-    public long getCurrentTime(){
-        return millis;
+        if (game.levelUp()) { //levels up if all the mice are finished
+            startTime = System.currentTimeMillis(); //resets the timer if there is a level up
+        }
+        game.setTime(millis); //sets the timer value in the game class to equal the value in this view
     }
 
     public void updateView(Canvas canvas) {
         if (canvas != null) {
             canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
             game.paintMaze(canvas, mazePaint, screenWidth, screenHeight);
+
 
             //canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.raw.simplemousedown), 10, 10, null);
 

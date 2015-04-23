@@ -180,14 +180,13 @@ public class Maze {
     }
 
     public boolean equals(Maze maze) {
-        if (this.getClass().equals(maze)) {
-            if (this.horizWalls.equals(maze.getHorizWalls()) && this.vertWalls.equals(maze.getVertWalls()) && this.getStart().equals(maze.getStart()) && this.getEnd().equals(maze.getEnd())) {
-                return true;
-            } else {
+        if (this.getHeight() != maze.getHeight() || this.getWidth() != maze.getWidth()) {
                 return false;
+        } else if (!(this.horizWalls.equals(maze.getHorizWalls()) && this.vertWalls.equals(maze.getVertWalls()))) {
+            return false;
+        } else {
+            return true;
             }
-        }
-        return false;
     }
 
     /**
