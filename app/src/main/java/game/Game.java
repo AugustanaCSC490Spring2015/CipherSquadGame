@@ -2,6 +2,7 @@ package game;
 
 
 import edu.augustana.csc490.gamestarter.MainGameView;
+import edu.augustana.csc490.gamestarter.R;
 import maze.Line;
 
 import android.graphics.Bitmap;
@@ -63,7 +64,7 @@ public class Game {
     private Random rand;
 
     //mouse data
-    public Picture playerMouseImage = new Picture();
+    public Bitmap playerMouseImage;
     public Paint playerMousePaint = new Paint();
     public final Point MOUSE_START_POS= new Point(0, 0);
 
@@ -107,7 +108,8 @@ public class Game {
         powerUps = new PowerUpMap(maze);
         this.numOpponents = numOpponents;
         this.AIDifficulty = AIDifficulty;
-        //playerMouseImage
+        //Picture playerMouseImage = new Picture();
+        Bitmap playerMouseImage = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.simplemousedown);
         playerMouse = new PlayerMouse(playerMousePaint, playerMouseImage);
         opponentMice = new Mouse[numOpponents];
         level = 1;

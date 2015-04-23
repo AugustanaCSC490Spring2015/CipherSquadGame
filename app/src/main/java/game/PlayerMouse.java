@@ -1,5 +1,6 @@
 package game;
 
+import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Picture;
 
@@ -8,7 +9,7 @@ import android.graphics.Picture;
  */
 public class PlayerMouse extends Mouse {
 
-    public PlayerMouse(Paint p, Picture mouseImage) {
+    public PlayerMouse(Paint p, Bitmap mouseImage) {
         initMouse(p, mouseImage);
     }
 

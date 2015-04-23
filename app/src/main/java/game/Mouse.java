@@ -1,10 +1,8 @@
 package game;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Picture;
-import android.media.Image;
-
 import java.util.ArrayList;
 
 
@@ -16,11 +14,15 @@ import java.util.ArrayList;
 public abstract class Mouse {
 
     private Paint mousePaint;
-    private Picture mouseImage;
+    private Bitmap mouseImage;
+
+    public void setMouseImage(Bitmap mouseImage) {
+        this.mouseImage = mouseImage;
+    }
 
     //default mouse data
     protected final int COLOR = Color.GRAY;
-    protected final Picture MOUSE_IMAGE = new Picture();
+    //protected final Bitmap MOUSE_IMAGE;
 
     //data for the circle test mouse
     private int circleSize;
@@ -40,7 +42,7 @@ public abstract class Mouse {
 
     }
 
-    public void initMouse(Paint p, Picture mouseImage){
+    public void initMouse(Paint p, Bitmap mouseImage){
         this.mousePaint = p;
         this.mouseImage = mouseImage;
         totalTime = 0;

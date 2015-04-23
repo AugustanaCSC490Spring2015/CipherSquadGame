@@ -30,6 +30,7 @@ import game.*;
 
 public class MainGameView extends SurfaceView implements SurfaceHolder.Callback {
     private static final String TAG = "GameStarter"; // for Log.w(TAG, ...)
+    public static MainGameView currentGameView=null;
 
     private GameThread gameThread; // runs the main game loop
     private Activity mainActivity; // keep a reference to the main Activity
@@ -77,6 +78,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     public MainGameView(Context context, AttributeSet atts) {
         super(context, atts);
         mainActivity = (Activity) context;
+        currentGameView = this;
 
         getHolder().addCallback(this);
 
@@ -141,9 +143,12 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
             game.paintMaze(canvas, mazePaint, screenWidth, screenHeight);
 
 
-            //canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.raw.simplemousedown), 10, 10, null);
+            Bitmap test = BitmapFactory.decodeResource(getResources(), R.raw.simplemousedown);
+            test = test.createScaledBitmap(test,50,50,false);
 
-            canvas.drawCircle(game.getPlayerMousePos().x, game.getPlayerMousePos().y, game.playerMouse.getCircleSize(), game.playerMouse.getMousePaint());
+            canvas.drawBitmap(test, game.getPlayerMousePos().x - (test.getWidth()/2), game.getPlayerMousePos().y - (test.getHeight()/2), null);
+
+            //canvas.drawCircle(game.getPlayerMousePos().x, game.getPlayerMousePos().y, game.playerMouse.getCircleSize(), game.playerMouse.getMousePaint());
         }
     }
 
