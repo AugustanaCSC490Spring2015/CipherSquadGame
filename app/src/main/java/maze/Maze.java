@@ -181,82 +181,14 @@ public class Maze {
 
     public boolean equals(Maze maze) {
         if (this.getHeight() != maze.getHeight() || this.getWidth() != maze.getWidth()) {
-                return false;
+            return false;
         } else if (!(this.horizWalls.equals(maze.getHorizWalls()) && this.vertWalls.equals(maze.getVertWalls()))) {
             return false;
         } else {
             return true;
-            }
+        }
     }
 
-    /**
-     * Prints the maze. The following characters are used for each part.
-     * <ul>
-     * <li><code>'-'</code> for horizontal walls</li>
-     * <li><code>'|'</code> for vertical walls</li>
-     * <li><code>'*'</code> for the corner fillers</li>
-     * </ul>
-     *
-     * @param out the target {@link PrintStream}
-     */
-
-
-    public void print(PrintStream out) {
-        int startX = start.getX();
-        int startY = start.getY();
-        int endX = end.getX();
-        int endY = end.getY();
-
-        for (int y = 0; y < height; y++) {
-            // Print a row of horizontal walls
-
-            int rowBase = y * width;
-            for (int x = 0; x < width; x++) {
-                out.print('*');
-                if (x == startX && y == startY) {
-                    out.print("S");
-                } else {
-                    out.print(horizWalls[rowBase + x] ? '-' : ' ');
-                }
-
-            }
-            out.println('*');
-
-            // Print a row of vertical walls
-
-            rowBase = y * (width + 1);
-            for (int x = 0; x < width; x++) {
-                if (x == startX && y == startY) {
-                    out.print("S");
-                } else {
-                    out.print(vertWalls[rowBase + x] ? '|' : ' ');
-                }
-                out.print(' ');
-
-            }
-            if (width == startX && y == startY) {
-                out.print("S");
-            } else if (width == endX && y == endY) {
-                out.print("E");
-            } else {
-                out.println(vertWalls[rowBase + width] ? '|' : ' ');
-            }
-
-        }
-
-        // Print the last row of horizontal walls
-
-        int rowBase = height * width;
-        for (int x = 0; x < width; x++) {
-            out.print('*');
-            if (endX == x) {
-                out.print("E");
-            } else {
-                out.print(horizWalls[rowBase + x] ? '-' : ' ');
-            }
-        }
-        out.println('*');
-    }
 }
 
 

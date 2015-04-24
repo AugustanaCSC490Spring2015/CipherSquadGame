@@ -37,8 +37,6 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     private boolean isGameOver = true;
 
-    private int x; //blue circle x
-    private int y; //blue circle y
     private int screenWidth;
     private int screenHeight;
 
@@ -115,15 +113,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         Bitmap miceImageArray[] = new Bitmap[numOpponents + 1];
 
         miceImageArray[0] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousedown);
-        miceImageArray[0] = miceImageArray[0].createScaledBitmap(miceImageArray[0], 150, 150, false);
 
         game = new Game(width, height, algorithm, miceImageArray);
         startTime = System.currentTimeMillis();
         millis = 0;
-        Point initPosPlayerMouse = game.getPlayerMousePos();
-
-        this.x = initPosPlayerMouse.x;
-        this.y = initPosPlayerMouse.y;
 
         //This statement was taken from http://stackoverflow.com/questions/4597690/android-timer-how
         timerHandler.postDelayed(timerRunnable, 0);
@@ -199,7 +192,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         if (e.getAction() == MotionEvent.ACTION_MOVE) {
             int actionX = (int) e.getX();
             int actionY = (int) e.getY();
-            game.movePlayerMouse(game.getPlayerMousePos().x, game.getPlayerMousePos().y, actionX, actionY);
+            game.movePlayerMouse(actionX, actionY);
         }
 
         return true;

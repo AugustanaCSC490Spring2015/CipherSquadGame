@@ -8,6 +8,7 @@ import maze.Line;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Picture;
@@ -64,8 +65,11 @@ public class Game {
     private Random rand;
 
     //mouse data
+    private Bitmap[] miceImageArray;
     private Bitmap playerMouseImage;
     private Bitmap[] opponentMiceImages;
+    private int oldCellWidth;
+    private int oldCellHeight;
     //public Paint playerMousePaint = new Paint();
 
     public final Point MOUSE_START_POS= new Point(0, 0);
@@ -110,15 +114,14 @@ public class Game {
         powerUps = new PowerUpMap(maze);
         this.numOpponents = numOpponents;
         this.AIDifficulty = AIDifficulty;
-        //add the mouse images
-        playerMouseImage = miceImageArray[0];
+        this.miceImageArray = miceImageArray;
         for (int i = 1; i <= miceImageArray.length; i++) {
             //opponentMiceImages[i - 1] = miceImageArray[i];
         }
 
         //Picture playerMouseImage = new Picture();
-        Bitmap playerMouseImage = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.simplemousedown);
-        playerMouse = new PlayerMouse(playerMouseImage);
+        //Bitmap playerMouseImage = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.simplemousedown);
+        playerMouse = new PlayerMouse();
         opponentMice = new Mouse[numOpponents];
         level = 1;
         levelPointRelationship = 1000;
@@ -150,6 +153,7 @@ public class Game {
             return false;
         }
         playerMouse.moveMouse(MOUSE_START_POS.x, MOUSE_START_POS.y);
+
         playerMouse.setFinished(false);
         height = height + 3;
         width = width + 3;
@@ -184,9 +188,9 @@ public class Game {
         return mazeGen.getMaze();
     }
 
-    public boolean movePlayerMouse(int prevX, int prevY, int newX, int newY) {
-        int prevMazeX = prevX / cellWidth;
-        int prevMazeY = prevY / cellHeight;
+    public boolean movePlayerMouse(int newX, int newY) {
+        int prevMazeX = playerMouse.getPosX() / cellWidth;
+        int prevMazeY = playerMouse.getPosY() / cellHeight;
         int newMazeX = newX / cellWidth;
         int newMazeY = newY / cellHeight;
 
@@ -254,6 +258,31 @@ public class Game {
     }
 
     public void drawMice(Canvas c, int screenWidth, int screenHeight) {
+        //check to see if the mice images need to be generated or regenerated
+        if (playerMouseImage == null) {
+            //scale and add the mouse images
+            createMiceBitmaps();
+        } else if (cellWidth != oldCellWidth || cellHeight != oldCellHeight) {
+            createMiceBitmaps();
+        }
         c.drawBitmap(playerMouseImage, getPlayerMousePos().x - (playerMouseImage.getWidth() / 2), getPlayerMousePos().y - (playerMouseImage.getHeight() / 2), null);
+    }
+
+    private void createMiceBitmaps() {
+        //playerMouseImage = miceImageArray[0].createScaledBitmap(miceImageArray[0], cellWidth, cellWidth, false);
+        int width = miceImageArray[0].getWidth();
+        int height = miceImageArray[0].getHeight();
+        float scaleWidth = ((float) cellWidth) / width;
+        float scaleHeight = ((float) cellWidth) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        playerMouseImage = Bitmap.createBitmap(miceImageArray[0], 0, 0, width, height, matrix, false);
+        playerMouse.setMouseImage(playerMouseImage);
+        oldCellWidth = mazeLineArray.getWidthSpacing();
+        oldCellHeight = mazeLineArray.getHeightSpacing();
     }
 }
