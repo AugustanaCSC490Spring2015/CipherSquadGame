@@ -38,7 +38,7 @@ public class PowerUpMap {
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                if (i == randX && j == randY) {
+                if (i == randX && j == randY && i != 0 && j != 0) {
                     c.drawBitmap(powerUpList.get(0).getBitmapImage(), i * screenWidth/width, j * screenHeight/height, null);
                 }
             }
