@@ -33,29 +33,32 @@ public abstract class Mouse {
     private int mousePoints;
     private int movements;
     private int numMovementsTillRotate;
-    private int xAtLastRotate;
-    private int yAtLastRotate;
-    private float changeFromInitAngle;
 
-    private Matrix angleMatrix;
+    private float angle;
 
     private ArrayList<PowerUp> powerUpList = new ArrayList();
 
     public void setMouseImage(Bitmap mouseImage) {
         this.mouseImage = mouseImage;
-        numMovementsTillRotate = mouseImage.getHeight() / 20 + 1;
+        numMovementsTillRotate = mouseImage.getWidth() / 250 + 1;
     }
 
+    public void setMouseAngle(float angle) {
+        this.angle = angle;
+    }
+
+    public float getAngle() {
+        return angle;
+    }
     public Bitmap getMouseImage() {
         return mouseImage;
     }
 
     public void initMouse() {
-        angleMatrix = new Matrix();
+        angle = 45;
         numMovementsTillRotate = 1;
         movements = 0;
         totalTime = 0;
-        changeFromInitAngle = 0;
         finished = false;
         mousePoints = 0;
         posX = 0;
@@ -79,28 +82,16 @@ public abstract class Mouse {
         posX = x;
         posY = y;
         movements++;
-        if (movements > numMovementsTillRotate) {
-            //rotateImage(); //need to fix the rotate method
-            Log.i("MoveMouseRotate", "Move Mouse Rotate method called " + movements + " num till rotate " + numMovementsTillRotate);
-            movements = 0;
-        }
         return true;
     }
 
-    private void rotateImage() {
-        int deltaX = posX - xAtLastRotate;
-        int deltaY = posY - yAtLastRotate;
-        float angle = (float) Math.toDegrees(Math.atan(deltaY / deltaX) * 180 / Math.PI);
-        xAtLastRotate = posX;
-        yAtLastRotate = posY;
-        if (angle == 0) {
-            return;
+    public boolean rotate() {
+        if (movements > numMovementsTillRotate) {
+            Log.i("MoveMouseRotate", "Move Mouse Rotate method called " + movements + " num till rotate " + numMovementsTillRotate);
+            movements = 0;
+            return true;
         }
-        changeFromInitAngle = (changeFromInitAngle + angle) % 360;
-        angleMatrix.postRotate(angle);
-        mouseImage = Bitmap.createBitmap(mouseImage, 0, 0, mouseImage.getWidth(), mouseImage.getHeight(), angleMatrix, true);
-        angleMatrix.reset();
-        return;
+        return false;
     }
 
 
@@ -118,9 +109,6 @@ public abstract class Mouse {
 
     public void setFinished(boolean finished) {
         this.finished = finished;
-        angleMatrix.postRotate(changeFromInitAngle);
-        mouseImage = Bitmap.createBitmap(mouseImage, 0, 0, mouseImage.getWidth(), mouseImage.getHeight(), angleMatrix, true);
-        angleMatrix.reset();
     }
 
 

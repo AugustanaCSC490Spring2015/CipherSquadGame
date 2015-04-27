@@ -1,20 +1,14 @@
 package game;
 
 
-import edu.augustana.csc490.gamestarter.MainGameView;
-import edu.augustana.csc490.gamestarter.R;
 import maze.Line;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Picture;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
 import android.util.Log;
 
 import maze.*;
@@ -72,7 +66,8 @@ public class Game {
     private int oldCellHeight;
     //public Paint playerMousePaint = new Paint();
 
-    public final Point MOUSE_START_POS= new Point(0, 0);
+    private Point mouseStartPos;
+    private final float START_ANGLE = 45;
 
 
     //default game settings
@@ -152,13 +147,13 @@ public class Game {
         if (!playerMouse.getFinished()) { //add for loop here for each mouse if we have multiple players
             return false;
         }
-        playerMouse.moveMouse(MOUSE_START_POS.x, MOUSE_START_POS.y);
-
+        playerMouse.setMouseAngle(START_ANGLE);
+        playerMouse.moveMouse(mouseStartPos.x, mouseStartPos.y);
         playerMouse.setFinished(false);
         height = height + 3;
         width = width + 3;
         maze = createMaze(width, height, mazeType);
-        powerUps = new PowerUpMap(maze);
+
         level++;
         levelPointRelationship *= 2;
         setTime(0);
@@ -217,16 +212,13 @@ public class Game {
         return false;
     }
 
-    public Point getPlayerMousePos() {
-        return new Point(playerMouse.getPosX(), playerMouse.getPosY());
-    }
-
     private Bitmap generateMazeLineArrayBitmap(Paint p, int screenW, int screenH) {
         mazeLineArray = new MazeLineArray(maze, screenW, screenH);
         screenWidth = mazeLineArray.getScreenWidth();
         screenHeight = mazeLineArray.getScreenHeight();
         cellWidth = mazeLineArray.getWidthSpacing();
         cellHeight = mazeLineArray.getHeightSpacing();
+        p.setStrokeWidth(cellWidth / 6);
 
         mazeBitmap = Bitmap.createBitmap(screenW, screenH, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(mazeBitmap);
@@ -259,30 +251,50 @@ public class Game {
 
     public void drawMice(Canvas c, int screenWidth, int screenHeight) {
         //check to see if the mice images need to be generated or regenerated
-        if (playerMouseImage == null) {
+        if (playerMouse.getImage() == null) {
             //scale and add the mouse images
             createMiceBitmaps();
         } else if (cellWidth != oldCellWidth || cellHeight != oldCellHeight) {
             createMiceBitmaps();
         }
-        c.drawBitmap(playerMouseImage, getPlayerMousePos().x - (playerMouseImage.getWidth() / 2), getPlayerMousePos().y - (playerMouseImage.getHeight() / 2), null);
+        Bitmap rotatedMouse = rotateMouseImage(playerMouse);
+        c.drawBitmap(rotatedMouse, playerMouse.getPosX() - (rotatedMouse.getWidth() / 2), playerMouse.getPosY() - (rotatedMouse.getHeight() / 2), null);
     }
 
     private void createMiceBitmaps() {
-        //playerMouseImage = miceImageArray[0].createScaledBitmap(miceImageArray[0], cellWidth, cellWidth, false);
-        int width = miceImageArray[0].getWidth();
-        int height = miceImageArray[0].getHeight();
-        float scaleWidth = ((float) cellWidth) / width;
-        float scaleHeight = ((float) cellWidth) / height;
-        // CREATE A MATRIX FOR THE MANIPULATION
-        Matrix matrix = new Matrix();
-        // RESIZE THE BIT MAP
-        matrix.postScale(scaleWidth, scaleHeight);
-
-        // "RECREATE" THE NEW BITMAP
-        playerMouseImage = Bitmap.createBitmap(miceImageArray[0], 0, 0, width, height, matrix, false);
+        int scaleWidth = (cellWidth) / 4;
+        //int scaleHeight = (cellWidth) / 4;
+        mouseStartPos = new Point(cellWidth / 2, cellHeight / 2);
+        playerMouse.moveMouse(mouseStartPos.x, mouseStartPos.y);
+        playerMouseImage = miceImageArray[0].createScaledBitmap(miceImageArray[0], cellWidth + scaleWidth, cellWidth + scaleWidth, false);
         playerMouse.setMouseImage(playerMouseImage);
+        playerMouse.setMouseAngle(START_ANGLE);
         oldCellWidth = mazeLineArray.getWidthSpacing();
         oldCellHeight = mazeLineArray.getHeightSpacing();
+    }
+
+
+    private int xAtLastRotate;
+    private int yAtLastRotate;
+
+    private Bitmap rotateMouseImage(Mouse mouse) {
+        double deltaX = mouse.getPosX() - xAtLastRotate;
+        double deltaY = mouse.getPosY() - yAtLastRotate;
+        float angle = mouse.getAngle();
+        if (deltaX != 0 && deltaY != 0 && mouse.rotate()) {
+            angle = (float) Math.toDegrees(Math.atan2(deltaY, deltaX));
+            mouse.setMouseAngle(angle);
+            xAtLastRotate = mouse.getPosX();
+            yAtLastRotate = mouse.getPosY();
+        }
+        //Log.i("Angle", "Angle for rotation " + angle);
+        Matrix matrix = new Matrix();
+        //matrix.setTranslate(mouse.getPosX() - (mouse.getImage().getWidth() / 2), mouse.getPosY() - (mouse.getImage().getHeight() / 2));
+        matrix.setRotate(angle);
+        Bitmap targetBitmap = Bitmap.createBitmap(mouse.getImage().getWidth(), mouse.getImage().getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(targetBitmap);
+        matrix.setRotate(angle, mouse.getImage().getWidth() / 2, mouse.getImage().getHeight() / 2);
+        canvas.drawBitmap(mouse.getImage(), matrix, new Paint());
+        return targetBitmap;
     }
 }

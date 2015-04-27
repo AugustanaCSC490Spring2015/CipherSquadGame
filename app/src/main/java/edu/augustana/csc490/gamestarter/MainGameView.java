@@ -8,8 +8,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
-import android.graphics.Point;
+import android.graphics.PathEffect;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -78,8 +79,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         backgroundPaint.setColor(Color.WHITE);
         mazePaint = new Paint();
         mazePaint.setColor(Color.BLUE);
-        mazePaint.setStrokeWidth(3);
-
+        mazePaint.setStyle(Paint.Style.STROKE);
+        mazePaint.setStrokeJoin(Paint.Join.ROUND);
+        mazePaint.setStrokeCap(Paint.Cap.ROUND);
+       
         Intent i = mainActivity.getIntent();
         height = i.getIntExtra("size", 20);
         width = i.getIntExtra("size", 20);
@@ -103,7 +106,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         int numOpponents = 0;
         Bitmap miceImageArray[] = new Bitmap[numOpponents + 1];
 
-        miceImageArray[0] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousedown);
+        miceImageArray[0] = BitmapFactory.decodeResource(getResources(), R.raw.simplemouseright);
 
         game = new Game(width, height, algorithm, miceImageArray);
         startTime = System.currentTimeMillis();
