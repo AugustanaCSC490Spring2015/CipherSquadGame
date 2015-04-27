@@ -8,9 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
-import android.graphics.PathEffect;
+import android.graphics.Point;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -29,6 +28,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     private boolean isGameOver = true;
 
+    private int x; //blue circle x
+    private int y; //blue circle y
     private int screenWidth;
     private int screenHeight;
 
@@ -42,9 +43,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     long startTime;
     long millis;
+    int points = 0;
 
-    //runs without a timer by reposting this handler at the end of the runnable
-    //Adapted from http://stackoverflow.com/questions/4597690/android-timer-how
+    /* runs without a timer by reposting this handler at the end of the runnable.
+    Adapted from http://stackoverflow.com/questions/4597690/android-timer-how */
     Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable() {
 
@@ -58,13 +60,14 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
             centiSeconds = centiSeconds % 100;
 
             ActionBar actionBar = mainActivity.getActionBar();
-            actionBar.setTitle(String.format("%d:%02d:%02d", minutes, seconds, centiSeconds));
+            actionBar.setTitle("Time: " + String.format("%d:%02d:%02d", minutes, seconds, centiSeconds) + "   Score: " + points);
             timerHandler.postDelayed(this, 5);
         }
     };
 
 
     private Game game;
+    private Mouse mouse;
 
     public MainGameView(Context context, AttributeSet atts) {
         super(context, atts);
@@ -83,6 +86,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         mazePaint.setStrokeJoin(Paint.Join.ROUND);
         mazePaint.setStrokeCap(Paint.Cap.ROUND);
        
+
+        /* set width and height based on value entered by user and the
+        algorithm based on the option chosen by the user in IntroActivity */
         Intent i = mainActivity.getIntent();
         height = i.getIntExtra("size", 20);
         width = i.getIntExtra("size", 20);
@@ -102,6 +108,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         startNewGame();
     }
 
+    // called when a new maze is used (level up, size change, first time when view is created)
     public void startNewGame() {
         int numOpponents = 0;
         Bitmap miceImageArray[] = new Bitmap[numOpponents + 1];
@@ -109,6 +116,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         miceImageArray[0] = BitmapFactory.decodeResource(getResources(), R.raw.simplemouseright);
 
         game = new Game(width, height, algorithm, miceImageArray);
+        mouse = game.playerMouse;
         startTime = System.currentTimeMillis();
         millis = 0;
 
@@ -128,8 +136,11 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
             startTime = System.currentTimeMillis(); //resets the timer if there is a level up
         }
         game.setTime(millis); //sets the timer value in the game class to equal the value in this view
+        points = mouse.addPoints(0);
+
     }
 
+    // called every time the mouse moves in order to update visuals
     public void updateView(Canvas canvas) {
         if (canvas != null) {
             canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
@@ -177,6 +188,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         }
     }
 
+    // tracks user movement on the screen
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         if (e.getAction() == MotionEvent.ACTION_MOVE) {

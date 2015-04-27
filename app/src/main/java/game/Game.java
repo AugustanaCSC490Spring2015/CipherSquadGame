@@ -31,14 +31,12 @@ public class Game {
     //graphics
     public Bitmap mazeBitmap;
 
-
     //maze data
     private int cellWidth;
     private int cellHeight;
     private int width;
     private int height;
     private int mazeType;
-
 
     private Path playerPath;
     private Path[] AISolutions;
@@ -109,6 +107,8 @@ public class Game {
         this.numOpponents = numOpponents;
         this.AIDifficulty = AIDifficulty;
         this.miceImageArray = miceImageArray;
+
+        // add the mouse images
         for (int i = 1; i <= miceImageArray.length; i++) {
             //opponentMiceImages[i - 1] = miceImageArray[i];
         }
@@ -120,6 +120,7 @@ public class Game {
         level = 1;
         levelPointRelationship = 1000;
 
+        //adds additional mice to represent other players
         this.isNetworked = isNetworked;
         for (int i = 0; i < numOpponents; i++) {
             if (isNetworked) {
@@ -140,6 +141,7 @@ public class Game {
 
     }
 
+    // called when players have finished the current maze and starts next level
     public boolean levelUp() {
         //display player stats
         //reset the game with a larger maze
@@ -165,6 +167,7 @@ public class Game {
         currentTime = t;
     }
 
+    // generates maze based on which algorithm was chosen
     private Maze createMaze(int width, int height, int mazeType) {
         MazeGenerator mazeGen;
         switch (mazeType) {
@@ -183,6 +186,7 @@ public class Game {
         return mazeGen.getMaze();
     }
 
+    // allows the playerMouse to move with user
     public boolean movePlayerMouse(int newX, int newY) {
         int prevMazeX = playerMouse.getPosX() / cellWidth;
         int prevMazeY = playerMouse.getPosY() / cellHeight;

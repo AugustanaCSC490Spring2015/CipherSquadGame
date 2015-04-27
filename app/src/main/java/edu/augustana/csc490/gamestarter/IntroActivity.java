@@ -13,17 +13,13 @@ import android.widget.RadioButton;
 
 public class IntroActivity extends Activity {
 
-    int height;
-    int width;
-    int size;
-    int algorithm;
+    int size; //initial maze size entered by user
+    int algorithm; //algorithm for maze generation chosen by user
 
-    EditText sizeEditText;
-   // EditText widthEditText;
+    EditText sizeEditText; //for user to enter the desired size for the initial maze
 
-    //RadioButton algo1;
-    RadioButton algo2;
-    RadioButton algo3;
+    RadioButton algo2; //Hunt and Kill algorithm
+    RadioButton algo3; //Prim algorithm
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,22 +27,19 @@ public class IntroActivity extends Activity {
         setContentView(R.layout.activity_intro);
         Button launchButton = (Button) findViewById(R.id.launchButton);
         sizeEditText = (EditText) findViewById(R.id.sizeEditText);
-        //widthEditText = (EditText) findViewById(R.id.widthEditText);
 
-        //algo1 = (RadioButton)findViewById(R.id.algo1);
+        // algo1 RadioButton for Recursive Backtracker algorithm is unnecessary as it is the default option
         algo2 = (RadioButton) findViewById(R.id.algo2);
         algo3 = (RadioButton) findViewById(R.id.algo3);
-
 
         launchButton.setOnClickListener(clickHandler);
     }
 
+    // click handler used to launch the game when launchButton is clicked
     View.OnClickListener clickHandler = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(IntroActivity.this, MainActivity.class);
-            //height = Integer.parseInt(sizeEditText.getText().toString());
-            //width = Integer.parseInt(sizeEditText.getText().toString());
             size = Integer.parseInt(sizeEditText.getText().toString());
 
             algorithm = 1;
@@ -56,8 +49,6 @@ public class IntroActivity extends Activity {
                 algorithm = 3;
             }
 
-            //intent.putExtra("height", height);
-            //intent.putExtra("width", width);
             intent.putExtra("size", size);
             intent.putExtra("algorithm", algorithm);
             startActivity(intent);
