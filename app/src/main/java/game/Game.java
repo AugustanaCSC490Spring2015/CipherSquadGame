@@ -106,7 +106,6 @@ public class Game {
         width = mazeWidth;
         this.mazeType = mazeType;
         maze = createMaze(mazeWidth, mazeHeight, mazeType);
-        powerUps = new PowerUpMap(maze);
         this.numOpponents = numOpponents;
         this.AIDifficulty = AIDifficulty;
         this.miceImageArray = miceImageArray;
@@ -155,6 +154,7 @@ public class Game {
         maze = createMaze(width, height, mazeType);
 
         level++;
+        powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height);
         levelPointRelationship *= 2;
         setTime(0);
 
@@ -296,5 +296,18 @@ public class Game {
         matrix.setRotate(angle, mouse.getImage().getWidth() / 2, mouse.getImage().getHeight() / 2);
         canvas.drawBitmap(mouse.getImage(), matrix, new Paint());
         return targetBitmap;
+    }
+
+    public void drawPowerUps(Canvas c, int screenWidth, int screenHeight) {
+        if (powerUps == null) {
+            generatePowerUps(maze, screenWidth, screenHeight, width, height);
+        }
+        for (int i = 0; i <= level; i++) {
+            powerUps.displayPowerUps(c,screenWidth,screenHeight);
+        }
+    }
+
+    private void generatePowerUps(Maze maze, int screenWidth, int screenHeight, int width, int height) {
+        powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height);
     }
 }
