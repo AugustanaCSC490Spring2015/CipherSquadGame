@@ -93,8 +93,10 @@ public abstract class Mouse {
     }
 
 
-    public void addPoints(int points) {
+    public int addPoints(int points) {
+
         mousePoints = mousePoints + points;
+        return mousePoints;
     }
 
     public void setTotalTime(long time) {

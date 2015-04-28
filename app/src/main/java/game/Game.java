@@ -111,6 +111,8 @@ public class Game {
         this.numOpponents = numOpponents;
         this.AIDifficulty = AIDifficulty;
         this.miceImageArray = miceImageArray;
+
+        // add the mouse images
         for (int i = 1; i <= miceImageArray.length; i++) {
             //opponentMiceImages[i - 1] = miceImageArray[i];
         }
@@ -122,6 +124,7 @@ public class Game {
         level = 1;
         levelPointRelationship = 1000;
 
+        //adds additional mice to represent other players
         this.isNetworked = isNetworked;
         for (int i = 0; i < numOpponents; i++) {
             if (isNetworked) {
@@ -139,6 +142,7 @@ public class Game {
         mouse.setTotalTime(currentTime);
         if (points > 0){ mouse.addPoints(points);}
         mouse.setFinished(true);
+
     }
 
     public boolean levelUp() {
@@ -152,9 +156,7 @@ public class Game {
         playerMouse.setFinished(false);
         height = height + 3;
         width = width + 3;
-        maze = new Maze(width, height);
-        mazeGen = new RecursiveBacktrackerMazeGenerator(maze);
-
+        maze = createMaze(width, height, mazeType);
 
         level++;
         powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height);
@@ -167,6 +169,8 @@ public class Game {
     public void setTime(long t) {
         currentTime = t;
     }
+
+
 
     public boolean movePlayerMouse(int newX, int newY) {
         int prevMazeX = playerMouse.getPosX() / cellWidth;
@@ -201,8 +205,8 @@ public class Game {
         mazeLineArray = new MazeLineArray(maze, screenW, screenH);
         screenWidth = mazeLineArray.getScreenWidth();
         screenHeight = mazeLineArray.getScreenHeight();
-        cellWidth = mazeLineArray.getWSpacing();
-        cellHeight = mazeLineArray.getHSpacing();
+        cellWidth = mazeLineArray.getWidthSpacing();
+        cellHeight = mazeLineArray.getHeightSpacing();
         p.setStrokeWidth(cellWidth / 6);
 
         mazeBitmap = Bitmap.createBitmap(screenW, screenH, Bitmap.Config.ARGB_8888);
@@ -224,19 +228,13 @@ public class Game {
         if (mazeLineArray == null) {
             generateMazeLineArrayBitmap(p, screenWidth, screenHeight);
             //Log.i("mazeLineArrayGenerator", "Null");
-        } else if (maze != mazeLineArray.getMaze()) {
-            generateMazeLineArrayBitmap(p, screenWidth, screenHeight);
-        }
-
-        /*
         } else if (screenHeight != mazeLineArray.getScreenHeight() || screenWidth != mazeLineArray.getScreenWidth()) {
             generateMazeLineArrayBitmap(p, screenWidth, screenHeight);
             //Log.i("mazeLineArrayGenerator", "Screen size change");
         } else if (!maze.equals(mazeLineArray.getMaze())) {
             generateMazeLineArrayBitmap(p, screenWidth, screenHeight);
             Log.i("mazeLineArrayGenerator", "Equals method");
-        }*/
-
+        }
         c.drawBitmap(mazeBitmap, 0, 0, p);
     }
 
@@ -253,18 +251,15 @@ public class Game {
     }
 
     private void createMiceBitmaps() {
-        int scaleWidth = cellWidth + cellWidth / 4;
+        int scaleWidth = (cellWidth) / 4;
         //int scaleHeight = (cellWidth) / 4;
         mouseStartPos = new Point(cellWidth / 2, cellHeight / 2);
-        /*playerMouse.moveMouse(mouseStartPos.x, mouseStartPos.y);
-        Matrix m = new Matrix();
-        m.postScale(scaleWidth, scaleWidth);
-        playerMouseImage = Bitmap.createBitmap(miceImageArray[0], 0, 0, miceImageArray[0].getWidth(), miceImageArray[0].getHeight(), m, false);*/
-        playerMouseImage = miceImageArray[0].createScaledBitmap(miceImageArray[0], scaleWidth, scaleWidth, false);
+        playerMouse.moveMouse(mouseStartPos.x, mouseStartPos.y);
+        playerMouseImage = miceImageArray[0].createScaledBitmap(miceImageArray[0], cellWidth + scaleWidth, cellWidth + scaleWidth, false);
         playerMouse.setMouseImage(playerMouseImage);
         playerMouse.setMouseAngle(START_ANGLE);
-        oldCellWidth = mazeLineArray.getWSpacing();
-        oldCellHeight = mazeLineArray.getHSpacing();
+        oldCellWidth = mazeLineArray.getWidthSpacing();
+        oldCellHeight = mazeLineArray.getHeightSpacing();
     }
 
 
