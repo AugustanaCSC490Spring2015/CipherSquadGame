@@ -2,8 +2,6 @@ package game;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -21,7 +19,6 @@ public abstract class Mouse {
     //default mouse data
     protected final int COLOR = Color.GRAY;
     //protected final Bitmap MOUSE_IMAGE;
-
 
 
     //data for mouse
@@ -50,6 +47,7 @@ public abstract class Mouse {
     public float getAngle() {
         return angle;
     }
+
     public Bitmap getMouseImage() {
         return mouseImage;
     }
@@ -65,11 +63,11 @@ public abstract class Mouse {
         posY = 0;
     }
 
-    public int getPosX(){
+    public int getPosX() {
         return posX;
     }
 
-    public int getPosY(){
+    public int getPosY() {
         return posY;
     }
 
@@ -78,7 +76,7 @@ public abstract class Mouse {
     }
 
 
-    public boolean moveMouse(int x, int y){
+    public boolean moveMouse(int x, int y) {
         posX = x;
         posY = y;
         movements++;
@@ -110,7 +108,6 @@ public abstract class Mouse {
     public void setFinished(boolean finished) {
         this.finished = finished;
     }
-
 
 
 }

@@ -8,9 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
-import android.graphics.PathEffect;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -22,7 +20,7 @@ import game.*;
 
 public class MainGameView extends SurfaceView implements SurfaceHolder.Callback {
     private static final String TAG = "GameStarter"; // for Log.w(TAG, ...)
-    public static MainGameView currentGameView=null;
+    public static MainGameView currentGameView = null;
 
     private GameThread gameThread; // runs the main game loop
     private Activity mainActivity; // keep a reference to the main Activity
@@ -82,7 +80,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         mazePaint.setStyle(Paint.Style.STROKE);
         mazePaint.setStrokeJoin(Paint.Join.ROUND);
         mazePaint.setStrokeCap(Paint.Cap.ROUND);
-       
+
         Intent i = mainActivity.getIntent();
         height = i.getIntExtra("size", 20);
         width = i.getIntExtra("size", 20);
@@ -143,7 +141,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     public void stopGame() {
         if (gameThread != null)
             gameThread.setRunning(false);
-            timerHandler.removeCallbacks(timerRunnable);
+        timerHandler.removeCallbacks(timerRunnable);
     }
 
     // release resources; may be called by MainGameFragment onDestroy
