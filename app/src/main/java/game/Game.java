@@ -182,6 +182,7 @@ public class Game {
         //will check if mouse has reached the end of the maze prior to moving
         if (maze.getEnd().x + 1 == prevMazeX && maze.getEnd().y == prevMazeY) {
             mouseFinished(playerMouse);
+            return true;
         }
 
         if (prevMazeX == newMazeX && prevMazeY == newMazeY) {
@@ -197,6 +198,7 @@ public class Game {
 
         if (!maze.isWallPresent(new Point(prevMazeX, prevMazeY), direction)) {
             playerMouse.moveMouse(newX, newY);
+            playerMouse.setMazePos(new Point(newMazeX, newMazeY));
             return true;
         }
         return false;

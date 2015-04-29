@@ -2,6 +2,7 @@ package game;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public abstract class Mouse {
     //data for mouse
     private int posX;
     private int posY;
+    private Point mazePos;
     private boolean finished;
     private long totalTime;
 
@@ -61,6 +63,7 @@ public abstract class Mouse {
         mousePoints = 0;
         posX = 0;
         posY = 0;
+        mazePos = new Point(0, 0);
     }
 
     public int getPosX() {
@@ -73,6 +76,10 @@ public abstract class Mouse {
 
     public Bitmap getImage() {
         return mouseImage;
+    }
+
+    public void setMazePos(Point pos) {
+        mazePos = pos;
     }
 
 
