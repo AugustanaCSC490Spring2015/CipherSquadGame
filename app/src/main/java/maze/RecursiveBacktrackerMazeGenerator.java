@@ -41,7 +41,7 @@ public class RecursiveBacktrackerMazeGenerator {
         cellsVisited[maze.getStart().x][maze.getStart().y] = true;
         r = new Random(System.currentTimeMillis());
         iteration(maze.getStart());
-        carve(maze.getEnd(), S); // carve the ending hole
+        carve(maze.getEnd(), E); // carve the ending hole
     }
 
     private class BTState {
