@@ -10,10 +10,15 @@ import maze.*;
 public abstract class PowerUp {
 
     PowerUp() {
-        int xLocation;
-        int Ylocation;
     }
 
     public abstract Bitmap getBitmapImage();
 
+    public abstract void setMazeX(int x);
+
+    public abstract void setMazeY(int y);
+
+    public abstract int getMazeX();
+
+    public abstract int getMazeY();
 }

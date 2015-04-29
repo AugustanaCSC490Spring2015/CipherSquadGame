@@ -160,7 +160,7 @@ public class Game {
         mazeGen = new RecursiveBacktrackerMazeGenerator(maze);
 
         level++;
-        powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height);
+        powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height, level);
         levelPointRelationship *= 2;
         setTime(0);
 
@@ -293,11 +293,11 @@ public class Game {
             generatePowerUps(maze, screenWidth, screenHeight, width, height);
         }
         for (int i = 0; i <= level; i++) {
-            powerUps.displayPowerUps(c,screenWidth,screenHeight);
+            powerUps.displayPowerUps(c,screenWidth,screenHeight, playerMouse);
         }
     }
 
     private void generatePowerUps(Maze maze, int screenWidth, int screenHeight, int width, int height) {
-        powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height);
+        powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height, level);
     }
 }

@@ -1,6 +1,8 @@
 package game;
 
 import android.graphics.Canvas;
+import android.graphics.Point;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,7 +17,7 @@ public class PowerUpMap {
     public int height;
     public int width;
 
-    Random rand;
+    Random rand = new Random(System.currentTimeMillis());
     int randX;
     int randY;
 
@@ -25,12 +27,10 @@ public class PowerUpMap {
         this.height = maze.getHeight();
         this.width = maze.getWidth();
 
-        rand = new Random();
-
-
         for (int i = 0; i < level; i++) {
-            randX = (int)(rand.nextDouble() * width);
-            randY = (int)(rand.nextDouble() * height);
+            rand = new Random(System.currentTimeMillis());
+            randX = rand.nextInt(width);
+            randY = rand.nextInt(height);
             PowerUp powerUp = new CheesePowerUp(screenWidth,screenHeight,width,height);
             powerUp.setMazeX(randX);
             powerUp.setMazeY(randY);
@@ -38,18 +38,17 @@ public class PowerUpMap {
         }
     }
 
-    public void displayPowerUps(Canvas c, int screenWidth, int screenHeight, int mouseX, int mouseY) {
+    public void displayPowerUps(Canvas c, int screenWidth, int screenHeight, Mouse mouse) {
         for (int powerUpNumber = 0; powerUpNumber < powerUpList.size(); powerUpNumber++) {
-            randX = powerUpList.get(powerUpNumber).getMazeX();
-            randY = powerUpList.get(powerUpNumber).getMazeY();
-            //TODO Prints many images, I want one location for each and for it to stay!!
-            if (((mouseX <= (randX * screenWidth / width) + ((screenWidth / width)/3) && (mouseX >= (randX * screenWidth / width) - ((screenWidth / width)/3)) && (mouseY <= (randY * screenHeight / height) + ((screenHeight / height)/3) && (mouseY >= (randY * screenHeight / height) - ((screenHeight / height)/3)))))) {
-                //powerUpList.set(powerUpNumber, new GarbagePowerUp());
+            Point powerUp = new Point(powerUpList.get(powerUpNumber).getMazeX(), powerUpList.get(powerUpNumber).getMazeY());
+            Point mouseMazeLocation = new Point(mouse.getPosX()/(screenWidth/width), mouse.getPosY() / (screenHeight/height));
+
+            if ((mouseMazeLocation.x == powerUp.x) && (mouseMazeLocation.y == powerUp.y)) {
+                mouse.addPoints(1000);
                 powerUpList.remove(powerUpNumber);
+                powerUpNumber--;
             } else {
-                //randX = powerUpList.get(powerUpNumber).getMazeX();
-                //randY = powerUpList.get(powerUpNumber).getMazeY();
-                c.drawBitmap(powerUpList.get(powerUpNumber).getBitmapImage(), randX * screenWidth / width, randY * screenHeight / height, null);
+                c.drawBitmap(powerUpList.get(powerUpNumber).getBitmapImage(), powerUp.x * screenWidth / width, powerUp.y * screenHeight / height, null);
             }
         }
     }

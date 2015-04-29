@@ -108,6 +108,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         int numOpponents = 0;
         Bitmap miceImageArray[] = new Bitmap[numOpponents + 1];
 
+        // Mouse taken from https://openclipart.org/ under their Unlimited Commercial Use:
+        // https://openclipart.org/unlimited-commercial-use-clipart
         miceImageArray[0] = BitmapFactory.decodeResource(getResources(), R.raw.simplemouseright);
 
         game = new Game(width, height, algorithm, miceImageArray);
@@ -135,8 +137,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     public void updateView(Canvas canvas) {
         if (canvas != null) {
             canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
-            game.paintMaze(canvas, mazePaint, screenWidth, screenHeight);
             game.drawPowerUps(canvas, screenWidth, screenHeight);
+            game.paintMaze(canvas, mazePaint, screenWidth, screenHeight);
             game.drawMice(canvas, screenWidth, screenHeight);
         }
     }
