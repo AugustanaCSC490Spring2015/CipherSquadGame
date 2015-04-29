@@ -79,8 +79,6 @@ public class Game {
     //maze types
     public static final int NUM_MAZE_TYPES = 3;
     public static final int RECURSIVE_BACKTRACKER_MAZE = 1;
-    public static final int HUNT_AND_KILL_MAZE = 2;
-    public static final int PRIM_MAZE = 3;
 
     //player settings
     public static final int NUM_OPPONENTS = 0;

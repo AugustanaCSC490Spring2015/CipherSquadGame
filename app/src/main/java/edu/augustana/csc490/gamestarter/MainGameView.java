@@ -90,7 +90,6 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         Intent i = mainActivity.getIntent();
         height = i.getIntExtra("size", 20);
         width = i.getIntExtra("size", 20);
-        algorithm = i.getIntExtra("algorithm", 1);
 
 
     }

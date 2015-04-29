@@ -101,7 +101,6 @@ public abstract class Mouse {
 
 
     public int addPoints(int points) {
-
         mousePoints = mousePoints + points;
         return mousePoints;
     }
