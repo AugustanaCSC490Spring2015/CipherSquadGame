@@ -68,7 +68,7 @@ public class Maze {
     }
 
     public Point getEnd() {
-        return new Point(endPoint.x, startPoint.y);
+        return new Point(endPoint.x, endPoint.y);
     }
 
     public int getWidth() {
@@ -119,7 +119,7 @@ public class Maze {
             case S:
                 return hWalls[location.x + location.y * width + width];
             case W:
-                return vWalls[location.y + location.x * height] = false;
+                return vWalls[location.y + location.x * height];
             default:
                 return true;
         }

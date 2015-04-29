@@ -1,7 +1,10 @@
 package maze;
 
 import android.graphics.Point;
+import android.hardware.Camera;
+import android.util.Log;
 
+import java.util.LinkedList;
 import java.util.Random;
 
 
@@ -37,14 +40,81 @@ public class RecursiveBacktrackerMazeGenerator {
         cellsVisited = new boolean[maze.getWidth()][maze.getHeight()];
         cellsVisited[maze.getStart().x][maze.getStart().y] = true;
         r = new Random(System.currentTimeMillis());
-        Point currentCell = maze.getStart();
-        run(currentCell);
+        iteration(maze.getStart());
         carve(maze.getEnd(), S); // carve the ending hole
     }
 
+    private class BTState {
+        Point curCell;
+        private int[] directions;
+        private int dirIndex;
 
-    private void run(Point currentCell) {
-        int directions[] = ShuffledDirectionArray();
+        public BTState(Point curCell) {
+            this.curCell = curCell;
+            directions = shuffledDirectionArray();
+            dirIndex = 0;
+        }
+
+        private int[] shuffledDirectionArray() {
+            int[] array = new int[4];
+            for (int i = 0; i <= 3; i++) {
+                array[i] = i + 1;
+            }
+            int index, temp;
+            for (int i = array.length - 1; i > 0; i--) {
+                index = r.nextInt(i + 1);
+                temp = array[index];
+                array[index] = array[i];
+                array[i] = temp;
+            }
+            return array;
+        }
+
+        public void advance() {
+            dirIndex++;
+        }
+
+        public boolean isDone() {
+            return dirIndex >= 4;
+        }
+
+        public int getCurrentDirection() {
+            return directions[dirIndex];
+        }
+    }
+
+
+    private void iteration(Point currentCell) {
+        //creates the maze using a stack
+        LinkedList<BTState> stack = new LinkedList<BTState>();
+        stack.push(new BTState(currentCell));
+        BTState curState;
+        int steps = 0;
+        while (!stack.isEmpty()) {
+            curState = stack.peek();
+            if (curState.isDone()) {
+                stack.pop();
+            } else {
+                Point newCell = advanceCell(curState.curCell, curState.getCurrentDirection());
+                if (newCell != curState.curCell) {
+                    if (!cellsVisited[newCell.x][newCell.y]) {
+                        carve(curState.curCell, curState.getCurrentDirection());
+                        cellsVisited[newCell.x][newCell.y] = true;
+                        BTState next = new BTState(newCell);
+                        steps++;
+                        Log.i("Maze Creation", "x = " + newCell.x + " y = " + newCell.y + "; " + next.getCurrentDirection() + "; Step: " + steps);
+                        stack.push(next);
+                    }
+                }
+                curState.advance();
+            }
+        }
+    }
+
+
+    private void recursion(Point currentCell) {
+        //recursively creates the maze
+        int directions[] = shuffledDirectionArray();
         for (int direction : directions) {
             Point newCell = advanceCell(currentCell, direction);
             if (newCell != currentCell) {
@@ -52,7 +122,7 @@ public class RecursiveBacktrackerMazeGenerator {
                     carve(currentCell, direction);
                     cellsVisited[newCell.x][newCell.y] = true;
                     //System.out.println("x = " + newCell.x + " y = " + newCell.y + "; " + directions[i] + "; ");
-                    run(newCell);
+                    recursion(newCell);
                 }
             }
         }
@@ -81,7 +151,7 @@ public class RecursiveBacktrackerMazeGenerator {
         }
     }
 
-    private int[] ShuffledDirectionArray() {
+    private int[] shuffledDirectionArray() {
         int[] array = new int[4];
         for (int i = 0; i <= 3; i++) {
             array[i] = i + 1;
