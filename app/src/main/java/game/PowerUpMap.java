@@ -22,25 +22,35 @@ public class PowerUpMap {
 
     public ArrayList<PowerUp> powerUpList = new ArrayList<PowerUp>();
 
-    public PowerUpMap(Maze maze, int screenWidth, int screenHeight, int width, int height) {
+    public PowerUpMap(Maze maze, int screenWidth, int screenHeight, int width, int height, int level) {
         this.height = maze.getHeight();
         this.width = maze.getWidth();
 
         rand = new Random();
-        randX = (int)(rand.nextDouble() * width);
-        rand = new Random();
-        randY = (int)(rand.nextDouble() * height);
 
-        powerUpList.add(new CheesePowerUp(screenWidth,screenHeight,width,height));
+
+        for (int i = 0; i < level; i++) {
+            randX = (int)(rand.nextDouble() * width);
+            randY = (int)(rand.nextDouble() * height);
+            PowerUp powerUp = new CheesePowerUp(screenWidth,screenHeight,width,height);
+            powerUp.setMazeX(randX);
+            powerUp.setMazeY(randY);
+            powerUpList.add(powerUp);
+        }
     }
 
-    public void displayPowerUps(Canvas c, int screenWidth, int screenHeight) {
-
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (i == randX && j == randY && i != 0 && j != 0) {
-                    c.drawBitmap(powerUpList.get(0).getBitmapImage(), i * screenWidth/width, j * screenHeight/height, null);
-                }
+    public void displayPowerUps(Canvas c, int screenWidth, int screenHeight, int mouseX, int mouseY) {
+        for (int powerUpNumber = 0; powerUpNumber < powerUpList.size(); powerUpNumber++) {
+            randX = powerUpList.get(powerUpNumber).getMazeX();
+            randY = powerUpList.get(powerUpNumber).getMazeY();
+            //TODO Prints many images, I want one location for each and for it to stay!!
+            if (((mouseX <= (randX * screenWidth / width) + ((screenWidth / width)/3) && (mouseX >= (randX * screenWidth / width) - ((screenWidth / width)/3)) && (mouseY <= (randY * screenHeight / height) + ((screenHeight / height)/3) && (mouseY >= (randY * screenHeight / height) - ((screenHeight / height)/3)))))) {
+                //powerUpList.set(powerUpNumber, new GarbagePowerUp());
+                powerUpList.remove(powerUpNumber);
+            } else {
+                //randX = powerUpList.get(powerUpNumber).getMazeX();
+                //randY = powerUpList.get(powerUpNumber).getMazeY();
+                c.drawBitmap(powerUpList.get(powerUpNumber).getBitmapImage(), randX * screenWidth / width, randY * screenHeight / height, null);
             }
         }
     }
