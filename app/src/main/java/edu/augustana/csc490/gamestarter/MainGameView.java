@@ -8,9 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
-import android.graphics.PathEffect;
+import android.graphics.Point;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -83,6 +82,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         mazePaint.setStrokeJoin(Paint.Join.ROUND);
         mazePaint.setStrokeCap(Paint.Cap.ROUND);
        
+
+        /* set width and height based on value entered by user and the
+        algorithm based on the option chosen by the user in IntroActivity */
         Intent i = mainActivity.getIntent();
         height = i.getIntExtra("size", 20);
         width = i.getIntExtra("size", 20);

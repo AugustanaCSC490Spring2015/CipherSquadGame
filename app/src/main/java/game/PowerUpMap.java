@@ -1,12 +1,11 @@
 package game;
 
 import android.graphics.Canvas;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import maze.*;
+import maze.Maze;
 
 /**
  * Created by Ethan Halsall on 3/30/2015.
