@@ -41,6 +41,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     long startTime;
     long millis;
+    int points = 0;
 
     //runs without a timer by reposting this handler at the end of the runnable
     //Adapted from http://stackoverflow.com/questions/4597690/android-timer-how
@@ -57,13 +58,14 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
             centiSeconds = centiSeconds % 100;
 
             ActionBar actionBar = mainActivity.getActionBar();
-            actionBar.setTitle(String.format("%d:%02d:%02d", minutes, seconds, centiSeconds));
+            actionBar.setTitle("Time: " + String.format("%d:%02d:%02d", minutes, seconds, centiSeconds) + "   Score: " + points);
             timerHandler.postDelayed(this, 5);
         }
     };
 
 
     private Game game;
+    private Mouse mouse;
 
     public MainGameView(Context context, AttributeSet atts) {
         super(context, atts);
@@ -113,6 +115,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         miceImageArray[0] = BitmapFactory.decodeResource(getResources(), R.raw.simplemouseright);
 
         game = new Game(width, height, algorithm, miceImageArray);
+        mouse = game.playerMouse;
         startTime = System.currentTimeMillis();
         millis = 0;
 
@@ -132,6 +135,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
             startTime = System.currentTimeMillis(); //resets the timer if there is a level up
         }
         game.setTime(millis); //sets the timer value in the game class to equal the value in this view
+        points = mouse.addPoints(0);
     }
 
     public void updateView(Canvas canvas) {
