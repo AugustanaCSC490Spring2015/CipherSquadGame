@@ -26,7 +26,7 @@ public class PowerUpMap {
         this.width = maze.getWidth();
 
         rand = new Random();
-        randX = (int)(rand.nextDouble() * width);
+        randX = rand.nextInt(width);
         rand = new Random();
         randY = (int)(rand.nextDouble() * height);
 
