@@ -18,7 +18,7 @@ public class CheesePowerUp extends PowerUp {
         // swiss_cheese taken from http://simple.wikipedia.org/wiki/Swiss_cheese under Public Domain
         // http://simple.wikipedia.org/wiki/Swiss_cheese#/media/File:NCI_swiss_cheese.jpg
         cheeseImage = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.swiss_cheese);
-        cheeseImage = Bitmap.createScaledBitmap(cheeseImage,screenWidth / width,screenHeight/height,true);
+        cheeseImage = Bitmap.createScaledBitmap(cheeseImage,screenWidth / width,screenHeight/width,true);
     }
 
 

@@ -13,6 +13,7 @@ import android.util.Log;
 
 import maze.*;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -178,6 +179,7 @@ public class Game {
         int prevMazeY = playerMouse.getPosY() / cellHeight;
         int newMazeX = newX / cellWidth;
         int newMazeY = newY / cellHeight;
+        assignPowerUp(playerMouse,newMazeX,newMazeY);
 
         //will check if mouse has reached the end of the maze prior to moving
         if (maze.getEnd().x + 1 == prevMazeX && maze.getEnd().y == prevMazeY) {
@@ -290,16 +292,24 @@ public class Game {
         return targetBitmap;
     }
 
+    // Only draws the power ups
     public void drawPowerUps(Canvas c, int screenWidth, int screenHeight) {
         if (powerUps == null) {
-            generatePowerUps(maze, screenWidth, screenHeight, width, height);
+            powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height, level);
         }
-        for (int i = 0; i <= level; i++) {
-            powerUps.displayPowerUps(c,screenWidth,screenHeight, playerMouse);
-        }
+        powerUps.displayPowerUps(c,screenWidth,screenHeight, playerMouse);
     }
 
-    private void generatePowerUps(Maze maze, int screenWidth, int screenHeight, int width, int height) {
-        powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height, level);
+    public void assignPowerUp(Mouse mouse, int mazeX, int mazeY) {
+
+        // This array list I get does not seem to work properly. Fix when can. -Matt
+        //ArrayList powerUpList = powerUps.getPowerUpList();
+
+        for (int i = 0; i < powerUps.powerUpList.size(); i++) {
+            if(powerUps.powerUpList.get(i).getMazeX() == mazeX && powerUps.powerUpList.get(i).getMazeY() == mazeY) {
+                mouse.addPoints(1000);
+                mouse.addPowerUp(powerUps.addPowerUpToMouse(i));
+            }
+        }
     }
 }
