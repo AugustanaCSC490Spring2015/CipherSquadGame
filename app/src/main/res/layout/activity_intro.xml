@@ -36,31 +36,4 @@
         android:layout_alignTop="@+id/sizeEditText"
         android:gravity="center_vertical" />
 
-    <RadioGroup
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/sizeEditText">
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Recursive Backtracker Algorithm"
-            android:id="@+id/algo1"
-            android:checked="true" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hunt and Kill Algorithm"
-            android:id="@+id/algo2" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/algo3"
-            android:text="Prim Algorithm" />
-    </RadioGroup>
-
 </RelativeLayout>
