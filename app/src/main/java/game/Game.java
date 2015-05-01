@@ -116,8 +116,6 @@ public class Game {
             //opponentMiceImages[i - 1] = miceImageArray[i];
         }
 
-        //Picture playerMouseImage = new Picture();
-        //Bitmap playerMouseImage = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.simplemousedown);
         playerMouse = new PlayerMouse();
         opponentMice = new Mouse[numOpponents];
         level = 1;
@@ -177,7 +175,6 @@ public class Game {
         int prevMazeY = playerMouse.getPosY() / cellHeight;
         int newMazeX = newX / cellWidth;
         int newMazeY = newY / cellHeight;
-        assignPowerUp(playerMouse,newMazeX,newMazeY);
 
         //will check if mouse has reached the end of the maze prior to moving
         if (maze.getEnd().x + 1 == prevMazeX && maze.getEnd().y == prevMazeY) {
@@ -199,6 +196,7 @@ public class Game {
         if (!maze.isWallPresent(new Point(prevMazeX, prevMazeY), direction)) {
             playerMouse.moveMouse(newX, newY);
             playerMouse.setMazePos(new Point(newMazeX, newMazeY));
+            assignPowerUp(playerMouse,newMazeX,newMazeY);
             return true;
         }
         return false;
@@ -290,7 +288,7 @@ public class Game {
         return targetBitmap;
     }
 
-    // Only draws the power ups
+    // draws the powerups, but first creates the powerup map if it has not been created yet
     public void drawPowerUps(Canvas c, int screenWidth, int screenHeight) {
         if (powerUps == null) {
             powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height, level);

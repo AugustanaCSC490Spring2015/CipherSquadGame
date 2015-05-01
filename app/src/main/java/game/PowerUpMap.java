@@ -21,6 +21,10 @@ public class PowerUpMap {
     int randX;
     int randY;
 
+    public PowerUp allPowerUps[] = new PowerUp[2];
+
+
+    // The list that contains all the powerups on the map
     public ArrayList<PowerUp> powerUpList = new ArrayList<PowerUp>();
 
     // Constructor, which adds the powerups to the powerup list
@@ -28,8 +32,11 @@ public class PowerUpMap {
         this.height = maze.getHeight();
         this.width = maze.getWidth();
 
+        allPowerUps[0] = new CheesePowerUp(screenWidth,screenHeight,width,height);
+        allPowerUps[1] = new BreadPowerUp(screenWidth,screenHeight,width,height);
+
         for (int i = 0; i < width / 2 ; i++) {
-            rand = new Random(System.currentTimeMillis());
+            rand = new Random();
             randX = rand.nextInt(width);
             // This is just so the cheese does not start at point 0,0 with the mouse
             if (randX == 0) {
@@ -38,7 +45,8 @@ public class PowerUpMap {
                 randY = rand.nextInt(height);
             }
 
-            PowerUp powerUp = new CheesePowerUp(screenWidth,screenHeight,width,height);
+            // This adds a powerup, and each powerup is a different powerup type than the last
+            PowerUp powerUp = allPowerUps[i % allPowerUps.length];
             powerUp.setMazeX(randX);
             powerUp.setMazeY(randY);
             powerUpList.add(powerUp);

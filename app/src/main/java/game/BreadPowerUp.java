@@ -13,7 +13,17 @@ public class BreadPowerUp extends PowerUp {
 
     int xLocation;
     int yLocation;
-    Bitmap breadImage = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.cheese_icon);
+
+    // sandwich.png was found on http://www.pdclipart.org/displayimage.php?album=search&cat=0&pos=18
+    // under Public Domain
+    Bitmap breadImage;
+
+    BreadPowerUp(int screenWidth, int screenHeight, int width, int height) {
+        // swiss_cheese taken from http://simple.wikipedia.org/wiki/Swiss_cheese under Public Domain
+        // http://simple.wikipedia.org/wiki/Swiss_cheese#/media/File:NCI_swiss_cheese.jpg
+        breadImage = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.sandwich);
+        breadImage = Bitmap.createScaledBitmap(breadImage,screenWidth / width,screenHeight/height,true);
+    }
 
     //int xLocation = PowerUpMap.getRandomMazeXLocation();
 

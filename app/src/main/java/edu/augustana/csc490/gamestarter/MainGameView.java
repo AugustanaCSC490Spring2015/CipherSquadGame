@@ -113,6 +113,11 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         // https://openclipart.org/unlimited-commercial-use-clipart
         miceImageArray[0] = BitmapFactory.decodeResource(getResources(), R.raw.simplemouseright);
 
+        // TODO at the moment, the array is only length 1, making index 0 the only index.
+        //miceImageArray[1] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousewhite);
+        //miceImageArray[2] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousebrown);
+        //miceImageArray[3] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousepink);
+
         game = new Game(width, height, algorithm, miceImageArray);
         mouse = game.playerMouse;
         startTime = System.currentTimeMillis();
