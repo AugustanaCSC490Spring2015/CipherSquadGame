@@ -13,6 +13,7 @@ import android.util.Log;
 
 import maze.*;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -97,6 +98,7 @@ public class Game {
     private void initializeGame(int mazeWidth, int mazeHeight, Bitmap[] miceImageArray, int numOpponents, int AIDifficulty, boolean isNetworked) {
         height = mazeHeight;
         width = mazeWidth;
+        this.mazeType = mazeType;
         maze = new Maze(mazeWidth, mazeHeight);
         mazeGen = new RecursiveBacktrackerMazeGenerator(maze);
         this.numOpponents = numOpponents;
@@ -212,6 +214,7 @@ public class Game {
         if (!maze.isWallPresent(new Point(prevMazeX, prevMazeY), direction)) {
             playerMouse.moveMouse(newX, newY);
             playerMouse.setMazePos(new Point(newMazeX, newMazeY));
+            assignPowerUp(playerMouse,newMazeX,newMazeY);
             return true;
         }
         return false;
@@ -377,16 +380,24 @@ public class Game {
         return targetBitmap;
     }
 
+    // draws the powerups, but first creates the powerup map if it has not been created yet
     public void drawPowerUps(Canvas c, int screenWidth, int screenHeight) {
         if (powerUps == null) {
-            generatePowerUps(maze, screenWidth, screenHeight, width, height);
+            powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height, level);
         }
-        for (int i = 0; i <= level; i++) {
-            powerUps.displayPowerUps(c,screenWidth,screenHeight, playerMouse);
-        }
+        powerUps.displayPowerUps(c,screenWidth,screenHeight, playerMouse);
     }
 
-    private void generatePowerUps(Maze maze, int screenWidth, int screenHeight, int width, int height) {
-        powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height, level);
+    public void assignPowerUp(Mouse mouse, int mazeX, int mazeY) {
+
+        // This array list I get does not seem to work properly. Fix when can. -Matt
+        //ArrayList powerUpList = powerUps.getPowerUpList();
+
+        for (int i = 0; i < powerUps.powerUpList.size(); i++) {
+            if(powerUps.powerUpList.get(i).getMazeX() == mazeX && powerUps.powerUpList.get(i).getMazeY() == mazeY) {
+                mouse.addPoints(1000);
+                mouse.addPowerUp(powerUps.addPowerUpToMouse(i));
+            }
+        }
     }
 }

@@ -56,6 +56,8 @@ public abstract class Mouse {
         return mouseImage;
     }
 
+    public Point getMazePos(){return mazePos;}
+
     public void initMouse() {
         angle = 45;
         numMovementsTillRotate = 1;
@@ -107,9 +109,11 @@ public abstract class Mouse {
         return false;
     }
 
+    public void addPowerUp(PowerUp powerUp) {
+        powerUpList.add(powerUp);
+    }
 
     public int addPoints(int points) {
-
         mousePoints = mousePoints + points;
         return mousePoints;
     }

@@ -41,6 +41,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     long startTime;
     long millis;
+    int points = 0;
 
     //runs without a timer by reposting this handler at the end of the runnable
     //Adapted from http://stackoverflow.com/questions/4597690/android-timer-how
@@ -57,13 +58,14 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
             centiSeconds = centiSeconds % 100;
 
             ActionBar actionBar = mainActivity.getActionBar();
-            actionBar.setTitle(String.format("%d:%02d:%02d", minutes, seconds, centiSeconds));
+            actionBar.setTitle("Time: " + String.format("%d:%02d:%02d", minutes, seconds, centiSeconds) + "   Score: " + points);
             timerHandler.postDelayed(this, 5);
         }
     };
 
 
     private Game game;
+    private Mouse mouse;
 
     public MainGameView(Context context, AttributeSet atts) {
         super(context, atts);
@@ -88,7 +90,6 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         Intent i = mainActivity.getIntent();
         height = i.getIntExtra("size", 20);
         width = i.getIntExtra("size", 20);
-        algorithm = i.getIntExtra("algorithm", 1);
 
 
     }
@@ -112,7 +113,13 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         // https://openclipart.org/unlimited-commercial-use-clipart
         miceImageArray[0] = BitmapFactory.decodeResource(getResources(), R.raw.simplemouseright);
 
+        // TODO at the moment, the array is only length 1, making index 0 the only index.
+        //miceImageArray[1] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousewhite);
+        //miceImageArray[2] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousebrown);
+        //miceImageArray[3] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousepink);
+
         game = new Game(width, height, algorithm, miceImageArray);
+        mouse = game.playerMouse;
         startTime = System.currentTimeMillis();
         millis = 0;
 
