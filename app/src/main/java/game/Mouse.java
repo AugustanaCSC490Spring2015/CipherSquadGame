@@ -7,6 +7,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import maze.Maze;
+
 
 /**
  * Created by Ethan Halsall on 3/30/2015.
@@ -82,6 +84,12 @@ public abstract class Mouse {
         mazePos = pos;
     }
 
+    public Point getMazePos() {
+        return mazePos;
+    }
+
+    public abstract void levelUp(Maze maze);
+
 
     public boolean moveMouse(int x, int y) {
         posX = x;
@@ -92,7 +100,7 @@ public abstract class Mouse {
 
     public boolean rotate() {
         if (movements > numMovementsTillRotate) {
-            Log.i("MoveMouseRotate", "Move Mouse Rotate method called " + movements + " num till rotate " + numMovementsTillRotate);
+            //Log.i("MoveMouseRotate", "Move Mouse Rotate method called " + movements + " num till rotate " + numMovementsTillRotate);
             movements = 0;
             return true;
         }

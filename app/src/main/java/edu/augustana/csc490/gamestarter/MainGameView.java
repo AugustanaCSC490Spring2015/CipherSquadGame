@@ -132,6 +132,11 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
             startTime = System.currentTimeMillis(); //resets the timer if there is a level up
         }
         game.setTime(millis); //sets the timer value in the game class to equal the value in this view
+        if (!game.isNetworked()) {
+            if (start) {
+                game.moveAIMice();
+            }
+        }
     }
 
     public void updateView(Canvas canvas) {
@@ -140,6 +145,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
             game.drawPowerUps(canvas, screenWidth, screenHeight);
             game.paintMaze(canvas, mazePaint, screenWidth, screenHeight);
             game.drawMice(canvas, screenWidth, screenHeight);
+            start = true;
         }
     }
 
@@ -181,6 +187,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         }
     }
 
+    boolean start = false;
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         if (e.getAction() == MotionEvent.ACTION_MOVE) {
@@ -219,8 +226,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
                     // lock the surfaceHolder for drawing
                     synchronized (surfaceHolder) {
-                        gameStep();         // update game state
                         updateView(canvas); // draw using the canvas
+                        gameStep();         // update game state
                     }
                     Thread.sleep(10); // if you want to slow down the action...
                 } catch (InterruptedException ex) {

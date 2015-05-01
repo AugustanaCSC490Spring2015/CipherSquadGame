@@ -42,8 +42,6 @@ public class Game {
 
 
     private Path playerPath;
-    private Path[] AISolutions;
-    private Path[] AIPaths;
 
     private int[] playerPoints;
     private int level;
@@ -54,7 +52,7 @@ public class Game {
     private PowerUpMap powerUps;
 
     private int numOpponents;
-    private int AIDifficulty;
+    private int aiDifficulty;
     private boolean isNetworked;
 
     private Random rand;
@@ -76,17 +74,12 @@ public class Game {
     //maze dimensions
     public static final int HEIGHT = 10;
     public static final int WIDTH = 10;
-    //maze types
-    public static final int NUM_MAZE_TYPES = 3;
-    public static final int RECURSIVE_BACKTRACKER_MAZE = 1;
-    public static final int HUNT_AND_KILL_MAZE = 2;
-    public static final int PRIM_MAZE = 3;
 
     //player settings
-    public static final int NUM_OPPONENTS = 0;
+    public static final int NUM_OPPONENTS = 3;
 
     //AI settings
-    public static final int AI_DIFFICULTY = 5;
+    public static final int AI_DIFFICULTY = 10;
 
     //network settings
     public static final boolean IS_NETWORKED = false;
@@ -94,23 +87,22 @@ public class Game {
 
     //creates a new game with the standard game data defined above in the final fields
     public Game(Bitmap[] miceImageArray) {
-        rand = new Random();
-        initializeGame(WIDTH, HEIGHT, rand.nextInt(NUM_MAZE_TYPES), miceImageArray, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
+        initializeGame(WIDTH, HEIGHT, miceImageArray, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
     }
 
     public Game(int width, int height, int mazeType, Bitmap[] miceImageArray) {
-        initializeGame(width, height, mazeType, miceImageArray, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
+        initializeGame(width, height, miceImageArray, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
     }
 
-    private void initializeGame(int mazeWidth, int mazeHeight, int mazeType, Bitmap[] miceImageArray, int numOpponents, int AIDifficulty, boolean isNetworked) {
+    private void initializeGame(int mazeWidth, int mazeHeight, Bitmap[] miceImageArray, int numOpponents, int AIDifficulty, boolean isNetworked) {
         height = mazeHeight;
         width = mazeWidth;
-        this.mazeType = mazeType;
         maze = new Maze(mazeWidth, mazeHeight);
         mazeGen = new RecursiveBacktrackerMazeGenerator(maze);
         this.numOpponents = numOpponents;
-        this.AIDifficulty = AIDifficulty;
+        this.aiDifficulty = AIDifficulty;
         this.miceImageArray = miceImageArray;
+        rand = new Random();
 
         // add the mouse images
         for (int i = 1; i <= miceImageArray.length; i++) {
@@ -120,17 +112,23 @@ public class Game {
         //Picture playerMouseImage = new Picture();
         //Bitmap playerMouseImage = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.simplemousedown);
         playerMouse = new PlayerMouse();
-        opponentMice = new Mouse[numOpponents];
         level = 1;
         levelPointRelationship = 1000;
 
         //adds additional mice to represent other players
         this.isNetworked = isNetworked;
+
+        if (isNetworked) {
+            opponentMice = new NetworkedMouse[numOpponents];
+        } else {
+            opponentMice = new AIMouse[numOpponents];
+        }
+
         for (int i = 0; i < numOpponents; i++) {
             if (isNetworked) {
                 opponentMice[i] = new NetworkedMouse();
             } else {
-                opponentMice[i] = new AIMouse();
+                opponentMice[i] = new AIMouse(maze);
             }
         }
         // mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
@@ -151,13 +149,26 @@ public class Game {
         if (!playerMouse.getFinished()) { //add for loop here for each mouse if we have multiple players
             return false;
         }
-        playerMouse.setMouseAngle(START_ANGLE);
-        playerMouse.moveMouse(mouseStartPos.x, mouseStartPos.y);
-        playerMouse.setFinished(false);
+
         height = height + 3;
         width = width + 3;
         maze = new Maze(width, height);
         mazeGen = new RecursiveBacktrackerMazeGenerator(maze);
+
+        //reset playermouse location
+        playerMouse.setMouseAngle(START_ANGLE);
+        playerMouse.moveMouse(mouseStartPos.x, mouseStartPos.y);
+        playerMouse.setFinished(false);
+
+        //reset opponent mouse
+        for (Mouse m : opponentMice) {
+            m.setMouseAngle(START_ANGLE);
+            m.moveMouse(mouseStartPos.x, mouseStartPos.y);
+            m.setFinished(false);
+            if (!isNetworked) {
+                m.levelUp(maze);
+            }
+        }
 
         level++;
         powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height, level);
@@ -171,6 +182,9 @@ public class Game {
         currentTime = t;
     }
 
+    public boolean isNetworked() {
+        return isNetworked;
+    }
 
 
     public boolean movePlayerMouse(int newX, int newY) {
@@ -184,21 +198,82 @@ public class Game {
             mouseFinished(playerMouse);
             return true;
         }
-
+        //moves the mouse on the screen if it has not moved into a new maze cell
         if (prevMazeX == newMazeX && prevMazeY == newMazeY) {
             playerMouse.moveMouse(newX, newY);
             return true;
         }
-
-        if (Math.abs(newMazeX - prevMazeX) + Math.abs(newMazeY - prevMazeY) != 1){
+        //prevents the mouse from hopping walls and moving outside of the maze
+        if (Math.abs(newMazeX - prevMazeX) + Math.abs(newMazeY - prevMazeY) != 1 || !(maze.checkLocation(new Point(newMazeX, newMazeY)))) {
             return false;
         }
-
+        //moves the mouse into a new maze cell
         int direction = maze.getDirection(prevMazeX, prevMazeY, newMazeX, newMazeY);
-
         if (!maze.isWallPresent(new Point(prevMazeX, prevMazeY), direction)) {
             playerMouse.moveMouse(newX, newY);
             playerMouse.setMazePos(new Point(newMazeX, newMazeY));
+            return true;
+        }
+        return false;
+    }
+
+    public void moveAIMice() {
+        int randomMouse = rand.nextInt(numOpponents - 1);
+        Log.i("random mouse: ", "" + randomMouse);
+        moveAIMouse((AIMouse) opponentMice[randomMouse]);
+    }
+
+    private boolean moveAIMouse(AIMouse mouse) {
+        Point prevMazeCell = mouse.getMazePos();
+        Point newMazeCell = mouse.nextMove(false); //used for direction only
+
+        Point prevScreenPos = new Point(mouse.getPosX(), mouse.getPosY());
+        Point newScreenPos;
+
+        //moves the mouse on the screen if it has not moved into a new maze cell
+        int direction = maze.getDirection(prevMazeCell.x, prevMazeCell.y, newMazeCell.x, newMazeCell.y);
+
+
+        switch (direction) {
+            case Maze.N:
+                newScreenPos = new Point(prevScreenPos.x, prevScreenPos.y - rand.nextInt(aiDifficulty));
+                break;
+            case Maze.E:
+                newScreenPos = new Point(prevScreenPos.x + rand.nextInt(aiDifficulty), prevScreenPos.y);
+                break;
+            case Maze.S:
+                newScreenPos = new Point(prevScreenPos.x, prevScreenPos.y + rand.nextInt(aiDifficulty));
+                break;
+            case Maze.W:
+                newScreenPos = new Point(prevScreenPos.x - rand.nextInt(aiDifficulty), prevScreenPos.y);
+                break;
+            default:
+                newScreenPos = prevScreenPos;
+                break;
+        }
+
+        newMazeCell = new Point(newScreenPos.x / cellWidth, newScreenPos.y / cellHeight);
+        if (prevMazeCell.x == newMazeCell.y && prevMazeCell.y == newMazeCell.y) {
+            playerMouse.moveMouse(newScreenPos.x, newScreenPos.y);
+            return true;
+        }
+
+        //will check if mouse has reached the end of the maze prior to moving
+        if (maze.getEnd().x + 1 == prevMazeCell.x && maze.getEnd().y == prevMazeCell.y) {
+            mouseFinished(mouse);
+            return true;
+        }
+        //prevents the mouse from hopping walls and moving outside of the maze
+        if (Math.abs(newMazeCell.x - prevMazeCell.x) + Math.abs(newMazeCell.x - prevMazeCell.y) != 1 || !(maze.checkLocation(newMazeCell))) {
+            return false;
+        }
+
+
+        //moves the mouse to the new maze cell
+
+        if (!maze.isWallPresent(prevMazeCell, direction)) {
+            mouse.moveMouse(newScreenPos.x, newScreenPos.y);
+            mouse.setMazePos(mouse.nextMove(true));
             return true;
         }
         return false;
@@ -251,16 +326,28 @@ public class Game {
         }
         Bitmap rotatedMouse = rotateMouseImage(playerMouse);
         c.drawBitmap(rotatedMouse, playerMouse.getPosX() - (rotatedMouse.getWidth() / 2), playerMouse.getPosY() - (rotatedMouse.getHeight() / 2), null);
+        for (Mouse m : opponentMice) {
+            rotatedMouse = rotateMouseImage(m);
+            c.drawBitmap(rotatedMouse, m.getPosX() - (rotatedMouse.getWidth() / 2), m.getPosY() - (rotatedMouse.getHeight() / 2), null);
+        }
     }
 
     private void createMiceBitmaps() {
         int scaleWidth = (cellWidth) / 4;
-        //int scaleHeight = (cellWidth) / 4;
+        int scaleHeight = (cellWidth) / 4;
+        //make bitmap for the playermouse
         mouseStartPos = new Point(cellWidth / 2, cellHeight / 2);
         playerMouse.moveMouse(mouseStartPos.x, mouseStartPos.y);
-        playerMouseImage = miceImageArray[0].createScaledBitmap(miceImageArray[0], cellWidth + scaleWidth, cellWidth + scaleWidth, false);
-        playerMouse.setMouseImage(playerMouseImage);
+        playerMouse.setMouseImage(miceImageArray[0].createScaledBitmap(miceImageArray[0], cellWidth + scaleWidth, cellWidth + scaleWidth, false));
         playerMouse.setMouseAngle(START_ANGLE);
+
+        //make bitmaps for all the opponents
+        int opponent = 1;
+        for (Mouse m : opponentMice) {
+            m.setMouseImage(miceImageArray[opponent].createScaledBitmap(miceImageArray[opponent], cellWidth + scaleWidth, cellWidth + scaleWidth, false));
+            m.setMouseAngle(START_ANGLE);
+            opponent++;
+        }
         oldCellWidth = mazeLineArray.getWSpacing();
         oldCellHeight = mazeLineArray.getHSpacing();
     }
