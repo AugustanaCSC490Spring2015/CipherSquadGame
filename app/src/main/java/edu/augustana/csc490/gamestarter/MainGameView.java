@@ -4,18 +4,22 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import game.*;
 
@@ -39,9 +43,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     private int width;
     private int algorithm;
 
+
     long startTime;
     long millis;
-    int points = 0;
+    static int points = 0;
 
     //runs without a timer by reposting this handler at the end of the runnable
     //Adapted from http://stackoverflow.com/questions/4597690/android-timer-how
@@ -142,6 +147,43 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         points = mouse.addPoints(0);
     }
 
+    //Adapted from http://code.tutsplus.com/tutorials/android-sdk-create-an-arithmetic-game-high-scores-and-state-data--mobile-18825
+    public static void setHighScore(){
+        int thisScore = points;
+
+        if(thisScore > 0){
+            SharedPreferences.Editor scoreEdit = MainActivity.gameScores.edit();
+            String scores = MainActivity.gameScores.getString("highScores", "");
+
+            if(scores.length() >0){
+                List<Score> scoreStrings = new ArrayList<Score>();
+                String[] exScores = scores.split("\\|"); //to split the string passed into gameScores
+                for(String eSc : exScores){
+                    String[] parts = eSc.split(" - ");
+                    scoreStrings.add(new Score(Integer.parseInt(parts[0])));
+                }
+
+                Score newScore = new Score(thisScore);
+                scoreStrings.add(newScore);
+                Collections.sort(scoreStrings);
+
+                StringBuilder scoreBuild = new StringBuilder("");
+                for(int s=0; s<scoreStrings.size(); s++){
+                    if(s>=10) break;//only want ten
+                    if(s>0) scoreBuild.append("|");//pipe separate the score strings
+                    scoreBuild.append(scoreStrings.get(s).getScoreText());
+                }
+                //write to prefs
+                scoreEdit.putString("highScores", scoreBuild.toString());
+                scoreEdit.commit();
+            } else {
+                scoreEdit.putString("highScores", "" + thisScore);
+                scoreEdit.commit();
+            }
+
+        }
+    }
+
     public void updateView(Canvas canvas) {
         if (canvas != null) {
             canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
@@ -153,6 +195,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     // stop the game; may be called by the MainGameFragment onPause
     public void stopGame() {
+        setHighScore(); //save score
         if (gameThread != null)
             gameThread.setRunning(false);
             timerHandler.removeCallbacks(timerRunnable);
@@ -175,6 +218,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     // called when the surface is destroyed
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        setHighScore(); //save score
+
         // ensure that thread terminates properly
         boolean retry = true;
         gameThread.setRunning(false); // terminate gameThread

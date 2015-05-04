@@ -1,8 +1,11 @@
 package game;
 
 
+import edu.augustana.csc490.gamestarter.MainActivity;
+import edu.augustana.csc490.gamestarter.MainGameView;
 import maze.Line;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -53,6 +56,8 @@ public class Game {
     public Mouse playerMouse;
     private Mouse[] opponentMice;
     private PowerUpMap powerUps;
+
+
 
     private int numOpponents;
     private int AIDifficulty;
@@ -148,6 +153,8 @@ public class Game {
         if (!playerMouse.getFinished()) { //add for loop here for each mouse if we have multiple players
             return false;
         }
+
+        MainGameView.setHighScore(); //save score before level change
         playerMouse.setMouseAngle(START_ANGLE);
         playerMouse.moveMouse(mouseStartPos.x, mouseStartPos.y);
         playerMouse.setFinished(false);

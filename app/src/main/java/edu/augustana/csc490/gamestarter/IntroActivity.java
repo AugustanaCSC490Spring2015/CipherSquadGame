@@ -16,25 +16,40 @@ public class IntroActivity extends Activity {
     int size; //initial maze size entered by user
 
     EditText sizeEditText; //for user to enter the desired size for the initial maze
+    Button launchButton;
+    Button scoresButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
-        Button launchButton = (Button) findViewById(R.id.launchButton);
+        launchButton = (Button) findViewById(R.id.launchButton);
+        scoresButton = (Button) findViewById(R.id.scoresButton);
         sizeEditText = (EditText) findViewById(R.id.sizeEditText);
 
-        launchButton.setOnClickListener(clickHandler);
+        launchButton.setOnClickListener(launchClickHandler);
+        scoresButton.setOnClickListener(scoresClickHandler);
+
     }
 
     // click handler used to launch the game when launchButton is clicked
-    View.OnClickListener clickHandler = new View.OnClickListener() {
+    View.OnClickListener launchClickHandler = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(IntroActivity.this, MainActivity.class);
             size = Integer.parseInt(sizeEditText.getText().toString());
 
             intent.putExtra("size", size);
+            startActivity(intent);
+        }
+    };
+
+    // click handler used to view the high scores when scoreButton is clicked
+    View.OnClickListener scoresClickHandler = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(IntroActivity.this, ScoresActivity.class);
+
             startActivity(intent);
         }
     };
