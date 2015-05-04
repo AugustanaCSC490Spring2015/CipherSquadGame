@@ -163,14 +163,14 @@ public class Game {
         playerMouse.setFinished(false);
 
         //reset opponent mouse
-        for (Mouse m : opponentMice) {
+        /*for (Mouse m : opponentMice) { // TODO fix the AI mice
             m.setMouseAngle(START_ANGLE);
             m.moveMouse(mouseStartPos.x, mouseStartPos.y);
             m.setFinished(false);
             if (!isNetworked) {
                 m.levelUp(maze);
             }
-        }
+        }*/
 
         level++;
         powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height, level);
@@ -190,13 +190,17 @@ public class Game {
 
 
     public boolean movePlayerMouse(int newX, int newY) {
+        if (playerMouse.getFinished()) {
+            return false;
+        }
+
         int prevMazeX = playerMouse.getPosX() / cellWidth;
         int prevMazeY = playerMouse.getPosY() / cellHeight;
         int newMazeX = newX / cellWidth;
         int newMazeY = newY / cellHeight;
 
         //will check if mouse has reached the end of the maze prior to moving
-        if (maze.getEnd().x + 1 == prevMazeX && maze.getEnd().y == prevMazeY) {
+        if (maze.getEnd().x == prevMazeX && maze.getEnd().y == prevMazeY) { // TODO fix the mouse ending point
             mouseFinished(playerMouse);
             return true;
         }
