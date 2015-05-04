@@ -1,11 +1,9 @@
 package game;
 
 
-import edu.augustana.csc490.gamestarter.MainActivity;
 import edu.augustana.csc490.gamestarter.MainGameView;
 import maze.Line;
 
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -16,7 +14,6 @@ import android.util.Log;
 
 import maze.*;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -136,6 +133,7 @@ public class Game {
                 opponentMice[i] = new AIMouse(maze);
             }
         }
+
         // mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
     }
 
@@ -143,7 +141,9 @@ public class Game {
         //keeps track of each player's points and adds points depending on the level they are on and the time they completed the maze
         int points = levelPointRelationship - (int) currentTime / 60000;
         mouse.setTotalTime(currentTime);
-        if (points > 0){ mouse.addPoints(points);}
+        if (points > 0) {
+            mouse.addPoints(points);
+        }
         mouse.setFinished(true);
 
     }
@@ -155,6 +155,7 @@ public class Game {
             return false;
         }
         MainGameView.setHighScore(); //save score before level change
+
         playerMouse.setMouseAngle(START_ANGLE);
         playerMouse.moveMouse(mouseStartPos.x, mouseStartPos.y);
         playerMouse.setFinished(false);
@@ -194,7 +195,6 @@ public class Game {
         return isNetworked;
     }
 
-
     public boolean movePlayerMouse(int newX, int newY) {
         if (playerMouse.getFinished()) {
             return false;
@@ -221,6 +221,7 @@ public class Game {
         }
         //moves the mouse into a new maze cell
         int direction = maze.getDirection(prevMazeX, prevMazeY, newMazeX, newMazeY);
+
         if (!maze.isWallPresent(new Point(prevMazeX, prevMazeY), direction)) {
             playerMouse.moveMouse(newX, newY);
             playerMouse.setMazePos(new Point(newMazeX, newMazeY));
@@ -395,7 +396,7 @@ public class Game {
         if (powerUps == null) {
             powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height, level);
         }
-        powerUps.displayPowerUps(c,screenWidth,screenHeight, playerMouse);
+        powerUps.displayPowerUps(c, screenWidth, screenHeight, playerMouse);
     }
 
     public void assignPowerUp(Mouse mouse, int mazeX, int mazeY) {
@@ -410,4 +411,5 @@ public class Game {
             }
         }
     }
+
 }

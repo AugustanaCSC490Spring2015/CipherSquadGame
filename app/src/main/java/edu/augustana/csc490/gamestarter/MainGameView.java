@@ -24,7 +24,7 @@ import java.util.List;
 import game.*;
 
 public class MainGameView extends SurfaceView implements SurfaceHolder.Callback {
-    private static final String TAG = "GameStarter"; // for Log.w(TAG, ...)
+    private static final String TAG = "RatRace"; // for Log.w(TAG, ...)
     public static MainGameView currentGameView=null;
 
     private GameThread gameThread; // runs the main game loop
@@ -41,7 +41,6 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     private int height;
     private int width;
-    private int algorithm;
 
 
     long startTime;
@@ -97,6 +96,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         width = i.getIntExtra("size", 20);
 
 
+
+
     }
 
     // called when the size changes (and first time, when view is created)
@@ -121,6 +122,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         miceImageArray[2] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousebrown);
         miceImageArray[3] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousepink);
 
+        int algorithm = 1;
         game = new Game(width, height, algorithm, miceImageArray);
         mouse = game.playerMouse;
         startTime = System.currentTimeMillis();
@@ -136,12 +138,13 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         }
     }
 
-
     private void gameStep() {
         if (game.levelUp()) { //levels up if all the mice are finished
             startTime = System.currentTimeMillis(); //resets the timer if there is a level up
         }
+
         game.setTime(millis); //sets the timer value in the game class to equal the value in this view
+        points = mouse.addPoints(0); //populates points to activityBar
         /*if (!game.isNetworked()) {
             if (start) {
                 game.moveAIMice();
@@ -221,7 +224,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     // called when the surface is destroyed
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        setHighScore(); //save score
+        //setHighScore(); //save score
 
         // ensure that thread terminates properly
         boolean retry = true;

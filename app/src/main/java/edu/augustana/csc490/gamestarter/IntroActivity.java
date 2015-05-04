@@ -8,13 +8,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 
 
 public class IntroActivity extends Activity {
 
     int size; //initial maze size entered by user
-
     EditText sizeEditText; //for user to enter the desired size for the initial maze
     Button launchButton;
     Button scoresButton;
