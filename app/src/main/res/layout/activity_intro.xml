@@ -36,4 +36,12 @@
         android:layout_alignTop="@+id/sizeEditText"
         android:gravity="center_vertical" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/high_scores"
+        android:id="@+id/scoresButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
