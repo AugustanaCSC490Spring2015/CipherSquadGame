@@ -95,8 +95,7 @@ public class Maze {
         return temp;
     }
 
-
-    protected boolean checkLocation(Point location) {
+    public boolean checkLocation(Point location) {
         // checks if the location references a cell inside the maze
         if (location.x < 0 || location.x >= width || location.y < 0
                 || location.y >= height) {

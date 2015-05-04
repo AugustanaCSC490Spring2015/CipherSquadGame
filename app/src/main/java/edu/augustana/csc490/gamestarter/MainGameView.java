@@ -111,17 +111,15 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     }
 
     public void startNewGame() {
-        int numOpponents = 0;
+        int numOpponents = 3;
         Bitmap miceImageArray[] = new Bitmap[numOpponents + 1];
 
         // Mouse taken from https://openclipart.org/ under their Unlimited Commercial Use:
         // https://openclipart.org/unlimited-commercial-use-clipart
         miceImageArray[0] = BitmapFactory.decodeResource(getResources(), R.raw.simplemouseright);
-
-        // TODO at the moment, the array is only length 1, making index 0 the only index.
-        //miceImageArray[1] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousewhite);
-        //miceImageArray[2] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousebrown);
-        //miceImageArray[3] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousepink);
+        miceImageArray[1] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousewhite);
+        miceImageArray[2] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousebrown);
+        miceImageArray[3] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousepink);
 
         game = new Game(width, height, algorithm, miceImageArray);
         mouse = game.playerMouse;
@@ -144,7 +142,11 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
             startTime = System.currentTimeMillis(); //resets the timer if there is a level up
         }
         game.setTime(millis); //sets the timer value in the game class to equal the value in this view
-        points = mouse.addPoints(0);
+        /*if (!game.isNetworked()) {
+            if (start) {
+                game.moveAIMice();
+            }
+        }*/ //TODO fix the AI problems
     }
 
     //Adapted from http://code.tutsplus.com/tutorials/android-sdk-create-an-arithmetic-game-high-scores-and-state-data--mobile-18825
@@ -190,6 +192,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
             game.drawPowerUps(canvas, screenWidth, screenHeight);
             game.paintMaze(canvas, mazePaint, screenWidth, screenHeight);
             game.drawMice(canvas, screenWidth, screenHeight);
+            start = true;
         }
     }
 
@@ -234,6 +237,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         }
     }
 
+    boolean start = false;
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         if (e.getAction() == MotionEvent.ACTION_MOVE) {
@@ -272,8 +276,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
                     // lock the surfaceHolder for drawing
                     synchronized (surfaceHolder) {
-                        gameStep();         // update game state
                         updateView(canvas); // draw using the canvas
+                        gameStep();         // update game state
                     }
                     Thread.sleep(10); // if you want to slow down the action...
                 } catch (InterruptedException ex) {
