@@ -77,7 +77,7 @@ public class Game {
     public static final int WIDTH = 10;
 
     //player settings
-    public static final int NUM_OPPONENTS = 3;
+    public static final int NUM_OPPONENTS = 0; // TODO fix the AI problems
 
     //AI settings
     public static final int AI_DIFFICULTY = 10;
@@ -221,7 +221,7 @@ public class Game {
     }
 
     public void moveAIMice() {
-        int randomMouse = rand.nextInt(numOpponents - 1);
+        int randomMouse = rand.nextInt(numOpponents);
         Log.i("random mouse: ", "" + randomMouse);
         moveAIMouse((AIMouse) opponentMice[randomMouse]);
     }

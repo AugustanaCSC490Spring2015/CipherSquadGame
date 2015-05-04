@@ -106,17 +106,15 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     }
 
     public void startNewGame() {
-        int numOpponents = 0;
+        int numOpponents = 3;
         Bitmap miceImageArray[] = new Bitmap[numOpponents + 1];
 
         // Mouse taken from https://openclipart.org/ under their Unlimited Commercial Use:
         // https://openclipart.org/unlimited-commercial-use-clipart
         miceImageArray[0] = BitmapFactory.decodeResource(getResources(), R.raw.simplemouseright);
-
-        // TODO at the moment, the array is only length 1, making index 0 the only index.
-        //miceImageArray[1] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousewhite);
-        //miceImageArray[2] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousebrown);
-        //miceImageArray[3] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousepink);
+        miceImageArray[1] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousewhite);
+        miceImageArray[2] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousebrown);
+        miceImageArray[3] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousepink);
 
         game = new Game(width, height, algorithm, miceImageArray);
         mouse = game.playerMouse;
@@ -139,11 +137,11 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
             startTime = System.currentTimeMillis(); //resets the timer if there is a level up
         }
         game.setTime(millis); //sets the timer value in the game class to equal the value in this view
-        if (!game.isNetworked()) {
+        /*if (!game.isNetworked()) {
             if (start) {
                 game.moveAIMice();
             }
-        }
+        }*/ //TODO fix the AI problems
     }
 
     public void updateView(Canvas canvas) {

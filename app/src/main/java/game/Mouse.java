@@ -56,8 +56,6 @@ public abstract class Mouse {
         return mouseImage;
     }
 
-    public Point getMazePos(){return mazePos;}
-
     public void initMouse() {
         angle = 45;
         numMovementsTillRotate = 1;
