@@ -1,13 +1,17 @@
 package edu.augustana.csc490.gamestarter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 
 public class IntroActivity extends Activity {
@@ -34,11 +38,43 @@ public class IntroActivity extends Activity {
     View.OnClickListener launchClickHandler = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(IntroActivity.this, MainActivity.class);
-            size = Integer.parseInt(sizeEditText.getText().toString());
 
-            intent.putExtra("size", size);
-            startActivity(intent);
+            final AlertDialog.Builder alert = new AlertDialog.Builder(IntroActivity.this);
+
+            alert.setTitle("Enter Initials");
+
+            // Set an EditText view to get user input
+            //Also set the edit text to only accept 3 characters
+            final EditText input = new EditText(IntroActivity.this);
+            int maxLength = 3;
+            InputFilter[] FilterArray = new InputFilter[1];
+            FilterArray[0] = new InputFilter.LengthFilter(maxLength);
+            input.setFilters(FilterArray);
+            alert.setView(input);
+            //alert.setView(input);
+
+            alert.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    String value = input.getText().toString();
+                    Intent intent = new Intent(IntroActivity.this, MainActivity.class);
+                    size = Integer.parseInt(sizeEditText.getText().toString());
+                    intent.putExtra("size", size);
+                    intent.putExtra("initials", value);
+                    startActivity(intent);
+
+                }
+            });
+
+
+            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    //cancel the action
+                }
+            });
+
+            alert.show();
+            // see http://www.androidsnippets.com/prompt-user-input-with-an-alertdialog
+
         }
     };
 

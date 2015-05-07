@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +42,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     private int height;
     private int width;
+
+    static String initials = "";
+    static String sessionID = "";
 
 
     long startTime;
@@ -94,6 +98,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         Intent i = mainActivity.getIntent();
         height = i.getIntExtra("size", 20);
         width = i.getIntExtra("size", 20);
+
+        //Grab the initials and a UUID for the high scores board
+        initials = i.getStringExtra("initials");
+        sessionID = UUID.randomUUID().toString().replace("-","");
 
 
 
@@ -156,6 +164,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     public static void setHighScore(){
         int thisScore = points;
 
+
         if(thisScore > 0){
             SharedPreferences.Editor scoreEdit = MainActivity.gameScores.edit();
             String scores = MainActivity.gameScores.getString("highScores", "");
@@ -165,24 +174,32 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
                 String[] exScores = scores.split("\\|"); //to split the string passed into gameScores
                 for(String eSc : exScores){
                     String[] parts = eSc.split(" - ");
-                    scoreStrings.add(new Score(Integer.parseInt(parts[0])));
+                    scoreStrings.add(new Score(parts[0],parts[1],Integer.parseInt(parts[2])));
                 }
 
-                Score newScore = new Score(thisScore);
+                Score newScore = new Score(sessionID, initials,thisScore);
+                //this for loop eliminates more than one score per session
+                for(Score score:scoreStrings){
+                    if(score.getUuid().equals(newScore.getUuid())){
+                        scoreStrings.remove(score);
+                    }
+                }
                 scoreStrings.add(newScore);
+
                 Collections.sort(scoreStrings);
 
                 StringBuilder scoreBuild = new StringBuilder("");
                 for(int s=0; s<scoreStrings.size(); s++){
                     if(s>=10) break;//only want ten
                     if(s>0) scoreBuild.append("|");//pipe separate the score strings
-                    scoreBuild.append(scoreStrings.get(s).getScoreText());
+                    Score topScore =scoreStrings.get(s);
+                    scoreBuild.append(topScore.getUuid()+" - "+topScore.getInitials()+" - "+topScore.getScoreText());
                 }
                 //write to prefs
                 scoreEdit.putString("highScores", scoreBuild.toString());
                 scoreEdit.commit();
             } else {
-                scoreEdit.putString("highScores", "" + thisScore);
+                scoreEdit.putString("highScores", sessionID+" - "+initials+" - "+thisScore);
                 scoreEdit.commit();
             }
 

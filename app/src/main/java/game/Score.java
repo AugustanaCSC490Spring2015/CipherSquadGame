@@ -5,9 +5,14 @@ package game;
  */
 public class Score implements Comparable<Score> {
     private int scoreNum;
+    private String uuid;
+    private String initials;
 
-    public Score(int num){
+
+    public Score(String uuid, String initials,int num){
         scoreNum = num;
+        this.uuid = uuid;
+        this.initials = initials;
     }
 
     //Works opposite of normal compareTo method to create a descending list
@@ -25,5 +30,12 @@ public class Score implements Comparable<Score> {
 
     public String getScoreText(){
         return "" + scoreNum;
+    }
+
+    public String getUuid(){
+        return uuid;
+    }
+    public String getInitials(){
+        return initials;
     }
 }
