@@ -14,28 +14,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/sizeEditText"
-        android:layout_marginTop="40dp"
-        android:text="5"
-        android:layout_below="@+id/launchButton"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/size"
-        android:id="@+id/sizeView"
-        android:layout_alignBottom="@+id/sizeEditText"
-        android:layout_toLeftOf="@+id/sizeEditText"
-        android:layout_toStartOf="@+id/sizeEditText"
-        android:layout_alignTop="@+id/sizeEditText"
-        android:gravity="center_vertical" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,5 +21,14 @@
         android:id="@+id/scoresButton"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/difficultyImageButton"
+        android:src="@android:drawable/ic_menu_manage"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
