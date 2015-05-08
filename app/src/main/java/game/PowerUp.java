@@ -2,8 +2,6 @@ package game;
 
 import android.graphics.Bitmap;
 
-import maze.*;
-
 /**
  * Created by Ethan Halsall on 3/30/2015.
  */

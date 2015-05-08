@@ -1,4 +1,4 @@
-package edu.augustana.csc490.gamestarter;
+package edu.augustana.csc490.ratrace;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import edu.augustana.csc490.gamestarter.R;
 import game.*;
 
 public class MainGameView extends SurfaceView implements SurfaceHolder.Callback {

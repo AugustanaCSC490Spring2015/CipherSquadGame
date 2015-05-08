@@ -1,7 +1,6 @@
 package maze;
 
 import android.graphics.Point;
-import android.hardware.Camera;
 import android.util.Log;
 
 import java.util.LinkedList;

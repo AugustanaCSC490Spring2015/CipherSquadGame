@@ -1,4 +1,4 @@
-package edu.augustana.csc490.gamestarter;
+package edu.augustana.csc490.ratrace;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,7 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import edu.augustana.csc490.gamestarter.R;
 
 
 public class IntroActivity extends Activity {

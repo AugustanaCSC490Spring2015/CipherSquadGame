@@ -1,10 +1,12 @@
 // GameStarter.java
 // MainActivity displays the MainGameFragment
-package edu.augustana.csc490.gamestarter;
+package edu.augustana.csc490.ratrace;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import edu.augustana.csc490.gamestarter.R;
 
 public class MainActivity extends Activity {
     static SharedPreferences gameScores;

@@ -22,13 +22,13 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name="edu.augustana.csc490.ratrace.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
 
         </activity>
         <activity
-            android:name=".IntroActivity"
+            android:name="edu.augustana.csc490.ratrace.IntroActivity"
             android:label="@string/title_activity_intro" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,7 +37,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ScoresActivity"
+            android:name="edu.augustana.csc490.ratrace.ScoresActivity"
             android:label="@string/title_activity_scores" >
         </activity>
     </application>

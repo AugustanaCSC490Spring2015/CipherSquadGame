@@ -3,7 +3,7 @@ package game;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import edu.augustana.csc490.gamestarter.MainGameView;
+import edu.augustana.csc490.ratrace.MainGameView;
 import edu.augustana.csc490.gamestarter.R;
 
 /**

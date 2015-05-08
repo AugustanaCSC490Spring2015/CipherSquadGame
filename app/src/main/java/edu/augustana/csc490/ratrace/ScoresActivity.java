@@ -1,4 +1,4 @@
-package edu.augustana.csc490.gamestarter;
+package edu.augustana.csc490.ratrace;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.content.SharedPreferences;
 import android.widget.TextView;
+
+import edu.augustana.csc490.gamestarter.R;
 
 /**
  * Adapted from http://code.tutsplus.com/tutorials/android-sdk-create-an-arithmetic-game-high-scores-and-state-data--mobile-18825

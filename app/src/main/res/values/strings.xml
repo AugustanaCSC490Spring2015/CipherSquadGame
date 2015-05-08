@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Your Maze!</string>
-    <string name="title_activity_intro">Customize your Maze!</string>
+    <string name="title_activity_intro">Rat Race</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

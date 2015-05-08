@@ -10,7 +10,7 @@
 
     <fragment
         android:id="@+id/gameStarterFragment"
-        android:name="edu.augustana.csc490.gamestarter.MainGameFragment"
+        android:name="edu.augustana.csc490.ratrace.MainGameFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_game" />

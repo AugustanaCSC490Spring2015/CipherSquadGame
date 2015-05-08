@@ -1,7 +1,7 @@
 package game;
 
 
-import edu.augustana.csc490.gamestarter.MainGameView;
+import edu.augustana.csc490.ratrace.MainGameView;
 import maze.Line;
 
 import android.graphics.Bitmap;
@@ -159,8 +159,8 @@ public class Game {
         playerMouse.setMouseAngle(START_ANGLE);
         playerMouse.moveMouse(mouseStartPos.x, mouseStartPos.y);
         playerMouse.setFinished(false);
-        height = height + 3;
-        width = width + 3;
+        height = height + 1;
+        width = width + 1;
         maze = new Maze(width, height);
         mazeGen = new RecursiveBacktrackerMazeGenerator(maze);
 

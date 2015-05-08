@@ -7,6 +7,6 @@
         android:id="@+id/mainGameView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="edu.augustana.csc490.gamestarter.MainGameView" />
+        class="edu.augustana.csc490.ratrace.MainGameView" />
 
 </FrameLayout>

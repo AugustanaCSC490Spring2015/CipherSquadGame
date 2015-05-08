@@ -1,11 +1,13 @@
 
-package edu.augustana.csc490.gamestarter;
+package edu.augustana.csc490.ratrace;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import edu.augustana.csc490.gamestarter.R;
 
 public class MainGameFragment extends Fragment {
     private MainGameView mainGameView; // custom view
