@@ -154,6 +154,11 @@ public class Game {
         if (!playerMouse.getFinished()) { //add for loop here for each mouse if we have multiple players
             return false;
         }
+        /*for (Mouse m : opponentMice) { // TODO fix the AI mice
+            if (!m.getFinished()){
+                return false;
+            }
+        }*/
         MainGameView.setHighScore(); //save score before level change
 
         playerMouse.setMouseAngle(START_ANGLE);
@@ -206,7 +211,7 @@ public class Game {
         int newMazeY = newY / cellHeight;
 
         //will check if mouse has reached the end of the maze prior to moving
-        if (maze.getEnd().x == prevMazeX && maze.getEnd().y == prevMazeY) { // TODO fix the mouse ending point
+        if (maze.getEnd().x + 1 == newMazeX && maze.getEnd().y == prevMazeY) {
             mouseFinished(playerMouse);
             return true;
         }
