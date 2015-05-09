@@ -73,14 +73,14 @@ public class Game {
     //default game settings
 
     //maze dimensions
-    public static final int HEIGHT = 10;
-    public static final int WIDTH = 10;
+    public static final int HEIGHT = 5;
+    public static final int WIDTH = 5;
 
     //player settings
-    public static final int NUM_OPPONENTS = 0; // TODO fix the AI problems
+    public static final int NUM_OPPONENTS = 3;
 
     //AI settings
-    public static final int AI_DIFFICULTY = 10;
+    public static final int AI_DIFFICULTY = 50;
 
     //network settings
     public static final boolean IS_NETWORKED = false;
@@ -91,8 +91,8 @@ public class Game {
         initializeGame(WIDTH, HEIGHT, miceImageArray, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
     }
 
-    public Game(int width, int height, int mazeType, Bitmap[] miceImageArray) {
-        initializeGame(width, height, miceImageArray, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
+    public Game(int width, int height, Bitmap[] miceImageArray, int numOpponents) {
+        initializeGame(width, height, miceImageArray, numOpponents, AI_DIFFICULTY, IS_NETWORKED);
     }
 
     private void initializeGame(int mazeWidth, int mazeHeight, Bitmap[] miceImageArray, int numOpponents, int AIDifficulty, boolean isNetworked) {
@@ -154,11 +154,11 @@ public class Game {
         if (!playerMouse.getFinished()) { //add for loop here for each mouse if we have multiple players
             return false;
         }
-        /*for (Mouse m : opponentMice) { // TODO fix the AI mice
+        for (Mouse m : opponentMice) { // TODO fix the AI mice
             if (!m.getFinished()){
                 return false;
             }
-        }*/
+        }
         MainGameView.setHighScore(); //save score before level change
 
         playerMouse.setMouseAngle(START_ANGLE);
@@ -175,14 +175,14 @@ public class Game {
         playerMouse.setFinished(false);
 
         //reset opponent mouse
-        /*for (Mouse m : opponentMice) { // TODO fix the AI mice
+        for (Mouse m : opponentMice) { // TODO fix the AI mice
             m.setMouseAngle(START_ANGLE);
             m.moveMouse(mouseStartPos.x, mouseStartPos.y);
             m.setFinished(false);
             if (!isNetworked) {
                 m.levelUp(maze);
             }
-        }*/
+        }
 
         level++;
         powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height, level);
@@ -244,58 +244,58 @@ public class Game {
 
     private boolean moveAIMouse(AIMouse mouse) {
         Point prevMazeCell = mouse.getMazePos();
-        Point newMazeCell = mouse.nextMove(false); //used for direction only
+        Point nextMazeCell = mouse.aiPath.peek(); //used for direction
 
         Point prevScreenPos = new Point(mouse.getPosX(), mouse.getPosY());
         Point newScreenPos;
 
         //moves the mouse on the screen if it has not moved into a new maze cell
-        int direction = maze.getDirection(prevMazeCell.x, prevMazeCell.y, newMazeCell.x, newMazeCell.y);
-
-
+        int direction = maze.getDirection(prevMazeCell.x, prevMazeCell.y, nextMazeCell.x, nextMazeCell.y);
+        int length = rand.nextInt(aiDifficulty) + aiDifficulty / 2; //randomizes the length of movement
         switch (direction) {
             case Maze.N:
-                newScreenPos = new Point(prevScreenPos.x, prevScreenPos.y - rand.nextInt(aiDifficulty));
+                newScreenPos = new Point(prevScreenPos.x, prevScreenPos.y - length % cellHeight);
                 break;
             case Maze.E:
-                newScreenPos = new Point(prevScreenPos.x + rand.nextInt(aiDifficulty), prevScreenPos.y);
+                newScreenPos = new Point(prevScreenPos.x + length % cellWidth, prevScreenPos.y);
                 break;
             case Maze.S:
-                newScreenPos = new Point(prevScreenPos.x, prevScreenPos.y + rand.nextInt(aiDifficulty));
+                newScreenPos = new Point(prevScreenPos.x, prevScreenPos.y + length % cellHeight);
                 break;
             case Maze.W:
-                newScreenPos = new Point(prevScreenPos.x - rand.nextInt(aiDifficulty), prevScreenPos.y);
+                newScreenPos = new Point(prevScreenPos.x - length % cellWidth, prevScreenPos.y);
                 break;
             default:
                 newScreenPos = prevScreenPos;
                 break;
         }
-
-        newMazeCell = new Point(newScreenPos.x / cellWidth, newScreenPos.y / cellHeight);
-        if (prevMazeCell.x == newMazeCell.y && prevMazeCell.y == newMazeCell.y) {
-            playerMouse.moveMouse(newScreenPos.x, newScreenPos.y);
-            return true;
-        }
+        Point newMazeCell = new Point(newScreenPos.x / cellWidth, newScreenPos.y / cellHeight);
 
         //will check if mouse has reached the end of the maze prior to moving
-        if (maze.getEnd().x + 1 == prevMazeCell.x && maze.getEnd().y == prevMazeCell.y) {
+        if (maze.getEnd().x + 1 == newMazeCell.x && maze.getEnd().y == newMazeCell.y) {
             mouseFinished(mouse);
             return true;
         }
+
+        //moves the mouse on the screen if the mouse has not traversed a maze cell
+        if (prevMazeCell.x == newMazeCell.y && prevMazeCell.y == newMazeCell.y) {
+            mouse.moveMouse(newScreenPos.x, newScreenPos.y);
+            return true;
+        }
+
+
         //prevents the mouse from hopping walls and moving outside of the maze
-        if (Math.abs(newMazeCell.x - prevMazeCell.x) + Math.abs(newMazeCell.x - prevMazeCell.y) != 1 || !(maze.checkLocation(newMazeCell))) {
+        if (Math.abs(nextMazeCell.x - prevMazeCell.x) + Math.abs(nextMazeCell.x - prevMazeCell.y) != 1 || !(maze.checkLocation(nextMazeCell))) {
+            mouse.aiPath.pop();
             return false;
         }
 
 
         //moves the mouse to the new maze cell
-
-        if (!maze.isWallPresent(prevMazeCell, direction)) {
             mouse.moveMouse(newScreenPos.x, newScreenPos.y);
-            mouse.setMazePos(mouse.nextMove(true));
+        mouse.setMazePos(mouse.aiPath.pop());
             return true;
-        }
-        return false;
+
     }
 
     private Bitmap generateMazeLineArrayBitmap(Paint p, int screenW, int screenH) {

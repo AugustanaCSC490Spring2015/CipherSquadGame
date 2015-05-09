@@ -11,8 +11,8 @@ import java.util.LinkedList;
  * Created by Ethan Halsall on 3/30/2015.
  */
 public class AIMouse extends Mouse {
-    private LinkedList<Point> solution;
-    private LinkedList<Point> aiPath;
+    public LinkedList<Point> solution;
+    public LinkedList<Point> aiPath;
     private RecursiveMazeSolver mazeSolver;
 
 
@@ -28,18 +28,4 @@ public class AIMouse extends Mouse {
         solution = mazeSolver.getSolution();
         aiPath = mazeSolver.getAiPath();
     }
-
-    public Point nextMove(Boolean newCell) {
-        if (newCell) {
-            return aiPath.removeFirst();
-        } else {
-            return aiPath.getFirst();
-        }
-    }
-
-    public LinkedList<Point> getSolution() {
-        return solution;
-    }
-
-
 }

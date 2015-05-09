@@ -1,6 +1,7 @@
 package maze;
 
 import android.graphics.Point;
+import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.Random;
@@ -21,6 +22,8 @@ public class RecursiveMazeSolver {
     public static final int S = 3;
     public static final int W = 4;
 
+    private boolean[][] cellsVisited;
+
     Random r;
 
     public RecursiveMazeSolver(Maze maze) {
@@ -29,6 +32,8 @@ public class RecursiveMazeSolver {
         start = maze.getStart();
         solution = new LinkedList<Point>();
         aiPath = new LinkedList<Point>();
+        cellsVisited = new boolean[maze.getWidth()][maze.getHeight()];
+        cellsVisited[maze.getStart().x][maze.getStart().y] = true;
         solve();
     }
 
@@ -50,21 +55,26 @@ public class RecursiveMazeSolver {
     private boolean recursion(Point currentCell) {
         //recursively solves the maze
         //saves the path and solution in their corresponding linked lists
+        if (currentCell.equals(maze.getEnd())) {
+            solution.push(currentCell);
+            Log.i("solution: ", "X = " + currentCell.x + " Y = " + currentCell.y);
+            return true;
+        }
         int directions[] = shuffledDirectionArray();
         for (int direction : directions) {
-            if (isSolved) {
-                solution.push(currentCell);
-                return true;
-            }
             Point newCell = advanceCell(currentCell, direction);
+
             if (newCell != currentCell) {
-                if (newCell.equals(end)) {
-                    System.out.println("x = " + newCell.x + " y = " + newCell.y + "; " + direction + "; ");
-                    solution.push(newCell);
-                    return true;
-                } else if (!maze.isWallPresent(currentCell, direction)) {
-                    aiPath.push(currentCell);
-                    isSolved = recursion(newCell);
+
+                if (!cellsVisited[newCell.x][newCell.y]) {
+
+                    aiPath.add(newCell);
+                    if (recursion(newCell)) {
+                        solution.push(currentCell);
+                        Log.i("solution: ", "X = " + currentCell.x + " Y = " + currentCell.y);
+                        return true;
+                    }
+                    cellsVisited[newCell.x][newCell.y] = true;
                 } else {
                     return false;
                 }

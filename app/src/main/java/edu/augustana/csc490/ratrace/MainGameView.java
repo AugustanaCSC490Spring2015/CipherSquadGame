@@ -74,7 +74,6 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
 
     private Game game;
-    private Mouse mouse;
 
     public MainGameView(Context context, AttributeSet atts) {
         super(context, atts);
@@ -121,7 +120,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     }
 
     public void startNewGame() {
-        int numOpponents = 3;
+        int numOpponents = 3; //maximum value is 3
         Bitmap miceImageArray[] = new Bitmap[numOpponents + 1];
 
         // Mouse taken from https://openclipart.org/ under their Unlimited Commercial Use:
@@ -131,9 +130,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         miceImageArray[2] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousebrown);
         miceImageArray[3] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousepink);
 
-        int algorithm = 1;
-        game = new Game(width, height, algorithm, miceImageArray);
-        mouse = game.playerMouse;
+        game = new Game(width, height, miceImageArray, numOpponents);
+
         startTime = System.currentTimeMillis();
         millis = 0;
 
@@ -153,12 +151,12 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         }
 
         game.setTime(millis); //sets the timer value in the game class to equal the value in this view
-        points = mouse.addPoints(0); //populates points to activityBar
-        /*if (!game.isNetworked()) {
+        points = game.playerMouse.addPoints(0); //populates points to activityBar
+        if (!game.isNetworked()) {
             if (start) {
                 game.moveAIMice();
             }
-        }*/ //TODO fix the AI problems
+        } //TODO fix the AI problems
     }
 
     //Adapted from http://code.tutsplus.com/tutorials/android-sdk-create-an-arithmetic-game-high-scores-and-state-data--mobile-18825
@@ -298,7 +296,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
                     // lock the surfaceHolder for drawing
                     synchronized (surfaceHolder) {
                         updateView(canvas); // draw using the canvas
-                        gameStep();         // update game state
+
                     }
                     Thread.sleep(10); // if you want to slow down the action...
                 } catch (InterruptedException ex) {
@@ -306,8 +304,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
                 } finally  // regardless if any errors happen...
                 {
                     // make sure we unlock canvas so other threads can use it
-                    if (canvas != null)
+                    if (canvas != null) {
                         surfaceHolder.unlockCanvasAndPost(canvas);
+                    }
+                    gameStep();         // update game state
                 }
             }
         }
