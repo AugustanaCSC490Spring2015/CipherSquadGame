@@ -13,6 +13,7 @@ import maze.Maze;
 public abstract class Mouse {
 
     private Bitmap mouseImage;
+    private Bitmap rotatedImage;
 
     //default mouse data
     protected final int COLOR = Color.GRAY;
@@ -25,6 +26,7 @@ public abstract class Mouse {
     private Point mazePos;
     private boolean finished;
     private long totalTime;
+    private Point posAtLastRotate;
 
     private int mousePoints;
     private int movements;
@@ -61,6 +63,8 @@ public abstract class Mouse {
         posX = 0;
         posY = 0;
         mazePos = new Point(0, 0);
+        posAtLastRotate = getPos();
+        rotatedImage = mouseImage;
     }
 
     public int getPosX() {
@@ -95,11 +99,28 @@ public abstract class Mouse {
 
     public boolean rotate() {
         if (movements > numMovementsTillRotate) {
-            //Log.i("MoveMouseRotate", "Move Mouse Rotate method called " + movements + " num till rotate " + numMovementsTillRotate);
-            movements = 0;
+            posAtLastRotate.x = posX;
+            posAtLastRotate.y = posY;
             return true;
+        } else {
+            return false;
         }
-        return false;
+    }
+
+    public Point getPosAtLastRotate() {
+        return new Point(posAtLastRotate);
+    }
+
+    public void setRotatedImage(Bitmap image) {
+        rotatedImage = image;
+    }
+
+    public Bitmap getRotatedImage() {
+        return rotatedImage;
+    }
+
+    public Point getPos() {
+        return new Point(posX, posY);
     }
 
     public void addPowerUp(PowerUp powerUp) {

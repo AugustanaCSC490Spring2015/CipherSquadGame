@@ -25,6 +25,8 @@ public class Game {
     private Maze maze;
     private RecursiveBacktrackerMazeGenerator mazeGen;
     private MazeLineArray mazeLineArray;
+    private boolean isMultiPlayer;
+    private int level;
 
     //maze line array data
     private int screenWidth;
@@ -32,7 +34,6 @@ public class Game {
 
     //graphics
     public Bitmap mazeBitmap;
-
 
     //maze data
     private int cellWidth;
@@ -42,10 +43,6 @@ public class Game {
     private int mazeType;
 
 
-    private Path playerPath;
-
-    private int[] playerPoints;
-    private int level;
     private long currentTime;
     private int levelPointRelationship;
     public Mouse playerMouse;
@@ -60,11 +57,12 @@ public class Game {
 
     //mouse data
     private Bitmap[] miceImageArray;
-    private Bitmap playerMouseImage;
-    private Bitmap[] opponentMiceImages;
     private int oldCellWidth;
     private int oldCellHeight;
-    //public Paint playerMousePaint = new Paint();
+
+    //power up images
+    private Bitmap[] powerUpImageArray;
+
 
     private Point mouseStartPos;
     private final float START_ANGLE = 45;
@@ -79,6 +77,9 @@ public class Game {
     //player settings
     public static final int NUM_OPPONENTS = 3;
 
+    //single or multiplayer
+    public static final boolean MULTI_PLAYER = true;
+
     //AI settings
     public static final int AI_DIFFICULTY = 50;
 
@@ -87,50 +88,46 @@ public class Game {
 
 
     //creates a new game with the standard game data defined above in the final fields
-    public Game(Bitmap[] miceImageArray) {
-        initializeGame(WIDTH, HEIGHT, miceImageArray, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
+    public Game(Bitmap[] miceImageArray, Bitmap[] powerUpImageArray) {
+        initializeGame(WIDTH, HEIGHT, miceImageArray, powerUpImageArray, MULTI_PLAYER, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
     }
 
-    public Game(int width, int height, Bitmap[] miceImageArray, int numOpponents) {
-        initializeGame(width, height, miceImageArray, numOpponents, AI_DIFFICULTY, IS_NETWORKED);
+    public Game(int width, int height, Bitmap[] miceImageArray, Bitmap[] powerUpImageArray, int numOpponents) {
+        if (numOpponents <= 0) isMultiPlayer = false;
+        initializeGame(width, height, miceImageArray, powerUpImageArray, isMultiPlayer, numOpponents, AI_DIFFICULTY, IS_NETWORKED);
     }
 
-    private void initializeGame(int mazeWidth, int mazeHeight, Bitmap[] miceImageArray, int numOpponents, int AIDifficulty, boolean isNetworked) {
+    private void initializeGame(int mazeWidth, int mazeHeight, Bitmap[] miceImageArray, Bitmap[] powerUpImageArray, boolean isMultiPlayer, int numOpponents, int AIDifficulty, boolean isNetworked) {
         height = mazeHeight;
         width = mazeWidth;
-        this.mazeType = mazeType;
         maze = new Maze(mazeWidth, mazeHeight);
         mazeGen = new RecursiveBacktrackerMazeGenerator(maze);
         this.numOpponents = numOpponents;
         this.aiDifficulty = AIDifficulty;
         this.miceImageArray = miceImageArray;
+        this.powerUpImageArray = powerUpImageArray;
         rand = new Random();
 
-        // add the mouse images
-        for (int i = 1; i <= miceImageArray.length; i++) {
-            //opponentMiceImages[i - 1] = miceImageArray[i];
-        }
-
-        //Picture playerMouseImage = new Picture();
-        //Bitmap playerMouseImage = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.simplemousedown);
+        //start the game
         playerMouse = new PlayerMouse();
         level = 1;
         levelPointRelationship = 1000;
 
         //adds additional mice to represent other players
         this.isNetworked = isNetworked;
-
-        if (isNetworked) {
-            opponentMice = new NetworkedMouse[numOpponents];
-        } else {
-            opponentMice = new AIMouse[numOpponents];
-        }
-
-        for (int i = 0; i < numOpponents; i++) {
+        if (isMultiPlayer) {
             if (isNetworked) {
-                opponentMice[i] = new NetworkedMouse();
+                opponentMice = new NetworkedMouse[numOpponents];
             } else {
-                opponentMice[i] = new AIMouse(maze);
+                opponentMice = new AIMouse[numOpponents];
+            }
+
+            for (int i = 0; i < numOpponents; i++) {
+                if (isNetworked) {
+                    opponentMice[i] = new NetworkedMouse();
+                } else {
+                    opponentMice[i] = new AIMouse(maze);
+                }
             }
         }
 
@@ -154,16 +151,16 @@ public class Game {
         if (!playerMouse.getFinished()) { //add for loop here for each mouse if we have multiple players
             return false;
         }
-        for (Mouse m : opponentMice) { // TODO fix the AI mice
-            if (!m.getFinished()){
-                return false;
+
+        if (isMultiPlayer) {
+            for (Mouse m : opponentMice) { // TODO fix the AI mice
+                if (!m.getFinished()) {
+                    return false;
+                }
             }
         }
         MainGameView.setHighScore(); //save score before level change
 
-        playerMouse.setMouseAngle(START_ANGLE);
-        playerMouse.moveMouse(mouseStartPos.x, mouseStartPos.y);
-        playerMouse.setFinished(false);
         height = height + 1;
         width = width + 1;
         maze = new Maze(width, height);
@@ -174,18 +171,19 @@ public class Game {
         playerMouse.moveMouse(mouseStartPos.x, mouseStartPos.y);
         playerMouse.setFinished(false);
 
-        //reset opponent mouse
-        for (Mouse m : opponentMice) { // TODO fix the AI mice
-            m.setMouseAngle(START_ANGLE);
-            m.moveMouse(mouseStartPos.x, mouseStartPos.y);
-            m.setFinished(false);
-            if (!isNetworked) {
-                m.levelUp(maze);
+        if (isMultiPlayer) {
+            //reset opponent mouse
+            for (Mouse m : opponentMice) { // TODO fix the AI mice
+                m.setMouseAngle(START_ANGLE);
+                m.moveMouse(mouseStartPos.x, mouseStartPos.y);
+                m.setFinished(false);
+                if (!isNetworked) {
+                    m.levelUp(maze);
+                }
             }
         }
 
         level++;
-        powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height, level);
         levelPointRelationship *= 2;
         setTime(0);
 
@@ -237,9 +235,11 @@ public class Game {
     }
 
     public void moveAIMice() {
-        int randomMouse = rand.nextInt(numOpponents);
-        Log.i("random mouse: ", "" + randomMouse);
-        moveAIMouse((AIMouse) opponentMice[randomMouse]);
+        if (isMultiPlayer) {
+            int randomMouse = rand.nextInt(numOpponents);
+            Log.i("random mouse: ", "" + randomMouse);
+            moveAIMouse((AIMouse) opponentMice[randomMouse]);
+        }
     }
 
     private boolean moveAIMouse(AIMouse mouse) {
@@ -343,12 +343,16 @@ public class Game {
         } else if (cellWidth != oldCellWidth || cellHeight != oldCellHeight) {
             createMiceBitmaps();
         }
-        Bitmap rotatedMouse = rotateMouseImage(playerMouse);
-        c.drawBitmap(rotatedMouse, playerMouse.getPosX() - (rotatedMouse.getWidth() / 2), playerMouse.getPosY() - (rotatedMouse.getHeight() / 2), null);
-        for (Mouse m : opponentMice) {
-            rotatedMouse = rotateMouseImage(m);
-            c.drawBitmap(rotatedMouse, m.getPosX() - (rotatedMouse.getWidth() / 2), m.getPosY() - (rotatedMouse.getHeight() / 2), null);
+
+        if (isMultiPlayer) {
+            for (Mouse m : opponentMice) {
+                rotateMouseImage(m);
+                c.drawBitmap(m.getRotatedImage(), m.getPosX() - (m.getRotatedImage().getWidth() / 2), m.getPosY() - (m.getRotatedImage().getHeight() / 2), null);
+            }
         }
+        rotateMouseImage(playerMouse);
+        c.drawBitmap(playerMouse.getRotatedImage(), playerMouse.getPosX() - (playerMouse.getRotatedImage().getWidth() / 2), playerMouse.getPosY() - (playerMouse.getRotatedImage().getHeight() / 2), null);
+
     }
 
     private void createMiceBitmaps() {
@@ -357,51 +361,58 @@ public class Game {
         //make bitmap for the playermouse
         mouseStartPos = new Point(cellWidth / 2, cellHeight / 2);
         playerMouse.moveMouse(mouseStartPos.x, mouseStartPos.y);
-        playerMouse.setMouseImage(miceImageArray[0].createScaledBitmap(miceImageArray[0], cellWidth + scaleWidth, cellWidth + scaleWidth, false));
+        Bitmap mouseImage = miceImageArray[0].createScaledBitmap(miceImageArray[0], cellWidth + scaleWidth, cellWidth + scaleWidth, false);
+        playerMouse.setMouseImage(mouseImage);
+        playerMouse.setRotatedImage(mouseImage);
         playerMouse.setMouseAngle(START_ANGLE);
 
-        //make bitmaps for all the opponents
-        int opponent = 1;
-        for (Mouse m : opponentMice) {
-            m.setMouseImage(miceImageArray[opponent].createScaledBitmap(miceImageArray[opponent], cellWidth + scaleWidth, cellWidth + scaleWidth, false));
-            m.setMouseAngle(START_ANGLE);
-            opponent++;
+        if (isMultiPlayer) {
+            //make bitmaps for all the opponents
+            int opponent = 1;
+            for (Mouse m : opponentMice) {
+                mouseImage = miceImageArray[opponent].createScaledBitmap(miceImageArray[opponent], cellWidth + scaleWidth, cellWidth + scaleWidth, false);
+                m.setMouseImage(mouseImage);
+                m.setRotatedImage(mouseImage);
+                m.setMouseAngle(START_ANGLE);
+                opponent++;
+            }
         }
         oldCellWidth = mazeLineArray.getWSpacing();
         oldCellHeight = mazeLineArray.getHSpacing();
     }
 
-
-    private int xAtLastRotate;
-    private int yAtLastRotate;
-
-    private Bitmap rotateMouseImage(Mouse mouse) {
-        double deltaX = mouse.getPosX() - xAtLastRotate;
-        double deltaY = mouse.getPosY() - yAtLastRotate;
-        float angle = mouse.getAngle();
-        if (deltaX != 0 && deltaY != 0 && mouse.rotate()) {
-            angle = (float) Math.toDegrees(Math.atan2(deltaY, deltaX));
-            mouse.setMouseAngle(angle);
-            xAtLastRotate = mouse.getPosX();
-            yAtLastRotate = mouse.getPosY();
+    private void rotateMouseImage(Mouse mouse) {
+        Point posAtLastRotate = mouse.getPosAtLastRotate();
+        if (mouse.rotate()) {
+            double deltaX = mouse.getPosX() - posAtLastRotate.x;
+            double deltaY = mouse.getPosY() - posAtLastRotate.y;
+            if (deltaX != 0 || deltaY != 0) {
+                float angle = mouse.getAngle();
+                angle = (float) Math.toDegrees(Math.atan2(deltaY, deltaX));
+                Matrix matrix = new Matrix();
+                matrix.setRotate(angle);
+                Bitmap targetBitmap = Bitmap.createBitmap(mouse.getImage().getWidth(), mouse.getImage().getHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(targetBitmap);
+                matrix.setRotate(angle, mouse.getImage().getWidth() / 2, mouse.getImage().getHeight() / 2);
+                canvas.drawBitmap(mouse.getImage(), matrix, new Paint());
+                mouse.setRotatedImage(targetBitmap);
+            }
         }
-        //Log.i("Angle", "Angle for rotation " + angle);
-        Matrix matrix = new Matrix();
-        //matrix.setTranslate(mouse.getPosX() - (mouse.getImage().getWidth() / 2), mouse.getPosY() - (mouse.getImage().getHeight() / 2));
-        matrix.setRotate(angle);
-        Bitmap targetBitmap = Bitmap.createBitmap(mouse.getImage().getWidth(), mouse.getImage().getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(targetBitmap);
-        matrix.setRotate(angle, mouse.getImage().getWidth() / 2, mouse.getImage().getHeight() / 2);
-        canvas.drawBitmap(mouse.getImage(), matrix, new Paint());
-        return targetBitmap;
     }
 
     // draws the powerups, but first creates the powerup map if it has not been created yet
     public void drawPowerUps(Canvas c, int screenWidth, int screenHeight) {
-        if (powerUps == null) {
-            powerUps = new PowerUpMap(maze, screenWidth, screenHeight, width, height, level);
+        //generates or regenerates the powerup map if it doesn't exist or the maze has changed
+        if (powerUps == null || powerUps.getMaze() != maze) {
+            Bitmap[] scaledPowerUpImages = new Bitmap[powerUpImageArray.length];
+            int scaledImage = 0;
+            for (Bitmap i : powerUpImageArray) {
+                scaledPowerUpImages[scaledImage] = Bitmap.createScaledBitmap(i, screenWidth / width, screenHeight / height, true);
+                scaledImage++;
+            }
+            powerUps = new PowerUpMap(maze, scaledPowerUpImages);
         }
-        powerUps.displayPowerUps(c, screenWidth, screenHeight, playerMouse);
+        powerUps.displayPowerUps(c, screenWidth, screenHeight);
     }
 
     public void assignPowerUp(Mouse mouse, int mazeX, int mazeY) {

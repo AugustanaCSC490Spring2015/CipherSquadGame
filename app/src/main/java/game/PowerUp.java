@@ -7,16 +7,19 @@ import android.graphics.Bitmap;
  */
 public abstract class PowerUp {
 
-    PowerUp() {
+    Bitmap image;
+    int mazeX;
+    int mazeY;
+
+    public Bitmap getBitmapImage() {
+        return image;
     }
 
-    public abstract Bitmap getBitmapImage();
+    public int getMazeX() {
+        return mazeX;
+    }
 
-    public abstract void setMazeX(int x);
-
-    public abstract void setMazeY(int y);
-
-    public abstract int getMazeX();
-
-    public abstract int getMazeY();
+    public int getMazeY() {
+        return mazeY;
+    }
 }

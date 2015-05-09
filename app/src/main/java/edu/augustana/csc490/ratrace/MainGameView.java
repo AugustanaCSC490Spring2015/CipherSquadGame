@@ -120,9 +120,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     }
 
     public void startNewGame() {
-        int numOpponents = 3; //maximum value is 3
-        Bitmap miceImageArray[] = new Bitmap[numOpponents + 1];
-
+        int numOpponents = 0; //maximum value is 3
+        int numPowerUpTypes = 3;
+        Bitmap miceImageArray[] = new Bitmap[4];
         // Mouse taken from https://openclipart.org/ under their Unlimited Commercial Use:
         // https://openclipart.org/unlimited-commercial-use-clipart
         miceImageArray[0] = BitmapFactory.decodeResource(getResources(), R.raw.simplemouseright);
@@ -130,7 +130,12 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         miceImageArray[2] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousebrown);
         miceImageArray[3] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousepink);
 
-        game = new Game(width, height, miceImageArray, numOpponents);
+        Bitmap powerUpImageArray[] = new Bitmap[numPowerUpTypes];
+        powerUpImageArray[0] = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.small_cheese_swiss);
+        powerUpImageArray[1] = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.sandwich);
+        powerUpImageArray[2] = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.applecore);
+
+        game = new Game(width, height, miceImageArray, powerUpImageArray, numOpponents);
 
         startTime = System.currentTimeMillis();
         millis = 0;
