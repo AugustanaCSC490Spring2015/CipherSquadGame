@@ -20,7 +20,7 @@ public class PowerUpMap {
     int randX;
     int randY;
 
-    public PowerUp allPowerUps[] = new PowerUp[2];
+    public PowerUp allPowerUps[] = new PowerUp[3];
 
 
     // The list that contains all the powerups on the map
@@ -33,6 +33,7 @@ public class PowerUpMap {
 
         allPowerUps[0] = new CheesePowerUp(screenWidth,screenHeight,width,height);
         allPowerUps[1] = new BreadPowerUp(screenWidth,screenHeight,width,height);
+        allPowerUps[2] = new GarbagePowerUp(screenWidth,screenHeight,width,height);
 
         for (int i = 0; i < width / 2 ; i++) {
             rand = new Random();
