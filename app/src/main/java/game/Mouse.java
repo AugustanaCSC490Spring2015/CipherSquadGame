@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import maze.Maze;
 
 
-
 public abstract class Mouse {
 
     private Bitmap mouseImage;
@@ -101,6 +100,7 @@ public abstract class Mouse {
         if (movements > numMovementsTillRotate) {
             posAtLastRotate.x = posX;
             posAtLastRotate.y = posY;
+            movements = 0;
             return true;
         } else {
             return false;

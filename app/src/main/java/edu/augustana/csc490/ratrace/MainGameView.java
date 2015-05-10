@@ -28,7 +28,7 @@ import game.*;
 
 public class MainGameView extends SurfaceView implements SurfaceHolder.Callback {
     private static final String TAG = "RatRace"; // for Log.w(TAG, ...)
-    public static MainGameView currentGameView=null;
+    public static MainGameView currentGameView = null;
 
     private GameThread gameThread; // runs the main game loop
     private Activity mainActivity; // keep a reference to the main Activity
@@ -102,9 +102,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
         //Grab the initials and a UUID for the high scores board
         initials = i.getStringExtra("initials");
-        sessionID = UUID.randomUUID().toString().replace("-","");
-
-
+        sessionID = UUID.randomUUID().toString().replace("-", "");
 
 
     }
@@ -171,6 +169,14 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         } //TODO fix the AI problems
     }
 
+    private void playSounds() {
+        for (int i = 0; i < Game.NUM_SOUNDS; i++) {
+            if (game.soundsToPlay(i)) {
+                //play the sound
+            }
+        }
+    }
+
     //Adapted from http://code.tutsplus.com/tutorials/android-sdk-create-an-arithmetic-game-high-scores-and-state-data--mobile-18825
     public void setHighScore() {
         int thisScore = points;
@@ -194,7 +200,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
                     if (score.getUuid().equals(newScore.getUuid())) {
                         scoreStrings.remove(score);
                     }
-                    }
+                }
                 scoreStrings.add(newScore);
 
                 Collections.sort(scoreStrings);
@@ -212,7 +218,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
             } else {
                 scoreEdit.putString("highScores", sessionID + " - " + initials + " - " + thisScore);
                 scoreEdit.commit();
-                }
+            }
 
         }
 
@@ -233,7 +239,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         setHighScore(); //save score
         if (gameThread != null)
             gameThread.setRunning(false);
-            timerHandler.removeCallbacks(timerRunnable);
+        timerHandler.removeCallbacks(timerRunnable);
     }
 
     // release resources; may be called by MainGameFragment onDestroy
@@ -270,6 +276,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     }
 
     boolean start = false;
+
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         if (e.getAction() == MotionEvent.ACTION_MOVE) {

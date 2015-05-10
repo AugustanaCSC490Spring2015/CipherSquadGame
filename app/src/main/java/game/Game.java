@@ -1,14 +1,12 @@
 package game;
 
 
-import edu.augustana.csc490.ratrace.MainGameView;
 import maze.Line;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Point;
 import android.util.Log;
 
@@ -47,7 +45,7 @@ public class Game {
     private int levelPointRelationship;
     public Mouse playerMouse;
     private Mouse[] opponentMice;
-    private PowerUpMap powerUps;
+    private PowerUpMap powerUpMap;
 
     private int numOpponents;
     private int aiDifficulty;
@@ -107,6 +105,7 @@ public class Game {
         this.miceImageArray = miceImageArray;
         this.powerUpImageArray = powerUpImageArray;
         rand = new Random();
+        initSounds();
 
         //start the game
         playerMouse = new PlayerMouse();
@@ -403,16 +402,16 @@ public class Game {
     // draws the powerups, but first creates the powerup map if it has not been created yet
     public void drawPowerUps(Canvas c, int screenWidth, int screenHeight) {
         //generates or regenerates the powerup map if it doesn't exist or the maze has changed
-        if (powerUps == null || powerUps.getMaze() != maze) {
+        if (powerUpMap == null || powerUpMap.getMaze() != maze) {
             Bitmap[] scaledPowerUpImages = new Bitmap[powerUpImageArray.length];
             int scaledImage = 0;
             for (Bitmap i : powerUpImageArray) {
                 scaledPowerUpImages[scaledImage] = Bitmap.createScaledBitmap(i, screenWidth / width, screenHeight / height, true);
                 scaledImage++;
             }
-            powerUps = new PowerUpMap(maze, scaledPowerUpImages);
+            powerUpMap = new PowerUpMap(maze, scaledPowerUpImages);
         }
-        powerUps.displayPowerUps(c, screenWidth, screenHeight);
+        powerUpMap.displayPowerUps(c, screenWidth, screenHeight);
     }
 
     public void assignPowerUp(Mouse mouse, int mazeX, int mazeY) {
@@ -420,12 +419,56 @@ public class Game {
         // This array list I get does not seem to work properly. Fix when can. -Matt
         //ArrayList powerUpList = powerUps.getPowerUpList();
 
-        for (int i = 0; i < powerUps.powerUpList.size(); i++) {
-            if(powerUps.powerUpList.get(i).getMazeX() == mazeX && powerUps.powerUpList.get(i).getMazeY() == mazeY) {
+        for (int i = 0; i < powerUpMap.powerUpList.size(); i++) {
+            if (powerUpMap.powerUpList.get(i).getMazeX() == mazeX && powerUpMap.powerUpList.get(i).getMazeY() == mazeY) {
                 mouse.addPoints(1000);
-                mouse.addPowerUp(powerUps.addPowerUpToMouse(i));
+                mouse.addPowerUp(powerUpMap.addPowerUpToMouse(i));
             }
         }
+    }
+
+
+    //sounds
+    public final int SQUEAK_SOUND = 0;
+    public final int CHEESE_SOUND = 1;
+    public final int GARBAGE_SOUND = 2;
+    public final int BREAD_SOUND = 3;
+    public final int LEVEL_UP_SOUND = 4;
+
+    public static final int NUM_SOUNDS = 5;
+
+    public boolean[] playSound;
+
+    private void initSounds() {
+        playSound = new boolean[NUM_SOUNDS];
+    }
+
+
+    public boolean soundsToPlay(int sound) {
+        boolean tempSound = false;
+        switch (sound) {
+            case SQUEAK_SOUND:
+                tempSound = playSound[SQUEAK_SOUND];
+                playSound[SQUEAK_SOUND] = false;
+                break;
+            case CHEESE_SOUND:
+                tempSound = playSound[CHEESE_SOUND];
+                playSound[CHEESE_SOUND] = false;
+                break;
+            case GARBAGE_SOUND:
+                tempSound = playSound[GARBAGE_SOUND];
+                playSound[GARBAGE_SOUND] = false;
+                break;
+            case BREAD_SOUND:
+                tempSound = playSound[BREAD_SOUND];
+                playSound[BREAD_SOUND] = false;
+                break;
+            case LEVEL_UP_SOUND:
+                tempSound = playSound[LEVEL_UP_SOUND];
+                playSound[LEVEL_UP_SOUND] = false;
+                break;
+        }
+        return tempSound;
     }
 
 }
