@@ -31,4 +31,13 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/directionsText"
+        android:id="@+id/directionsButton"
+        android:layout_above="@+id/scoresButton"
+        android:layout_alignLeft="@+id/scoresButton"
+        android:layout_alignStart="@+id/scoresButton" />
+
 </RelativeLayout>

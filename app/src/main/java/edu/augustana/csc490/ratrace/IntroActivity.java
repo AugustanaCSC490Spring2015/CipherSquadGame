@@ -25,6 +25,7 @@ public class IntroActivity extends Activity {
     Button launchButton;
     Button scoresButton;
     ImageButton difficultyButton;
+    Button directionsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +34,15 @@ public class IntroActivity extends Activity {
         launchButton = (Button) findViewById(R.id.launchButton);
         scoresButton = (Button) findViewById(R.id.scoresButton);
         //sizeEditText = (EditText) findViewById(R.id.sizeEditText);
-        difficultyButton =(ImageButton) findViewById(R.id.difficultyImageButton);
+        difficultyButton = (ImageButton) findViewById(R.id.difficultyImageButton);
+        directionsButton = (Button) findViewById(R.id.directionsButton);
 
 
         launchButton.setOnClickListener(launchClickHandler);
         scoresButton.setOnClickListener(scoresClickHandler);
         difficultyButton.setOnClickListener(difficultyClickHandler);
+        directionsButton.setOnClickListener(directionsListener);
+
     }
 
     // click handler used to launch the game when launchButton is clicked
@@ -131,6 +135,14 @@ public class IntroActivity extends Activity {
             });
 
             alert.show();
+        }
+    };
+
+    View.OnClickListener directionsListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent directionsIntent = new Intent(IntroActivity.this, DirectionsActivity.class);
+            startActivity(directionsIntent);
         }
     };
     public boolean onCreateOptionsMenu(Menu menu) {
