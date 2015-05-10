@@ -196,9 +196,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
                 Score newScore = new Score(sessionID, initials, thisScore);
                 //this for loop eliminates more than one score per session
-                for (Score score : scoreStrings) {
-                    if (score.getUuid().equals(newScore.getUuid())) {
-                        scoreStrings.remove(score);
+                for(int i=0; i<scoreStrings.size(); i++ ){
+                    Score temp = scoreStrings.get(i);
+                    if (temp.getUuid().equals(newScore.getUuid())) {
+                        scoreStrings.remove(temp);
                     }
                 }
                 scoreStrings.add(newScore);
@@ -214,10 +215,12 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
                 }
                 //write to prefs
                 scoreEdit.putString("highScores", scoreBuild.toString());
-                scoreEdit.commit();
+                scoreEdit.apply();
+
             } else {
                 scoreEdit.putString("highScores", sessionID + " - " + initials + " - " + thisScore);
-                scoreEdit.commit();
+                scoreEdit.apply();
+
             }
 
         }

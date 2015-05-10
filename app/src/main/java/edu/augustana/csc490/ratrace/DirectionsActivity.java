@@ -43,7 +43,7 @@ public class DirectionsActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_directions, menu);
+       // getMenuInflater().inflate(R.menu.menu_directions, menu);
         return true;
     }
 
