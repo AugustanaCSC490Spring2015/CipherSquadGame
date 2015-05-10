@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ConcurrentModificationException;
 import java.util.UUID;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -150,14 +151,20 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         }
     }
 
-    private void gameStep() {
+    private void points() {
+        points = game.playerMouse.addPoints(0); //populates points to activityBar
+        game.setTime(millis); //sets the timer value in the game class to equal the value in this view
+    }
+
+    private void levelUp() {
         if (game.levelUp()) { //levels up if all the mice are finished
+            setHighScore();
             startTime = System.currentTimeMillis(); //resets the timer if there is a level up
         }
+    }
 
-        game.setTime(millis); //sets the timer value in the game class to equal the value in this view
-        points = game.playerMouse.addPoints(0); //populates points to activityBar
-        if (!game.isNetworked()) {
+    private void advanceAIMice() {
+        if (!game.isNetworked() && game.isMultiPlayer) {
             if (start) {
                 game.moveAIMice();
             }
@@ -165,49 +172,50 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     }
 
     //Adapted from http://code.tutsplus.com/tutorials/android-sdk-create-an-arithmetic-game-high-scores-and-state-data--mobile-18825
-    public static void setHighScore(){
+    public void setHighScore() {
         int thisScore = points;
 
 
-        if(thisScore > 0){
+        if (thisScore > 0) {
             SharedPreferences.Editor scoreEdit = MainActivity.gameScores.edit();
             String scores = MainActivity.gameScores.getString("highScores", "");
 
-            if(scores.length() >0){
+            if (scores.length() > 0) {
                 List<Score> scoreStrings = new ArrayList<Score>();
                 String[] exScores = scores.split("\\|"); //to split the string passed into gameScores
-                for(String eSc : exScores){
+                for (String eSc : exScores) {
                     String[] parts = eSc.split(" - ");
-                    scoreStrings.add(new Score(parts[0],parts[1],Integer.parseInt(parts[2])));
+                    scoreStrings.add(new Score(parts[0], parts[1], Integer.parseInt(parts[2])));
                 }
 
-                Score newScore = new Score(sessionID, initials,thisScore);
+                Score newScore = new Score(sessionID, initials, thisScore);
                 //this for loop eliminates more than one score per session
-                for(Score score:scoreStrings){
-                    if(score.getUuid().equals(newScore.getUuid())){
+                for (Score score : scoreStrings) {
+                    if (score.getUuid().equals(newScore.getUuid())) {
                         scoreStrings.remove(score);
                     }
-                }
+                    }
                 scoreStrings.add(newScore);
 
                 Collections.sort(scoreStrings);
 
                 StringBuilder scoreBuild = new StringBuilder("");
-                for(int s=0; s<scoreStrings.size(); s++){
-                    if(s>=10) break;//only want ten
-                    if(s>0) scoreBuild.append("|");//pipe separate the score strings
-                    Score topScore =scoreStrings.get(s);
-                    scoreBuild.append(topScore.getUuid()+" - "+topScore.getInitials()+" - "+topScore.getScoreText());
+                for (int s = 0; s < scoreStrings.size(); s++) {
+                    if (s >= 10) break;//only want ten
+                    if (s > 0) scoreBuild.append("|");//pipe separate the score strings
+                    Score topScore = scoreStrings.get(s);
+                    scoreBuild.append(topScore.getUuid() + " - " + topScore.getInitials() + " - " + topScore.getScoreText());
                 }
                 //write to prefs
                 scoreEdit.putString("highScores", scoreBuild.toString());
                 scoreEdit.commit();
             } else {
-                scoreEdit.putString("highScores", sessionID+" - "+initials+" - "+thisScore);
+                scoreEdit.putString("highScores", sessionID + " - " + initials + " - " + thisScore);
                 scoreEdit.commit();
-            }
+                }
 
         }
+
     }
 
     public void updateView(Canvas canvas) {
@@ -301,7 +309,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
                     // lock the surfaceHolder for drawing
                     synchronized (surfaceHolder) {
                         updateView(canvas); // draw using the canvas
-
+                        levelUp(); // levels up and sets high score
                     }
                     Thread.sleep(10); // if you want to slow down the action...
                 } catch (InterruptedException ex) {
@@ -312,7 +320,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
                     if (canvas != null) {
                         surfaceHolder.unlockCanvasAndPost(canvas);
                     }
-                    gameStep();         // update game state
+                    advanceAIMice();         // advance the AI mice if there are any
+                    points(); // updates the points and timer
                 }
             }
         }

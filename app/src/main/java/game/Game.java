@@ -25,7 +25,7 @@ public class Game {
     private Maze maze;
     private RecursiveBacktrackerMazeGenerator mazeGen;
     private MazeLineArray mazeLineArray;
-    private boolean isMultiPlayer;
+    public boolean isMultiPlayer;
     private int level;
 
     //maze line array data
@@ -159,7 +159,7 @@ public class Game {
                 }
             }
         }
-        MainGameView.setHighScore(); //save score before level change
+        //MainGameView.setHighScore(); //save score before level change
 
         height = height + 1;
         width = width + 1;
