@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 
 import edu.augustana.csc490.gamestarter.R;
 
+/**
+ * @author
+ */
 public class MainGameFragment extends Fragment {
     private MainGameView mainGameView; // custom view
 
