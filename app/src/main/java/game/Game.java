@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.util.Log;
 
 import maze.*;
@@ -96,6 +97,8 @@ public class Game {
     //network settings
     public static final boolean IS_NETWORKED = false;
 
+    private MediaPlayer bite;
+
 
     //creates a new game with the standard game data defined above in the final fields
     public Game(Bitmap[] miceImageArray, Bitmap[] powerUpImageArray) {
@@ -117,7 +120,6 @@ public class Game {
         this.miceImageArray = miceImageArray;
         this.powerUpImageArray = powerUpImageArray;
         rand = new Random();
-        initSounds();
         currentTime = 0;
         oldTime = currentTime;
 
@@ -476,53 +478,25 @@ public class Game {
         for (int i = 0; i < powerUpMap.powerUpList.size(); i++) {
             if (powerUpMap.powerUpList.get(i).getMazeX() == mazeX && powerUpMap.powerUpList.get(i).getMazeY() == mazeY) {
                 mouse.addPoints(500);
+                biteSound();
                 mouse.addPowerUp(powerUpMap.addPowerUpToMouse(i));
             }
         }
     }
 
 
+
     //sounds
-    public final int SQUEAK_SOUND = 0;
-    public final int CHEESE_SOUND = 1;
-    public final int GARBAGE_SOUND = 2;
-    public final int BREAD_SOUND = 3;
-    public final int LEVEL_UP_SOUND = 4;
 
-    public static final int NUM_SOUNDS = 5;
+    private void biteSound() {
 
-    public boolean[] playSound;
+        bite.seekTo(0);
+        bite.start();
 
-    private void initSounds() {
-        playSound = new boolean[NUM_SOUNDS];
     }
 
-
-    public boolean soundsToPlay(int sound) {
-        boolean tempSound = false;
-        switch (sound) {
-            case SQUEAK_SOUND:
-                tempSound = playSound[SQUEAK_SOUND];
-                playSound[SQUEAK_SOUND] = false;
-                break;
-            case CHEESE_SOUND:
-                tempSound = playSound[CHEESE_SOUND];
-                playSound[CHEESE_SOUND] = false;
-                break;
-            case GARBAGE_SOUND:
-                tempSound = playSound[GARBAGE_SOUND];
-                playSound[GARBAGE_SOUND] = false;
-                break;
-            case BREAD_SOUND:
-                tempSound = playSound[BREAD_SOUND];
-                playSound[BREAD_SOUND] = false;
-                break;
-            case LEVEL_UP_SOUND:
-                tempSound = playSound[LEVEL_UP_SOUND];
-                playSound[LEVEL_UP_SOUND] = false;
-                break;
-        }
-        return tempSound;
+    public void initBiteSound(MediaPlayer bite) {
+        this.bite = bite;
     }
 
 }

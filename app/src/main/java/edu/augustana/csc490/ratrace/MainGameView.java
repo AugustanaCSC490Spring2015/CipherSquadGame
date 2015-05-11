@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -23,7 +24,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import edu.augustana.csc490.gamestarter.R;
+
+import edu.augustana.csc490.ratrace.R;
+
 import game.*;
 
 /**
@@ -61,6 +64,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     long startTime;
     long millis;
     static int points = 0;
+
+    private MediaPlayer music = MediaPlayer.create(getContext(), R.raw.flightofthebumblebee);
+    private MediaPlayer bite = MediaPlayer.create(getContext(), R.raw.bite_sound);
 
     //runs without a timer by reposting this handler at the end of the runnable
     //Adapted from http://stackoverflow.com/questions/4597690/android-timer-how
@@ -143,6 +149,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
      * starts a new game
      */
     public void startNewGame() {
+        music.setVolume(.3f,.3f);
+        music.start();
         int numOpponents = 0; //maximum value is 3
         int numPowerUpTypes = 3;
         Bitmap miceImageArray[] = new Bitmap[4];
@@ -154,11 +162,22 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         miceImageArray[3] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousepink);
 
         Bitmap powerUpImageArray[] = new Bitmap[numPowerUpTypes];
+        // swiss_cheese taken from http://simple.wikipedia.org/wiki/Swiss_cheese under Public Domain
+        // http://simple.wikipedia.org/wiki/Swiss_cheese#/media/File:NCI_swiss_cheese.jpg
         powerUpImageArray[0] = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.small_cheese_swiss);
+        // sandwich.png was found on http://www.pdclipart.org/displayimage.php?album=search&cat=0&pos=18
+        // under Public Domain
         powerUpImageArray[1] = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.sandwich);
+        // applecore taken from https://openclipart.org/ under Unlimited Commercial Use
+        // https://openclipart.org/detail/40357/apple-core
         powerUpImageArray[2] = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.applecore);
 
+
+
+        
+        
         game = new Game(width, height, miceImageArray, powerUpImageArray, numOpponents, difficulty);
+        game.initBiteSound(bite);
 
         startTime = System.currentTimeMillis();
         millis = 0;
@@ -193,13 +212,13 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         } //TODO fix the AI problems
     }
 
-    private void playSounds() {
+    /*private void playSounds() {
         for (int i = 0; i < Game.NUM_SOUNDS; i++) {
             if (game.soundsToPlay(i)) {
                 //play the sound
             }
         }
-    }
+    }*/
 
     // Adds to the highsccorelist and keeps the list at 10.
     //Adapted from http://code.tutsplus.com/tutorials/android-sdk-create-an-arithmetic-game-high-scores-and-state-data--mobile-18825
@@ -274,6 +293,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     // release resources; may be called by MainGameFragment onDestroy
     public void releaseResources() {
         // release any resources (e.g. SoundPool stuff)
+        music.release();
     }
 
     @Override
