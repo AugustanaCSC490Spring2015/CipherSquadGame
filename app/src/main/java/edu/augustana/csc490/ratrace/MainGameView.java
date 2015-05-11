@@ -147,6 +147,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
      * starts a new game
      */
     public void startNewGame() {
+        music.setVolume(.3f,.3f);
         music.start();
         int numOpponents = 0; //maximum value is 3
         int numPowerUpTypes = 3;

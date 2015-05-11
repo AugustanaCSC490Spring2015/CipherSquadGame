@@ -435,39 +435,14 @@ public class Game {
     //sounds
 
     private void biteSound() {
+
+        bite.seekTo(0);
         bite.start();
+
     }
 
     public void initBiteSound(MediaPlayer bite) {
         this.bite = bite;
     }
 
-    /*
-    public boolean soundsToPlay(int sound) {
-        boolean tempSound = false;
-        switch (sound) {
-            case SQUEAK_SOUND:
-                tempSound = playSound[SQUEAK_SOUND];
-                playSound[SQUEAK_SOUND] = false;
-                break;
-            case CHEESE_SOUND:
-                tempSound = playSound[CHEESE_SOUND];
-                playSound[CHEESE_SOUND] = false;
-                break;
-            case GARBAGE_SOUND:
-                tempSound = playSound[GARBAGE_SOUND];
-                playSound[GARBAGE_SOUND] = false;
-                break;
-            case BREAD_SOUND:
-                tempSound = playSound[BREAD_SOUND];
-                playSound[BREAD_SOUND] = false;
-                break;
-            case LEVEL_UP_SOUND:
-                tempSound = playSound[LEVEL_UP_SOUND];
-                playSound[LEVEL_UP_SOUND] = false;
-                break;
-        }
-        return tempSound;
-    }
-    */
 }
