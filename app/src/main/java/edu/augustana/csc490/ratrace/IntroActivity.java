@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.text.InputType;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import edu.augustana.csc490.gamestarter.R;
 
@@ -21,7 +24,10 @@ import edu.augustana.csc490.gamestarter.R;
 public class IntroActivity extends Activity {
 
     int size = 5; //initial maze size entered by user
-    EditText sizeEditText; //for user to enter the desired size for the initial maze
+    String[] levelUpPaces = {"novice", "easy", "medium", "hard", "Expert"};
+    String setPace = levelUpPaces[1];
+    int setPaceElementNumber = 1; //this number is to help set and manage the radiogroupand should be equal at all times to setPace's element number
+   // EditText sizeEditText; for user to enter the desired size for the initial maze
     Button launchButton;
     Button scoresButton;
     ImageButton difficultyButton;
@@ -64,13 +70,14 @@ public class IntroActivity extends Activity {
             alert.setView(input);
             //alert.setView(input);
 
-            alert.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     String value = input.getText().toString();
                     Intent intent = new Intent(IntroActivity.this, MainActivity.class);
 
                     intent.putExtra("size", size);
                     intent.putExtra("initials", value);
+                    intent.putExtra("difficulty", setPace);
                     startActivity(intent);
 
                 }
@@ -103,25 +110,31 @@ public class IntroActivity extends Activity {
         @Override
         public void onClick(View view){
             final AlertDialog.Builder alert = new AlertDialog.Builder(IntroActivity.this);
-
-            alert.setTitle("Set Starting Difficulty");
-
-            // Set an EditText view to get user input
-            //Also set the edit text to only accept 3 characters
-            final EditText input = new EditText(IntroActivity.this);
-            input.setText(size+"");
-            int maxLength = 3;
-            InputFilter[] FilterArray = new InputFilter[1];
-            FilterArray[0] = new InputFilter.LengthFilter(maxLength);
-            input.setInputType(InputType.TYPE_CLASS_NUMBER);
-            input.setFilters(FilterArray);
-            alert.setView(input);
-
-            //alert.setView(input);
+            LayoutInflater inflater = IntroActivity.this.getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.dialog_settings, null);
+            alert.setView(dialogView);
+            final EditText startingDifficulty = (EditText) dialogView.findViewById(R.id.startingDifficultyEditText);
+            final RadioGroup levelPace = (RadioGroup) dialogView.findViewById(R.id.levelPaceRadioGroup);
+            startingDifficulty.setText(size + "");
+            final int[] radioIds = {R.id.noviceRadioButton, R.id.easyRadioButton, R.id.mediumRadioButton,
+                            R.id.hardRadioButton, R.id.expertRadioButton};
+            RadioButton[] radioButtons = {(RadioButton)dialogView.findViewById(radioIds[0]),
+                    (RadioButton)dialogView.findViewById(radioIds[1]),
+                    (RadioButton)dialogView.findViewById(radioIds[2]),
+                    (RadioButton)dialogView.findViewById(radioIds[3]),
+                    (RadioButton)dialogView.findViewById(radioIds[4])};
+            radioButtons[setPaceElementNumber].setChecked(true);
 
             alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    size = Integer.parseInt(input.getText().toString());
+                    size = Integer.parseInt(startingDifficulty.getText().toString());
+                    int checked = levelPace.getCheckedRadioButtonId();
+                    for(int i = 0; i<radioIds.length;i++){
+                        if(radioIds[i]==checked){
+                            setPaceElementNumber = i;
+                            setPace = levelUpPaces[i];
+                        }
+                    }
 
 
                 }
@@ -135,6 +148,7 @@ public class IntroActivity extends Activity {
             });
 
             alert.show();
+
         }
     };
 
