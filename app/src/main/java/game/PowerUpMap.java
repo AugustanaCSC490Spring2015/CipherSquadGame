@@ -83,8 +83,8 @@ public class PowerUpMap {
     // Method that takes in the canvas, the width/height of the screen,
     // and the mouse, in order to add the power ups collected to the mouse.
     public void displayPowerUps(Canvas c, int screenWidth, int screenHeight) {
-        for (PowerUp p : powerUpList) {
-            c.drawBitmap(p.getBitmapImage(), p.getMazeX() * screenWidth / width, p.getMazeY() * screenHeight / height, null);
+        for (int i = 0; i < powerUpList.size(); i++) {
+            c.drawBitmap(powerUpList.get(i).getBitmapImage(), powerUpList.get(i).getMazeX() * screenWidth / width, powerUpList.get(i).getMazeY() * screenHeight / height, null);
         }
     }
 
