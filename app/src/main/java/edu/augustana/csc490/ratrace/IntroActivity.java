@@ -18,7 +18,7 @@ import android.text.InputType;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import edu.augustana.csc490.gamestarter.R;
+import edu.augustana.csc490.ratrace.R;
 
 /**
  * IntroActivity is the first java document called by the XML

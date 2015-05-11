@@ -1,11 +1,11 @@
-// GameStarter.java
+// ratrace.java
 package edu.augustana.csc490.ratrace;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import edu.augustana.csc490.gamestarter.R;
+import edu.augustana.csc490.ratrace.R;
 
 /**
  * @author CypherSquad

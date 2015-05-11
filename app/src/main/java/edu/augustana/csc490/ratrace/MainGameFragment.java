@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import edu.augustana.csc490.gamestarter.R;
+import edu.augustana.csc490.ratrace.R;
 
 /**
  * @author
