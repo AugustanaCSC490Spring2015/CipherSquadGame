@@ -1,7 +1,7 @@
 package game;
 
 
-import edu.augustana.csc490.gamestarter.R;
+
 import edu.augustana.csc490.ratrace.MainGameView;
 import maze.Line;
 
@@ -131,8 +131,6 @@ public class Game {
         this.miceImageArray = miceImageArray;
         this.powerUpImageArray = powerUpImageArray;
         rand = new Random();
-
-        initSounds();
         currentTime = 0;
         oldTime = currentTime;
 
@@ -507,11 +505,6 @@ public class Game {
 
         bite.seekTo(0);
         bite.start();
-
-
-
-    private void initSounds() {
-        playSound = new boolean[NUM_SOUNDS];
 
     }
 

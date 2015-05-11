@@ -23,7 +23,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.util.ConcurrentModificationException;
 import java.util.UUID;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,7 +67,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     long startTime;
     long millis;
-    static int points = 0;
+    int points = 0;
+    int previousPoints = 0;
+
+
 
     private MediaPlayer music = MediaPlayer.create(getContext(), R.raw.flightofthebumblebee);
     private MediaPlayer bite = MediaPlayer.create(getContext(), R.raw.bite_sound);
@@ -197,16 +199,17 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         }
     }
 
-    private void points() {
-        points = game.playerMouse.addPoints(0); //populates points to activityBar
+    private void updateScore() {
+        points = game.playerMouse.getPoints(); //populates points to activityBar
         game.setTime(millis); //sets the timer value in the game class to equal the value in this view
+
     }
 
     private void levelUp() {
         if (game.levelUp()) { //levels up if all the mice are finished
             setHighScore();
             startTime = System.currentTimeMillis(); //resets the timer if there is a level up
-            showLevelUpDialog(R.string.nextLevel);
+            showLevelUpDialog();
         }
 
     }
@@ -290,22 +293,28 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     }
 
     private boolean dialogIsDisplayed = false;
-    public void showLevelUpDialog(final int messageId){
+    Score playerScore = new Score(sessionID, initials, points);
+
+    //Displays a Dialog screen after each level up with the player's
+    //overall score, points earned and time for that level
+    public void showLevelUpDialog(){
+        final int levelPoints = points- previousPoints;
+        final int pointsAtEndOfLevel = points;
+        previousPoints = points;
         //DialogFragment to display level stats
         final DialogFragment levelResult = new DialogFragment(){
             @Override
             public Dialog onCreateDialog(Bundle bundle){
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle(getResources().getString(messageId));
+                builder.setTitle(getResources().getString(R.string.nextLevel));
 
                 //Display the total points, points for that level, and number of powers ups
-                builder.setMessage(getResources().getString(R.string.results));
+                builder.setMessage(getResources().getString(R.string.results, pointsAtEndOfLevel, levelPoints, game.playerMouse.getTotalTime()));
                 builder.setPositiveButton(R.string.nextLevel, new DialogInterface.OnClickListener() {
                     // called when the next level button is pressed
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialogIsDisplayed = false;
-                        levelUp(); //set up next level
                     }
                 });
                 return builder.create();
@@ -415,7 +424,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
                         surfaceHolder.unlockCanvasAndPost(canvas);
                     }
                     advanceAIMice();         // advance the AI mice if there are any
-                    points(); // updates the points and timer
+                    updateScore(); // updates the points and timer
                 }
             }
         }

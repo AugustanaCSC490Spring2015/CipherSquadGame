@@ -127,13 +127,20 @@ public abstract class Mouse {
         powerUpList.add(powerUp);
     }
 
-    public int addPoints(int points) {
+    public void addPoints(int points) {
         mousePoints = mousePoints + points;
+    }
+
+    public int getPoints(){
         return mousePoints;
     }
 
     public void setTotalTime(long time) {
         totalTime = time;
+    }
+
+    public double getTotalTime(){
+        return (double) totalTime/1000;
     }
 
     public boolean getFinished() {
