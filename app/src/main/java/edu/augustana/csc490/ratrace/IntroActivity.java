@@ -135,13 +135,9 @@ public class IntroActivity extends Activity {
             startingDifficulty.setText(size + "");
             final int[] radioIds = {R.id.noviceRadioButton, R.id.easyRadioButton, R.id.mediumRadioButton,
                             R.id.hardRadioButton, R.id.expertRadioButton};
-            RadioButton[] radioButtons = {(RadioButton)dialogView.findViewById(radioIds[0]),
-                    (RadioButton)dialogView.findViewById(radioIds[1]),
-                    (RadioButton)dialogView.findViewById(radioIds[2]),
-                    (RadioButton)dialogView.findViewById(radioIds[3]),
-                    (RadioButton)dialogView.findViewById(radioIds[4])};
-            radioButtons[setPaceElementNumber].setChecked(true);
 
+            RadioButton firstChecked = (RadioButton) dialogView.findViewById(radioIds[setPaceElementNumber]);
+            firstChecked.setChecked(true);
             alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     size = Integer.parseInt(startingDifficulty.getText().toString());
