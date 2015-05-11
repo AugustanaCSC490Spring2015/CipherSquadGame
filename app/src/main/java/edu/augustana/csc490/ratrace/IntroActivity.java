@@ -20,19 +20,35 @@ import android.widget.RadioGroup;
 
 import edu.augustana.csc490.gamestarter.R;
 
-
+/**
+ * IntroActivity is the first java document called by the XML
+ * Displays the intro page with buttons to generate the maze, look
+ * at the directions in another Activity (DirectionsActivity), look
+ * at High Scores, and edit the settings.
+ * @see edu.augustana.csc490.ratrace.DirectionsActivity
+ * @see edu.augustana.csc490.ratrace.ScoresActivity
+ * @author CipherSquad
+ */
 public class IntroActivity extends Activity {
 
     int size = 5; //initial maze size entered by user
     String[] levelUpPaces = {"novice", "easy", "medium", "hard", "Expert"};
     String setPace = levelUpPaces[1];
-    int setPaceElementNumber = 1; //this number is to help set and manage the radiogroupand should be equal at all times to setPace's element number
-   // EditText sizeEditText; for user to enter the desired size for the initial maze
+
+    //this number is to help set and manage the radiogroupand should be equal at all times to
+    // setPace's element number EditText sizeEditText; for user to enter the desired size for the
+    // initial maze
+    int setPaceElementNumber = 1;
+
     Button launchButton;
     Button scoresButton;
     ImageButton difficultyButton;
     Button directionsButton;
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +59,7 @@ public class IntroActivity extends Activity {
         difficultyButton = (ImageButton) findViewById(R.id.difficultyImageButton);
         directionsButton = (Button) findViewById(R.id.directionsButton);
 
-
+        // Sets all listeners for the buttons
         launchButton.setOnClickListener(launchClickHandler);
         scoresButton.setOnClickListener(scoresClickHandler);
         difficultyButton.setOnClickListener(difficultyClickHandler);
@@ -106,6 +122,7 @@ public class IntroActivity extends Activity {
         }
     };
 
+    // click handler used to view the high scores when difficultyButton is clicked
     View.OnClickListener difficultyClickHandler = new View.OnClickListener(){
         @Override
         public void onClick(View view){
@@ -118,13 +135,9 @@ public class IntroActivity extends Activity {
             startingDifficulty.setText(size + "");
             final int[] radioIds = {R.id.noviceRadioButton, R.id.easyRadioButton, R.id.mediumRadioButton,
                             R.id.hardRadioButton, R.id.expertRadioButton};
-            RadioButton[] radioButtons = {(RadioButton)dialogView.findViewById(radioIds[0]),
-                    (RadioButton)dialogView.findViewById(radioIds[1]),
-                    (RadioButton)dialogView.findViewById(radioIds[2]),
-                    (RadioButton)dialogView.findViewById(radioIds[3]),
-                    (RadioButton)dialogView.findViewById(radioIds[4])};
-            radioButtons[setPaceElementNumber].setChecked(true);
 
+            RadioButton firstChecked = (RadioButton) dialogView.findViewById(radioIds[setPaceElementNumber]);
+            firstChecked.setChecked(true);
             alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     size = Integer.parseInt(startingDifficulty.getText().toString());
@@ -152,6 +165,7 @@ public class IntroActivity extends Activity {
         }
     };
 
+    // click handler used to view the high scores when directionsButton is clicked
     View.OnClickListener directionsListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -159,24 +173,16 @@ public class IntroActivity extends Activity {
             startActivity(directionsIntent);
         }
     };
+
+    /**
+     *
+     * @param menu The options menu in which you place your items
+     * @return true
+     */
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_intro, menu);
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

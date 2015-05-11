@@ -12,6 +12,11 @@ import android.widget.TextView;
 
 import edu.augustana.csc490.gamestarter.R;
 
+/**
+ * @author CypherSquad
+ * DirectionsActivity gets called from IntroActivity and displays the directions.
+ * It also has a button to go to the IntroActivity again.
+ */
 
 public class DirectionsActivity extends Activity {
 
@@ -32,6 +37,8 @@ public class DirectionsActivity extends Activity {
         powerUpsTextView.setText("Power ups: Move the mouse over a power up to increase your score");
     }
 
+    // playButtonListener adds an anonymous listener to the play button that sends you to the
+    // IntroActivity
     OnClickListener playButtonListener = new OnClickListener() {
         @Override
         public void onClick(View v) {

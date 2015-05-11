@@ -31,12 +31,20 @@ import java.util.List;
 import edu.augustana.csc490.gamestarter.R;
 import game.*;
 
+/**
+ * @author CypherSquad
+ * MainGameView creates the gamethread, mainactivity, timer, and an instance of the actual game.
+ *
+ */
 public class MainGameView extends SurfaceView implements SurfaceHolder.Callback {
-    private static final String TAG = "RatRace"; // for Log.w(TAG, ...)
+    // for Log.w(TAG, ...)
+    private static final String TAG = "RatRace";
     public static MainGameView currentGameView = null;
 
-    private GameThread gameThread; // runs the main game loop
-    private Activity mainActivity; // keep a reference to the main Activity
+    // runs the main game loop
+    private GameThread gameThread;
+    // keep a reference to the main Activity
+    private Activity mainActivity;
 
     private boolean isGameOver = true;
 
@@ -81,6 +89,11 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     private Game game;
 
+    /**
+     * Initializer called when creating a MainGameView
+     * @param context gets the context
+     * @param atts is the attribute set sent in
+     */
     public MainGameView(Context context, AttributeSet atts) {
         super(context, atts);
         mainActivity = (Activity) context;
@@ -112,7 +125,13 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     }
 
-    // called when the size changes (and first time, when view is created)
+    /**
+     * called when the size changes (and first time, when view is created)
+     * @param w is the width
+     * @param h is height
+     * @param oldw is old width
+     * @param oldh is old height
+     */
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -123,6 +142,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         startNewGame();
     }
 
+    /**
+     * starts a new game
+     */
     public void startNewGame() {
         int numOpponents = 0; //maximum value is 3
         int numPowerUpTypes = 3;
@@ -184,6 +206,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         }
     }
 
+    // Adds to the highsccorelist and keeps the list at 10.
     //Adapted from http://code.tutsplus.com/tutorials/android-sdk-create-an-arithmetic-game-high-scores-and-state-data--mobile-18825
     public void setHighScore() {
         int thisScore = points;
@@ -234,6 +257,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     }
 
+    // draws all the new positions of the objects in the game
     public void updateView(Canvas canvas) {
         if (canvas != null) {
             canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
