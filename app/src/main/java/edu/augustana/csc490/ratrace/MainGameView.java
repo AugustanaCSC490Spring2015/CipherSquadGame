@@ -52,6 +52,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     private int height;
     private int width;
+    private int difficulty;
 
     static String initials = "";
     static String sessionID = "";
@@ -110,8 +111,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         /* set width and height based on value entered by user and the
         algorithm based on the option chosen by the user in IntroActivity */
         Intent i = mainActivity.getIntent();
-        height = i.getIntExtra("size", 20);
-        width = i.getIntExtra("size", 20);
+        height = i.getIntExtra("size", 5);
+        width = i.getIntExtra("size", 5);
+        difficulty = i.getIntExtra("difficulty", 1);
 
         //Grab the initials and a UUID for the high scores board
         initials = i.getStringExtra("initials");
@@ -156,7 +158,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         powerUpImageArray[1] = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.sandwich);
         powerUpImageArray[2] = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.applecore);
 
-        game = new Game(width, height, miceImageArray, powerUpImageArray, numOpponents);
+        game = new Game(width, height, miceImageArray, powerUpImageArray, numOpponents, difficulty);
 
         startTime = System.currentTimeMillis();
         millis = 0;

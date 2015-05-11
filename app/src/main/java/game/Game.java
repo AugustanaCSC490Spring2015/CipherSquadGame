@@ -25,6 +25,7 @@ public class Game {
     private MazeLineArray mazeLineArray;
     public boolean isMultiPlayer;
     private int level;
+    private long oldTime;
 
     //maze line array data
     private int screenWidth;
@@ -40,15 +41,26 @@ public class Game {
     private int height;
     private int mazeType;
 
-
+    //points
     private long currentTime;
-    private int levelPointRelationship;
+    private int difficultyToPointRelationship;
+    private int difficultyToTimeRelation;
+    private int difficultyToAdvancement;
+
+    public final int NOVICE = 0;
+    public final int EASY = 1;
+    public final int MEDIUM = 2;
+    public final int HARD = 3;
+    public final int EXPERT = 4;
+
+
+    //mice
     public Mouse playerMouse;
     private Mouse[] opponentMice;
     private PowerUpMap powerUpMap;
 
     private int numOpponents;
-    private int aiDifficulty;
+    private int difficulty;
     private boolean isNetworked;
 
     private Random rand;
@@ -78,8 +90,8 @@ public class Game {
     //single or multiplayer
     public static final boolean MULTI_PLAYER = true;
 
-    //AI settings
-    public static final int AI_DIFFICULTY = 50;
+    //DIFFICULTY SETTING
+    public static final int DIFFICULTY = 1;
 
     //network settings
     public static final boolean IS_NETWORKED = false;
@@ -87,30 +99,60 @@ public class Game {
 
     //creates a new game with the standard game data defined above in the final fields
     public Game(Bitmap[] miceImageArray, Bitmap[] powerUpImageArray) {
-        initializeGame(WIDTH, HEIGHT, miceImageArray, powerUpImageArray, MULTI_PLAYER, NUM_OPPONENTS, AI_DIFFICULTY, IS_NETWORKED);
+        initializeGame(WIDTH, HEIGHT, miceImageArray, powerUpImageArray, MULTI_PLAYER, NUM_OPPONENTS, DIFFICULTY, IS_NETWORKED);
     }
 
-    public Game(int width, int height, Bitmap[] miceImageArray, Bitmap[] powerUpImageArray, int numOpponents) {
+    public Game(int width, int height, Bitmap[] miceImageArray, Bitmap[] powerUpImageArray, int numOpponents, int difficulty) {
         if (numOpponents <= 0) isMultiPlayer = false;
-        initializeGame(width, height, miceImageArray, powerUpImageArray, isMultiPlayer, numOpponents, AI_DIFFICULTY, IS_NETWORKED);
+        initializeGame(width, height, miceImageArray, powerUpImageArray, isMultiPlayer, numOpponents, DIFFICULTY, IS_NETWORKED);
     }
 
-    private void initializeGame(int mazeWidth, int mazeHeight, Bitmap[] miceImageArray, Bitmap[] powerUpImageArray, boolean isMultiPlayer, int numOpponents, int AIDifficulty, boolean isNetworked) {
+    private void initializeGame(int mazeWidth, int mazeHeight, Bitmap[] miceImageArray, Bitmap[] powerUpImageArray, boolean isMultiPlayer, int numOpponents, int difficulty, boolean isNetworked) {
         height = mazeHeight;
         width = mazeWidth;
         maze = new Maze(mazeWidth, mazeHeight);
         mazeGen = new RecursiveBacktrackerMazeGenerator(maze);
         this.numOpponents = numOpponents;
-        this.aiDifficulty = AIDifficulty;
+        this.difficulty = difficulty;
         this.miceImageArray = miceImageArray;
         this.powerUpImageArray = powerUpImageArray;
         rand = new Random();
         initSounds();
+        currentTime = 0;
+        oldTime = currentTime;
 
         //start the game
         playerMouse = new PlayerMouse();
         level = 1;
-        levelPointRelationship = 1000;
+
+        //initialize the difficulty level of the game
+        switch (difficulty) {
+            case NOVICE:
+                difficultyToPointRelationship = 10;
+                difficultyToTimeRelation = 500;
+                difficultyToAdvancement = 20;
+                break;
+            case EASY:
+                difficultyToPointRelationship = 10;
+                difficultyToTimeRelation = 300;
+                difficultyToAdvancement = 30;
+                break;
+            case MEDIUM:
+                difficultyToPointRelationship = 10;
+                difficultyToTimeRelation = 200;
+                difficultyToAdvancement = 35;
+                break;
+            case HARD:
+                difficultyToPointRelationship = 10;
+                difficultyToTimeRelation = 150;
+                difficultyToAdvancement = 40;
+                break;
+            case EXPERT:
+                difficultyToPointRelationship = 10;
+                difficultyToTimeRelation = 75;
+                difficultyToAdvancement = 50;
+                break;
+        }
 
         //adds additional mice to represent other players
         this.isNetworked = isNetworked;
@@ -135,11 +177,11 @@ public class Game {
 
     public void mouseFinished(Mouse mouse) {
         //keeps track of each player's points and adds points depending on the level they are on and the time they completed the maze
-        int points = levelPointRelationship - (int) currentTime / 60000;
+        /*int points = levelPointRelationship - (int) currentTime / 60000;
         mouse.setTotalTime(currentTime);
         if (points > 0) {
             mouse.addPoints(points);
-        }
+        }*/
         mouse.setFinished(true);
 
     }
@@ -183,13 +225,25 @@ public class Game {
         }
 
         level++;
-        levelPointRelationship *= 2;
+        difficultyToTimeRelation -= difficultyToAdvancement;
         setTime(0);
 
         return true;
     }
 
     public void setTime(long t) {
+        if (t <= oldTime) {
+            oldTime = t;
+        }
+
+        if (difficultyToTimeRelation <= 0) {
+            playerMouse.addPoints(difficultyToPointRelationship * -1);
+        } else if (oldTime + difficultyToTimeRelation <= currentTime) {
+            oldTime = currentTime;
+            difficultyToAdvancement -= difficultyToAdvancement / 4;
+            playerMouse.addPoints(difficultyToPointRelationship * -1);
+        }
+
         currentTime = t;
     }
 
@@ -250,7 +304,7 @@ public class Game {
 
         //moves the mouse on the screen if it has not moved into a new maze cell
         int direction = maze.getDirection(prevMazeCell.x, prevMazeCell.y, nextMazeCell.x, nextMazeCell.y);
-        int length = rand.nextInt(aiDifficulty) + aiDifficulty / 2; //randomizes the length of movement
+        int length = rand.nextInt(difficulty) + difficulty / 2; //randomizes the length of movement
         switch (direction) {
             case Maze.N:
                 newScreenPos = new Point(prevScreenPos.x, prevScreenPos.y - length % cellHeight);
@@ -421,7 +475,7 @@ public class Game {
 
         for (int i = 0; i < powerUpMap.powerUpList.size(); i++) {
             if (powerUpMap.powerUpList.get(i).getMazeX() == mazeX && powerUpMap.powerUpList.get(i).getMazeY() == mazeY) {
-                mouse.addPoints(1000);
+                mouse.addPoints(500);
                 mouse.addPowerUp(powerUpMap.addPowerUpToMouse(i));
             }
         }
