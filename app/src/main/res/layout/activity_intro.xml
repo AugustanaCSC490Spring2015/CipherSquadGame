@@ -9,9 +9,10 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Generate Maze!"
+        android:text="Play!"
         android:id="@+id/launchButton"
-        android:layout_alignParentTop="true"
+        android:textStyle="bold"
+        android:layout_above="@+id/scoresButton"
         android:layout_centerHorizontal="true" />
 
     <Button
@@ -19,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="@string/high_scores"
         android:id="@+id/scoresButton"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/directionsButton"
         android:layout_centerHorizontal="true" />
 
     <ImageButton
@@ -28,16 +29,14 @@
         android:id="@+id/difficultyImageButton"
         android:src="@android:drawable/ic_menu_manage"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/directionsText"
         android:id="@+id/directionsButton"
-        android:layout_above="@+id/scoresButton"
-        android:layout_alignLeft="@+id/scoresButton"
-        android:layout_alignStart="@+id/scoresButton" />
+        android:layout_above="@+id/difficultyImageButton"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

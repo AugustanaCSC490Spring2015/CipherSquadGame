@@ -58,7 +58,7 @@ public abstract class Mouse {
         movements = 0;
         totalTime = 0;
         finished = false;
-        mousePoints = 0;
+        mousePoints = 1000;
         posX = 0;
         posY = 0;
         mazePos = new Point(0, 0);
