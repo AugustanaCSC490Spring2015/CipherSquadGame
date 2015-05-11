@@ -65,6 +65,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     static int points = 0;
 
     private MediaPlayer music = MediaPlayer.create(getContext(), R.raw.flightofthebumblebee);
+    private MediaPlayer bite = MediaPlayer.create(getContext(), R.raw.bite_sound);
 
     //runs without a timer by reposting this handler at the end of the runnable
     //Adapted from http://stackoverflow.com/questions/4597690/android-timer-how
@@ -171,6 +172,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
 
         game = new Game(width, height, miceImageArray, powerUpImageArray, numOpponents);
+        game.initBiteSound(bite);
 
         startTime = System.currentTimeMillis();
         millis = 0;
@@ -205,13 +207,13 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         } //TODO fix the AI problems
     }
 
-    private void playSounds() {
+    /*private void playSounds() {
         for (int i = 0; i < Game.NUM_SOUNDS; i++) {
             if (game.soundsToPlay(i)) {
                 //play the sound
             }
         }
-    }
+    }*/
 
     // Adds to the highsccorelist and keeps the list at 10.
     //Adapted from http://code.tutsplus.com/tutorials/android-sdk-create-an-arithmetic-game-high-scores-and-state-data--mobile-18825
