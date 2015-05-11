@@ -32,8 +32,7 @@ import edu.augustana.csc490.gamestarter.R;
 public class IntroActivity extends Activity {
 
     int size = 5; //initial maze size entered by user
-    String[] levelUpPaces = {"novice", "easy", "medium", "hard", "Expert"};
-    String setPace = levelUpPaces[1];
+
 
     //this number is to help set and manage the radiogroupand should be equal at all times to
     // setPace's element number EditText sizeEditText; for user to enter the desired size for the
@@ -93,7 +92,7 @@ public class IntroActivity extends Activity {
 
                     intent.putExtra("size", size);
                     intent.putExtra("initials", value);
-                    intent.putExtra("difficulty", setPace);
+                    intent.putExtra("difficulty", setPaceElementNumber);
                     startActivity(intent);
 
                 }
@@ -145,7 +144,7 @@ public class IntroActivity extends Activity {
                     for(int i = 0; i<radioIds.length;i++){
                         if(radioIds[i]==checked){
                             setPaceElementNumber = i;
-                            setPace = levelUpPaces[i];
+
                         }
                     }
 
