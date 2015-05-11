@@ -2,7 +2,11 @@ package edu.augustana.csc490.ratrace;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -10,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -158,7 +163,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         if (game.levelUp()) { //levels up if all the mice are finished
             setHighScore();
             startTime = System.currentTimeMillis(); //resets the timer if there is a level up
+            showLevelUpDialog(R.string.nextLevel);
         }
+
     }
 
     private void advanceAIMice() {
@@ -235,6 +242,37 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
             game.drawMice(canvas, screenWidth, screenHeight);
             start = true;
         }
+    }
+
+    private boolean dialogIsDisplayed = false;
+    public void showLevelUpDialog(final int messageId){
+        //DialogFragment to display level stats
+        final DialogFragment levelResult = new DialogFragment(){
+            @Override
+            public Dialog onCreateDialog(Bundle bundle){
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(getResources().getString(messageId));
+
+                //Display the total points, points for that level, and number of powers ups
+                builder.setMessage(getResources().getString(R.string.results));
+                builder.setPositiveButton(R.string.nextLevel, new DialogInterface.OnClickListener() {
+                    // called when the next level button is pressed
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialogIsDisplayed = false;
+                        levelUp(); //set up next level
+                    }
+                });
+                return builder.create();
+            }
+        };
+        mainActivity.runOnUiThread(new Runnable(){
+            public void run(){
+                dialogIsDisplayed = true;
+                levelResult.setCancelable(false);
+                levelResult.show(mainActivity.getFragmentManager(), "results");
+            }
+        });
     }
 
     // stop the game; may be called by the MainGameFragment onPause

@@ -1,14 +1,24 @@
 package game;
 
 
+import edu.augustana.csc490.gamestarter.R;
+import edu.augustana.csc490.ratrace.MainGameView;
 import maze.Line;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.os.Bundle;
 import android.util.Log;
+
 
 import maze.*;
 
@@ -19,12 +29,14 @@ import java.util.Random;
  */
 public class Game {
 
+
     //game data
     private Maze maze;
     private RecursiveBacktrackerMazeGenerator mazeGen;
     private MazeLineArray mazeLineArray;
     public boolean isMultiPlayer;
     private int level;
+
 
     //maze line array data
     private int screenWidth;
@@ -65,7 +77,6 @@ public class Game {
     private Point mouseStartPos;
     private final float START_ANGLE = 45;
 
-
     //default game settings
 
     //maze dimensions
@@ -105,6 +116,7 @@ public class Game {
         this.miceImageArray = miceImageArray;
         this.powerUpImageArray = powerUpImageArray;
         rand = new Random();
+
         initSounds();
 
         //start the game
@@ -146,6 +158,8 @@ public class Game {
 
     public boolean levelUp() {
         //display player stats
+        //MainGameView.showLevelUpDialog(R.string.nextLevel);
+
         //reset the game with a larger maze
         if (!playerMouse.getFinished()) { //add for loop here for each mouse if we have multiple players
             return false;
@@ -439,8 +453,11 @@ public class Game {
 
     public boolean[] playSound;
 
+
+
     private void initSounds() {
         playSound = new boolean[NUM_SOUNDS];
+
     }
 
 
@@ -470,5 +487,7 @@ public class Game {
         }
         return tempSound;
     }
+
+
 
 }

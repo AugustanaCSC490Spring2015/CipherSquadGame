@@ -12,4 +12,6 @@
     <string name="title_activity_settings">Settings</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="results">Total Points: %1$d\nLevel Points: %2$d\nTime: %3$.1f</string>
+    <string name="nextLevel">Next Level!</string>
 </resources>

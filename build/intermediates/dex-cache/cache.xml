@@ -2,25 +2,25 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\jonathonm\Desktop\Android\CipherSquadGame\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
+        jar="C:\Users\Danielle Morgan\AndroidStudioProjects\CipherSquadGame\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
-        <dex dex="C:\Users\jonathonm\Desktop\Android\CipherSquadGame\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-ce86386819f3cd845c5a4286397a8a9e32d68b62.jar" />
+        <dex dex="C:\Users\Danielle Morgan\AndroidStudioProjects\CipherSquadGame\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-fa8b3bb8a7adac735dd3f4ee8ef1da0346df40dd.jar" />
     </item>
     <item
-        jar="C:\Users\jonathonm\Desktop\Android\CipherSquadGame\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar"
+        jar="C:\Users\Danielle Morgan\AndroidStudioProjects\CipherSquadGame\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
-        <dex dex="C:\Users\jonathonm\Desktop\Android\CipherSquadGame\app\build\intermediates\pre-dexed\debug\classes-b14c240893b4cb6a5d9134fbe6477c915de64c4e.jar" />
+        <dex dex="C:\Users\Danielle Morgan\AndroidStudioProjects\CipherSquadGame\app\build\intermediates\pre-dexed\debug\classes-ecfb6a1a8dd469c27ec804030caf508a1b62e5a1.jar" />
     </item>
     <item
-        jar="C:\Users\jonathonm\AppData\Local\Android\sdk1\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
+        jar="C:\Users\Danielle Morgan\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
-        <dex dex="C:\Users\jonathonm\Desktop\Android\CipherSquadGame\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-755fdadbc62f7163aa074ff80c8e8cbeb01bb10d.jar" />
+        <dex dex="C:\Users\Danielle Morgan\AndroidStudioProjects\CipherSquadGame\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-7691fefd3d4220cbb0d8c0fb7cec572668ab676c.jar" />
     </item>
 
 </items>
