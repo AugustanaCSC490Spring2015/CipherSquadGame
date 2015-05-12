@@ -31,8 +31,11 @@ public class PowerUpMap {
 
     public final int NUM_POWER_UP_TYPES = 3;
 
-
-    // Constructor, which adds the powerups to the powerup list
+    /**
+     * Constructor, which adds the powerups to the powerup list
+     * @param maze
+     * @param scaledPowerUpImages
+     */
     public PowerUpMap(Maze maze, Bitmap[] scaledPowerUpImages) {
         this.maze = maze;
         this.height = maze.getHeight();
@@ -80,16 +83,23 @@ public class PowerUpMap {
         }
     }
 
-    // Method that takes in the canvas, the width/height of the screen,
-    // and the mouse, in order to add the power ups collected to the mouse.
+
+    /**
+     * Method that takes in the canvas, the width/height of the screen,
+     * and the mouse, in order to add the power ups collected to the mouse.
+     */
     public void displayPowerUps(Canvas c, int screenWidth, int screenHeight) {
         for (int i = 0; i < powerUpList.size(); i++) {
             c.drawBitmap(powerUpList.get(i).getBitmapImage(), powerUpList.get(i).getMazeX() * screenWidth / width, powerUpList.get(i).getMazeY() * screenHeight / height, null);
         }
     }
 
-    // adds the selected powerup to the mouse array of powerups
-    // as well as removes it from the array of powerups that the powerupmap object has.
+    /**
+     * adds the selected powerup to the mouse array of powerups
+     * as well as removes it from the array of powerups that the powerupmap object has.
+     * @param locationInPowerUpArray
+     * @return
+     */
     public PowerUp addPowerUpToMouse(int locationInPowerUpArray) {
         return powerUpList.remove(locationInPowerUpArray);
     }

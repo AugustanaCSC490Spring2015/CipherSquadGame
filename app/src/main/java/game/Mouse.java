@@ -8,7 +8,9 @@ import java.util.ArrayList;
 
 import maze.Maze;
 
-
+/**
+ * @author CypherSquad
+ */
 public abstract class Mouse {
 
     private Bitmap mouseImage;

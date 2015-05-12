@@ -29,8 +29,6 @@ import java.util.Collections;
 import java.util.List;
 
 
-import edu.augustana.csc490.ratrace.R;
-
 import game.*;
 
 /**
@@ -74,6 +72,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     private MediaPlayer music = MediaPlayer.create(getContext(), R.raw.flightofthebumblebee);
     private MediaPlayer bite = MediaPlayer.create(getContext(), R.raw.bite_sound);
+    private MediaPlayer applause = MediaPlayer.create(getContext(),R.raw.audience_applause);
+    private MediaPlayer allPowerUpsSound = MediaPlayer.create(getContext(),R.raw.a_tone);
+
 
     //runs without a timer by reposting this handler at the end of the runnable
     //Adapted from http://stackoverflow.com/questions/4597690/android-timer-how
@@ -157,6 +158,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
      */
     public void startNewGame() {
         music.setVolume(.3f,.3f);
+        music.setLooping(true);
         music.start();
         int numOpponents = 0; //maximum value is 3
         int numPowerUpTypes = 3;
@@ -185,6 +187,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         
         game = new Game(width, height, miceImageArray, powerUpImageArray, numOpponents, difficulty);
         game.initBiteSound(bite);
+        game.initAllPowerUpSound(allPowerUpsSound);
 
         startTime = System.currentTimeMillis();
         millis = 0;
@@ -207,6 +210,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     private void levelUp() {
         if (game.levelUp()) { //levels up if all the mice are finished
+            applause.start();
             setHighScore();
             startTime = System.currentTimeMillis(); //resets the timer if there is a level up
             showLevelUpDialog();
@@ -341,6 +345,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     public void releaseResources() {
         // release any resources (e.g. SoundPool stuff)
         music.release();
+        bite.release();
+        applause.release();
+        allPowerUpsSound.release();
     }
 
     @Override

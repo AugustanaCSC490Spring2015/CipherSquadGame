@@ -27,6 +27,9 @@ import java.util.Random;
 
 /**
  * Created by Ethan Halsall on 3/30/2015.
+ * @author CypherSquad
+ * Game is used by MainGameView to create the maze
+ * Game sets maze, sets dificulty, sets level, sets number of mice, and other game essential variables
  */
 public class Game {
 
@@ -108,7 +111,12 @@ public class Game {
     //network settings
     public static final boolean IS_NETWORKED = false;
 
+    // sounds used in relation to game state
+
+    // Used when player collects a powerUp
     private MediaPlayer bite;
+    // Used when all powerUps have been collected
+    private MediaPlayer allPowerUpsSound;
 
 
     //creates a new game with the standard game data defined above in the final fields
@@ -188,8 +196,11 @@ public class Game {
         // mazeWalls = new MazeLineArray(maze, screenWidth, screenHeight);
     }
 
+    /**
+     * keeps track of each player's points and adds points depending on the level they are on and the time they completed the maze
+     * @param mouse
+     */
     public void mouseFinished(Mouse mouse) {
-        //keeps track of each player's points and adds points depending on the level they are on and the time they completed the maze
         /*int points = levelPointRelationship - (int) currentTime / 60000;
         mouse.setTotalTime(currentTime);
         if (points > 0) {
@@ -366,6 +377,13 @@ public class Game {
 
     }
 
+    /**
+     * generateMazeLineArrayBitmap generates the maze Bitmap
+     * @param p is the paint object
+     * @param screenW is the width in pixels of the screen to be drawn on
+     * @param screenH is the height in pixels of the screen to be drawn on
+     * @return the Bitmap of the maze created
+     */
     private Bitmap generateMazeLineArrayBitmap(Paint p, int screenW, int screenH) {
         mazeLineArray = new MazeLineArray(maze, screenW, screenH);
         screenWidth = mazeLineArray.getScreenWidth();
@@ -385,6 +403,13 @@ public class Game {
         return mazeBitmap;
     }
 
+    /**
+     *
+     * @param c is the canvas to paint on
+     * @param p is the paint object used for color
+     * @param screenWidth is the screen width
+     * @param screenHeight is the screen height
+     */
     public void paintMaze(Canvas c, Paint p, int screenWidth, int screenHeight) {
         //Cell start = maze.getStart();
         //Cell end = maze.getEnd();
@@ -403,6 +428,12 @@ public class Game {
         c.drawBitmap(mazeBitmap, 0, 0, p);
     }
 
+    /**
+     * drawMice draws the mice in the location that they are to be located
+     * @param c is the canvas on which to draw the mice
+     * @param screenWidth is the width of the screen
+     * @param screenHeight is the height of the screen
+     */
     public void drawMice(Canvas c, int screenWidth, int screenHeight) {
         //check to see if the mice images need to be generated or regenerated
         if (playerMouse.getImage() == null) {
@@ -423,6 +454,9 @@ public class Game {
 
     }
 
+    /**
+     * createMiceBitmaps makes the Bitmaps for the mice
+     */
     private void createMiceBitmaps() {
         int scaleWidth = (cellWidth) / 4;
         int scaleHeight = (cellWidth) / 4;
@@ -449,6 +483,10 @@ public class Game {
         oldCellHeight = mazeLineArray.getHSpacing();
     }
 
+    /**
+     * Rotates the mouse Bitmap in relation to the last position that the mouse was at before this one
+     * @param mouse is used to get the position of the mouse and its Bitmap
+     */
     private void rotateMouseImage(Mouse mouse) {
         Point posAtLastRotate = mouse.getPosAtLastRotate();
         if (mouse.rotate()) {
@@ -468,7 +506,9 @@ public class Game {
         }
     }
 
-    // draws the powerups, but first creates the powerup map if it has not been created yet
+    /**
+     * draws the powerups, but first creates the powerup map if it has not been created yet
+     */
     public void drawPowerUps(Canvas c, int screenWidth, int screenHeight) {
         //generates or regenerates the powerup map if it doesn't exist or the maze has changed
         if (powerUpMap == null || powerUpMap.getMaze() != maze) {
@@ -483,6 +523,13 @@ public class Game {
         powerUpMap.displayPowerUps(c, screenWidth, screenHeight);
     }
 
+    /**
+     * assignPowerUp checks the list of power ups and sees if the power up is located in whichever
+     * cell the mouse is currently in. If it is, remove it from the list and add points to the mouse.
+     * @param mouse is the mouse object
+     * @param mazeX is the X location of the mouse in the maze
+     * @param mazeY is the Y location of the mouse in the maze
+     */
     public void assignPowerUp(Mouse mouse, int mazeX, int mazeY) {
 
         // This array list I get does not seem to work properly. Fix when can. -Matt
@@ -493,6 +540,11 @@ public class Game {
                 mouse.addPoints(500);
                 biteSound();
                 mouse.addPowerUp(powerUpMap.addPowerUpToMouse(i));
+                // if the last power up was just collected, add 500 points and play a sound
+                if (powerUpMap.powerUpList.size() == 0) {
+                    allPowerUpsSound.start();
+                    mouse.addPoints(500);
+                }
             }
         }
     }
@@ -500,18 +552,14 @@ public class Game {
 
 
     //sounds
-
     private void biteSound() {
-
         bite.seekTo(0);
         bite.start();
-
     }
-
     public void initBiteSound(MediaPlayer bite) {
         this.bite = bite;
     }
-
-
-
+    public void initAllPowerUpSound(MediaPlayer allPowerUps) {
+        this.allPowerUpsSound = allPowerUps;
+    }
 }
