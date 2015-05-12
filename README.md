@@ -28,7 +28,7 @@ The main contributors to this project have been:
                     -   Removal of option to choose maze generation algorithm from UI and code
                     -   Read when the mouse has reached the end of a maze so Ethan could later implement the automatic level-up
   - Danielle Bryant -   Reorganized code and added the directions activity
-                    -   created the DialogFragement that appears on level up
+                    -   created the DialogFragment that appears on level up
   - Jonathon Meyer  -   Added a settings popup and modified High scores to hold initials
 
   Image rights obtained from Creative Images Center: Icon, High Score Image, Intro Activity Image, Directions Activity Image
