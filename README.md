@@ -1,5 +1,5 @@
 # CipherSquadGame
-Welcome to the Rat Race Game presented by CypherSquad
+Welcome to the Rat Race Game presented by CipherSquad
 
 -This is a maze based game that presents the user with a movable mouse character. The object of the game is for the user 
   to drag the mouse character through the maze and collect as many powerups as possible in the shortest time possible.
