@@ -17,6 +17,9 @@ The main contributors to this project have been:
                     -   Restructured power up code to reduce backwards dependencies and increase functionality
                     -   Fixed image scaling aspect ratios / UI reorganization
                     -   Points subtracted when timer increments / gives player something to race against
+                    -   Added code to release all resources to prevent memory leaks
+                    -   Added images to views
+                    -   Designed Icon
   - Matthew Leja    -   Designed and implemented the powerups and such
   - Jamie Christian -   Created the first iteration of high scores
                     -   Created the timer and populated it to the activity bar

@@ -22,4 +22,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="43dp" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scoresImageView"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/mouse_party"
+        android:layout_alignParentTop="false"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/scoresTextView" />
+
 </RelativeLayout>

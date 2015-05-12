@@ -33,8 +33,7 @@ import game.*;
 
 /**
  * @author CypherSquad
- * MainGameView creates the gamethread, mainactivity, timer, and an instance of the actual game.
- *
+ *         MainGameView creates the gamethread, mainactivity, timer, and an instance of the actual game.
  */
 public class MainGameView extends SurfaceView implements SurfaceHolder.Callback {
     // for Log.w(TAG, ...)
@@ -69,11 +68,13 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     int previousPoints = 0;
 
 
+    private Game game;
+
 
     private MediaPlayer music = MediaPlayer.create(getContext(), R.raw.flightofthebumblebee);
     private MediaPlayer bite = MediaPlayer.create(getContext(), R.raw.bite_sound);
-    private MediaPlayer applause = MediaPlayer.create(getContext(),R.raw.audience_applause);
-    private MediaPlayer allPowerUpsSound = MediaPlayer.create(getContext(),R.raw.a_tone);
+    private MediaPlayer applause = MediaPlayer.create(getContext(), R.raw.audience_applause);
+    private MediaPlayer allPowerUpsSound = MediaPlayer.create(getContext(), R.raw.a_tone);
 
 
     //runs without a timer by reposting this handler at the end of the runnable
@@ -102,12 +103,11 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     };
 
 
-    private Game game;
-
     /**
      * Initializer called when creating a MainGameView
+     *
      * @param context gets the context
-     * @param atts is the attribute set sent in
+     * @param atts    is the attribute set sent in
      */
     public MainGameView(Context context, AttributeSet atts) {
         super(context, atts);
@@ -143,8 +143,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     /**
      * called when the size changes (and first time, when view is created)
-     * @param w is the width
-     * @param h is height
+     *
+     * @param w    is the width
+     * @param h    is height
      * @param oldw is old width
      * @param oldh is old height
      */
@@ -161,13 +162,20 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     /**
      * starts a new game
      */
+
+
+    Bitmap miceImageArray[];
+    Bitmap powerUpImageArray[];
+
     public void startNewGame() {
-        music.setVolume(.3f,.3f);
+        music.setVolume(.3f, .3f);
         music.setLooping(true);
         music.start();
         int numOpponents = 0; //maximum value is 3
         int numPowerUpTypes = 3;
-        Bitmap miceImageArray[] = new Bitmap[4];
+        miceImageArray = new Bitmap[4];
+        powerUpImageArray = new Bitmap[numPowerUpTypes];
+
         // Mouse taken from https://openclipart.org/ under their Unlimited Commercial Use:
         // https://openclipart.org/unlimited-commercial-use-clipart
         miceImageArray[0] = BitmapFactory.decodeResource(getResources(), R.raw.simplemouseright);
@@ -175,7 +183,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         miceImageArray[2] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousebrown);
         miceImageArray[3] = BitmapFactory.decodeResource(getResources(), R.raw.simplemousepink);
 
-        Bitmap powerUpImageArray[] = new Bitmap[numPowerUpTypes];
+
         // swiss_cheese taken from http://simple.wikipedia.org/wiki/Swiss_cheese under Public Domain
         // http://simple.wikipedia.org/wiki/Swiss_cheese#/media/File:NCI_swiss_cheese.jpg
         powerUpImageArray[0] = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.small_cheese_swiss);
@@ -187,12 +195,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         powerUpImageArray[2] = BitmapFactory.decodeResource(MainGameView.currentGameView.getResources(), R.raw.applecore);
 
 
-
-        
-        
         game = new Game(width, height, miceImageArray, powerUpImageArray, numOpponents, difficulty);
         game.initBiteSound(bite);
         game.initAllPowerUpSound(allPowerUpsSound);
+
 
         startTime = System.currentTimeMillis();
         millis = 0;
@@ -252,7 +258,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
                 Score newScore = new Score(sessionID, initials, thisScore);
                 //this for loop eliminates more than one score per session
-                for(int i=0; i<scoreStrings.size(); i++ ){
+                for (int i = 0; i < scoreStrings.size(); i++) {
                     Score temp = scoreStrings.get(i);
                     if (temp.getUuid().equals(newScore.getUuid())) {
                         scoreStrings.remove(temp);
@@ -299,14 +305,14 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     //Displays a Dialog screen after each level up with the player's
     //overall score, points earned and time for that level
-    public void showLevelUpDialog(){
+    public void showLevelUpDialog() {
         final int levelPoints = points - previousPoints;
         final int pointsAtEndOfLevel = points;
         previousPoints = points;
         //DialogFragment to display level stats
-        final DialogFragment levelResult = new DialogFragment(){
+        final DialogFragment levelResult = new DialogFragment() {
             @Override
-            public Dialog onCreateDialog(Bundle bundle){
+            public Dialog onCreateDialog(Bundle bundle) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getResources().getString(R.string.nextLevel));
 
@@ -324,8 +330,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
                 return builder.create();
             }
         };
-        mainActivity.runOnUiThread(new Runnable(){
-            public void run(){
+        mainActivity.runOnUiThread(new Runnable() {
+            public void run() {
                 levelUpDialogIsDisplayed = true;
                 levelResult.setCancelable(false);
                 levelResult.show(mainActivity.getFragmentManager(), "results");
@@ -348,6 +354,13 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         bite.release();
         applause.release();
         allPowerUpsSound.release();
+        for (Bitmap b : miceImageArray) {
+            b.recycle();
+        }
+        for (Bitmap b : powerUpImageArray) {
+            b.recycle();
+        }
+        game = null;
     }
 
     @Override

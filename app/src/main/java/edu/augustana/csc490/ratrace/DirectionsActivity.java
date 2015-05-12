@@ -25,12 +25,12 @@ public class DirectionsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_directions);
 
-        Button playButton = (Button) findViewById(R.id.playButton);
+        //Button playButton = (Button) findViewById(R.id.playButton);
         TextView objectiveTextView = (TextView) findViewById(R.id.objectiveTextView);
         TextView howToPlayTextView = (TextView) findViewById(R.id.howToPlayTextView);
         TextView powerUpsTextView = (TextView) findViewById(R.id.powerupsTextView);
 
-        playButton.setOnClickListener(playButtonListener);
+        //playButton.setOnClickListener(playButtonListener);
         objectiveTextView.setText("Objective: Guide the mouse through the maze!");
         howToPlayTextView.setText("How to Play: Use your finger to move the mouse from the upper " +
                 "right corner to the lower left corner and collect power ups along the way");
@@ -39,13 +39,13 @@ public class DirectionsActivity extends Activity {
 
     // playButtonListener adds an anonymous listener to the play button that sends you to the
     // IntroActivity
-    OnClickListener playButtonListener = new OnClickListener() {
+    /*OnClickListener playButtonListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             Intent playIntent = new Intent(DirectionsActivity.this, IntroActivity.class);
             startActivity(playIntent);
         }
-    };
+    };*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

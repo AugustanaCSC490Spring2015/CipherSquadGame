@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -390,9 +391,9 @@ public class Game {
     /**
      * generateMazeLineArrayBitmap generates the maze Bitmap
      * @param p is the paint object
-     * @param screenW is the width in pixels of the screen to be drawn on
-     * @param screenH is the height in pixels of the screen to be drawn on
-     * @return the Bitmap of the maze created
+     * @param screenW is the width in pixels of the screen
+     * @param screenH is the height in pixels of the screen
+     * @return the Bitmap of the maze
      */
     private Bitmap generateMazeLineArrayBitmap(Paint p, int screenW, int screenH) {
         mazeLineArray = new MazeLineArray(maze, screenW, screenH);
@@ -410,8 +411,36 @@ public class Game {
             c.drawLine(line.startX, line.startY, line.endX, line.endY, p);
             //Log.i("line", line.startX + " " + line.startY + " " + line.endX + " " +line.endY);
         }
+
+        Paint textPaint = new Paint();
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint.setStrokeWidth(cellWidth / 6);
+        textPaint.setColor(Color.GREEN);
+        textPaint.setTextSize(determineMaxTextSize("S", cellWidth - cellWidth / 6));
+        c.drawText("S", cellWidth / 2, cellHeight - cellHeight / 5, textPaint);
+        textPaint.setColor(Color.RED);
+        textPaint.setTextSize(determineMaxTextSize("E", cellWidth - cellWidth / 6));
+        c.drawText("E", screenWidth - cellWidth / 2, screenHeight - cellHeight / 5, textPaint);
         return mazeBitmap;
     }
+
+    /**
+     * Adapted from http://stackoverflow.com/questions/12166476/android-canvas-drawtext-set-font-size-from-width
+     * Retrieve the maximum text size to fit in a given width.
+     * @param str (String): Text to check for size.
+     * @param maxWidth (float): Maximum allowed width.
+     * @return (int): The desired text size.
+     */
+    private int determineMaxTextSize(String str, float maxWidth) {
+        int size = 0;
+        Paint paint = new Paint();
+
+        do {
+            paint.setTextSize(++size);
+        } while (paint.measureText(str) < maxWidth);
+
+        return size;
+    } //End getMaxTextSize()
 
     /**
      *
@@ -421,8 +450,6 @@ public class Game {
      * @param screenHeight is the screen height
      */
     public void paintMaze(Canvas c, Paint p, int screenWidth, int screenHeight) {
-        //Cell start = maze.getStart();
-        //Cell end = maze.getEnd();
 
         //check to see if the maze line array needs to be generated or regenerated.
         if (mazeLineArray == null) {
@@ -433,7 +460,7 @@ public class Game {
             //Log.i("mazeLineArrayGenerator", "Screen size change");
         } else if (maze != mazeLineArray.getMaze()) {
             generateMazeLineArrayBitmap(p, screenWidth, screenHeight);
-            Log.i("mazeLineArrayGenerator", "Equals method");
+            //Log.i("mazeLineArrayGenerator", "Equals method");
         }
         c.drawBitmap(mazeBitmap, 0, 0, p);
     }
