@@ -21,7 +21,9 @@ The main contributors to this project have been:
                     -   Added code to release all resources to prevent memory leaks
                     -   Added images to views
                     -   Designed Icon
-  - Matthew Leja    -   Designed and implemented the powerups and such
+  - Matthew Leja    -   Designed and implemented the powerups and such which includes the images as well as displaying and removing them
+                    -   Picked and added in the music and sound effects
+                    -   Made the javadoc comments and some general comments in the code to help understanding
   - Jamie Christian -   Created the first iteration of high scores
                     -   Created the timer and populated it to the activity bar
                     -   Retrieval and population of player score to the activity bar
