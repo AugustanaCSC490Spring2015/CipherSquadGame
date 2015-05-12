@@ -2,8 +2,9 @@
 Welcome to the Rat Race Game presented by CypherSquad
 
 -This is a maze based game that presents the user with a movable mouse character. The object of the game is for the user 
-  to drag the mouse character through the maze and collect as many powerups as possible in the shortest time possible. At the 
-  end of every level your score is recorded (if it one of the top ten) and then you continue onto the next level.
+  to drag the mouse character through the maze and collect as many powerups as possible in the shortest time possible.
+  You have to race against the clock because your score decreases as time advances. At the end of every level your score
+  is recorded (if it one of the top ten) and then you continue onto the next level.
   
 The main contributors to this project have been:
 
@@ -27,5 +28,7 @@ The main contributors to this project have been:
                     -   Removal of option to choose maze generation algorithm from UI and code
                     -   Read when the mouse has reached the end of a maze so Ethan could later implement the automatic level-up
   - Danielle Bryant -   Reorganized code and added the directions activity
-                    - created the DialogFragement that appears on level up
+                    -   created the DialogFragement that appears on level up
   - Jonathon Meyer  -   Added a settings popup and modified High scores to hold initials
+
+  Image rights obtained from Creative Images Center: Icon, High Score Image, Intro Activity Image, Directions Activity Image
