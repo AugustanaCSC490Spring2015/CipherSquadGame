@@ -110,6 +110,9 @@ public class Game {
 
     private MediaPlayer bite;
 
+    private int numPowerUps = 0;
+    private int previousNumPowerups = 0;
+
 
     //creates a new game with the standard game data defined above in the final fields
     public Game(Bitmap[] miceImageArray, Bitmap[] powerUpImageArray) {
@@ -195,6 +198,7 @@ public class Game {
         if (points > 0) {
             mouse.addPoints(points);
         }*/
+        mouse.setTotalTime(currentTime);
         mouse.setFinished(true);
 
     }
@@ -261,6 +265,8 @@ public class Game {
 
         currentTime = t;
     }
+
+
 
     public boolean isNetworked() {
         return isNetworked;
@@ -491,12 +497,25 @@ public class Game {
         for (int i = 0; i < powerUpMap.powerUpList.size(); i++) {
             if (powerUpMap.powerUpList.get(i).getMazeX() == mazeX && powerUpMap.powerUpList.get(i).getMazeY() == mazeY) {
                 mouse.addPoints(500);
+                numPowerUps = numPowerUps + 1;
+                previousNumPowerups++;
                 biteSound();
                 mouse.addPowerUp(powerUpMap.addPowerUpToMouse(i));
+
             }
         }
+
     }
 
+    public int getTotalNumberOfPowerUps(){
+        return numPowerUps;
+    }
+
+    public int getPowerUpsForLevel(){
+        int levelPowerups = previousNumPowerups;
+        previousNumPowerups = 0;
+        return levelPowerups;
+    }
 
 
     //sounds
