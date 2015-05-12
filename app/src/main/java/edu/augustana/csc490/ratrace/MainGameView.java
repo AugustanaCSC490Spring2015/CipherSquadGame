@@ -83,7 +83,12 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
         @Override
         public void run() {
-            millis = System.currentTimeMillis() - startTime;
+            if (levelUpDialogIsDisplayed) { //"pauses" the timer when the level up dialog is displayed
+                millis = 0;
+                startTime = System.currentTimeMillis(); //resets the timer if there is a level up
+            } else {
+                millis = System.currentTimeMillis() - startTime;
+            }
             int centiSeconds = (int) (millis / 10);
             int seconds = (int) (millis / 1000);
             int minutes = seconds / 60;
@@ -212,8 +217,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         if (game.levelUp()) { //levels up if all the mice are finished
             applause.start();
             setHighScore();
-            startTime = System.currentTimeMillis(); //resets the timer if there is a level up
             showLevelUpDialog();
+
         }
 
     }
@@ -226,13 +231,6 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         } //TODO fix the AI problems
     }
 
-    /*private void playSounds() {
-        for (int i = 0; i < Game.NUM_SOUNDS; i++) {
-            if (game.soundsToPlay(i)) {
-                //play the sound
-            }
-        }
-    }*/
 
     // Adds to the highsccorelist and keeps the list at 10.
     //Adapted from http://code.tutsplus.com/tutorials/android-sdk-create-an-arithmetic-game-high-scores-and-state-data--mobile-18825
@@ -296,7 +294,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         }
     }
 
-    private boolean dialogIsDisplayed = false;
+    private boolean levelUpDialogIsDisplayed = false;
     Score playerScore = new Score(sessionID, initials, points);
 
     //Displays a Dialog screen after each level up with the player's
@@ -320,7 +318,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
                     // called when the next level button is pressed
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialogIsDisplayed = false;
+                        levelUpDialogIsDisplayed = false;
                     }
                 });
                 return builder.create();
@@ -328,7 +326,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
         };
         mainActivity.runOnUiThread(new Runnable(){
             public void run(){
-                dialogIsDisplayed = true;
+                levelUpDialogIsDisplayed = true;
                 levelResult.setCancelable(false);
                 levelResult.show(mainActivity.getFragmentManager(), "results");
             }
