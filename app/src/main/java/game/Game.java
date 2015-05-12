@@ -287,6 +287,11 @@ public class Game {
             return false;
         }
 
+        //prevents mouse from going N or W outside of the maze
+        if (newX < 0 || newY < 0) {
+            return false;
+        }
+
         int prevMazeX = playerMouse.getPosX() / cellWidth;
         int prevMazeY = playerMouse.getPosY() / cellHeight;
         int newMazeX = newX / cellWidth;

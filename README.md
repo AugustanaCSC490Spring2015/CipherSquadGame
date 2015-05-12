@@ -7,7 +7,16 @@ Welcome to the Rat Race Game presented by CypherSquad
   
 The main contributors to this project have been:
 
-  - Ethan Halsall   -   implemented the original maze generation
+  - Ethan Halsall   -   Designed the original maze generation / maze data structure
+                    -   Created structural design of game source code (packages, inheritance, etc.)
+                    -   Created maze data structure to line to bitmap code for displaying the maze
+                    -   Created and designed Mouse class and Mouse subclasses
+                    -   Bounded mouse to move only within space in the maze
+                    -   Added rotation to mouse image such that it is pointing in its direction of motion
+                    -   Created levelUp concept and code
+                    -   Restructured power up code to reduce backwards dependencies and increase functionality
+                    -   Fixed image scaling aspect ratios / UI reorganization
+                    -   Points subtracted when timer increments / gives player something to race against
   - Matthew Leja    -   Designed and implemented the powerups and such
   - Jamie Christian -   Created the first iteration of high scores
                     -   Created the timer and populated it to the activity bar
