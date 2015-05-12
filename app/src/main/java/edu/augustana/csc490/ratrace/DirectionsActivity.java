@@ -25,7 +25,7 @@ public class DirectionsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_directions);
 
-        Button playButton = (Button) findViewById(R.id.playButton);
+        Button playButton = (Button) findViewById(R.id.backButton);
         TextView objectiveTextView = (TextView) findViewById(R.id.objectiveTextView);
         TextView howToPlayTextView = (TextView) findViewById(R.id.howToPlayTextView);
         TextView powerUpsTextView = (TextView) findViewById(R.id.powerupsTextView);
