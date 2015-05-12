@@ -255,6 +255,7 @@ public class Game {
         }
 
         level++;
+        playerMouse.addPoints(1000 * level);
         difficultyToTimeRelation -= difficultyToAdvancement;
         setTime(0);
 
