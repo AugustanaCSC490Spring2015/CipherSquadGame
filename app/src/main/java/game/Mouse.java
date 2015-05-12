@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import maze.Maze;
 
 /**
- * @author CypherSquad
+ * @author CipherSquad
  */
 public abstract class Mouse {
 

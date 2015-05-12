@@ -32,7 +32,7 @@ import java.util.List;
 import game.*;
 
 /**
- * @author CypherSquad
+ * @author CipherSquad
  *         MainGameView creates the gamethread, mainactivity, timer, and an instance of the actual game.
  */
 public class MainGameView extends SurfaceView implements SurfaceHolder.Callback {

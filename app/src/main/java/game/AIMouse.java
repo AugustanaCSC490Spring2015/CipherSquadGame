@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 /**
  * Created by Ethan Halsall on 3/30/2015.
- * @author CypherSquad
+ * @author CipherSquad
  */
 public class AIMouse extends Mouse {
     public LinkedList<Point> solution;

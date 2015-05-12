@@ -28,7 +28,7 @@ import java.util.Random;
 
 /**
  * Created by Ethan Halsall on 3/30/2015.
- * @author CypherSquad
+ * @author CipherSquad
  * Game is used by MainGameView to create the maze
  * Game sets maze, sets dificulty, sets level, sets number of mice, and other game essential variables
  */
