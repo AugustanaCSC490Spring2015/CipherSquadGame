@@ -118,6 +118,8 @@ public class Game {
     // Used when all powerUps have been collected
     private MediaPlayer allPowerUpsSound;
 
+    private int numPowerUps = 0;
+    private int previousNumPowerups = 0;
 
     //creates a new game with the standard game data defined above in the final fields
     public Game(Bitmap[] miceImageArray, Bitmap[] powerUpImageArray) {
@@ -206,6 +208,7 @@ public class Game {
         if (points > 0) {
             mouse.addPoints(points);
         }*/
+        mouse.setTotalTime(currentTime);
         mouse.setFinished(true);
 
     }
@@ -272,6 +275,8 @@ public class Game {
 
         currentTime = t;
     }
+
+
 
     public boolean isNetworked() {
         return isNetworked;
@@ -523,13 +528,6 @@ public class Game {
         powerUpMap.displayPowerUps(c, screenWidth, screenHeight);
     }
 
-    /**
-     * assignPowerUp checks the list of power ups and sees if the power up is located in whichever
-     * cell the mouse is currently in. If it is, remove it from the list and add points to the mouse.
-     * @param mouse is the mouse object
-     * @param mazeX is the X location of the mouse in the maze
-     * @param mazeY is the Y location of the mouse in the maze
-     */
     public void assignPowerUp(Mouse mouse, int mazeX, int mazeY) {
 
         // This array list I get does not seem to work properly. Fix when can. -Matt
@@ -538,6 +536,8 @@ public class Game {
         for (int i = 0; i < powerUpMap.powerUpList.size(); i++) {
             if (powerUpMap.powerUpList.get(i).getMazeX() == mazeX && powerUpMap.powerUpList.get(i).getMazeY() == mazeY) {
                 mouse.addPoints(500);
+                numPowerUps = numPowerUps + 1;
+                previousNumPowerups++;
                 biteSound();
                 mouse.addPowerUp(powerUpMap.addPowerUpToMouse(i));
                 // if the last power up was just collected, add 500 points and play a sound
@@ -549,6 +549,15 @@ public class Game {
         }
     }
 
+    public int getTotalNumberOfPowerUps(){
+        return numPowerUps;
+    }
+
+    public int getPowerUpsForLevel(){
+        int levelPowerups = previousNumPowerups;
+        previousNumPowerups = 0;
+        return levelPowerups;
+    }
 
 
     //sounds

@@ -302,7 +302,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
     //Displays a Dialog screen after each level up with the player's
     //overall score, points earned and time for that level
     public void showLevelUpDialog(){
-        final int levelPoints = points- previousPoints;
+        final int levelPoints = points - previousPoints;
         final int pointsAtEndOfLevel = points;
         previousPoints = points;
         //DialogFragment to display level stats
@@ -313,7 +313,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
                 builder.setTitle(getResources().getString(R.string.nextLevel));
 
                 //Display the total points, points for that level, and number of powers ups
-                builder.setMessage(getResources().getString(R.string.results, pointsAtEndOfLevel, levelPoints, game.playerMouse.getTotalTime()));
+                builder.setMessage(getResources().getString(R.string.results, pointsAtEndOfLevel,
+                        levelPoints, game.playerMouse.getTotalTime(), game.getTotalNumberOfPowerUps(),
+                        game.getPowerUpsForLevel()));
                 builder.setPositiveButton(R.string.nextLevel, new DialogInterface.OnClickListener() {
                     // called when the next level button is pressed
                     @Override
