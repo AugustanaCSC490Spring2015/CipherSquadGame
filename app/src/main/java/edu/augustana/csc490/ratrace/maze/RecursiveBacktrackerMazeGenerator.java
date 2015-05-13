@@ -88,7 +88,7 @@ public class RecursiveBacktrackerMazeGenerator {
         LinkedList<BTState> stack = new LinkedList<BTState>();
         stack.push(new BTState(currentCell));
         BTState curState;
-        int steps = 0;
+        //int steps = 0;
         while (!stack.isEmpty()) {
             curState = stack.peek();
             if (curState.isDone()) {
@@ -100,8 +100,8 @@ public class RecursiveBacktrackerMazeGenerator {
                         carve(curState.curCell, curState.getCurrentDirection());
                         cellsVisited[newCell.x][newCell.y] = true;
                         BTState next = new BTState(newCell);
-                        steps++;
-                        Log.i("Maze Creation", "x = " + newCell.x + " y = " + newCell.y + "; " + next.getCurrentDirection() + "; Step: " + steps);
+                        //steps++;
+                        //Log.i("Maze Creation", "x = " + newCell.x + " y = " + newCell.y + "; " + next.getCurrentDirection() + "; Step: " + steps);
                         stack.push(next);
                     }
                 }
