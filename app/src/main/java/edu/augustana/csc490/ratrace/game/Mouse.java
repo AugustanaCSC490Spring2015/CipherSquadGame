@@ -113,6 +113,10 @@ public abstract class Mouse {
         return new Point(posAtLastRotate);
     }
 
+    public void setPosAtLastRotate(Point p) {
+        posAtLastRotate = p;
+    }
+
     public void setRotatedImage(Bitmap image) {
         rotatedImage = image;
     }

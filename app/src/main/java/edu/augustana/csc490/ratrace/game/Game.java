@@ -228,8 +228,9 @@ public class Game {
         maze = new Maze(width, height);
         mazeGen = new RecursiveBacktrackerMazeGenerator(maze);
 
-        //reset playermouse location
+        //reset playermouse location and angle
         playerMouse.setMouseAngle(START_ANGLE);
+        playerMouse.setPosAtLastRotate(new Point(-1, -1)); //sets the mouse rotation angle to 45 deg
         playerMouse.moveMouse(mouseStartPos.x, mouseStartPos.y);
         playerMouse.setFinished(false);
 
@@ -446,13 +447,10 @@ public class Game {
         //check to see if the maze line array needs to be generated or regenerated.
         if (mazeLineArray == null) {
             generateMazeLineArrayBitmap(p, screenWidth, screenHeight);
-            //Log.i("mazeLineArrayGenerator", "Null");
-        } else if (screenHeight != mazeLineArray.getScreenHeight() || screenWidth != mazeLineArray.getScreenWidth()) {
-            generateMazeLineArrayBitmap(p, screenWidth, screenHeight);
-            //Log.i("mazeLineArrayGenerator", "Screen size change");
+            Log.i("mazeLineArrayGenerator", "Null");
         } else if (maze != mazeLineArray.getMaze()) {
             generateMazeLineArrayBitmap(p, screenWidth, screenHeight);
-            //Log.i("mazeLineArrayGenerator", "Equals method");
+            Log.i("mazeLineArrayGenerator", "Equals method");
         }
         c.drawBitmap(mazeBitmap, 0, 0, p);
     }
@@ -513,7 +511,7 @@ public class Game {
     }
 
     /**
-     * Rotates the mouse Bitmap in relation to the last position that the mouse was at before this one
+     * Rotates the mouse Bitmap in the direction that it is moving
      * @param mouse is used to get the position of the mouse and its Bitmap
      */
     private void rotateMouseImage(Mouse mouse) {
@@ -530,6 +528,7 @@ public class Game {
                 Canvas canvas = new Canvas(targetBitmap);
                 matrix.setRotate(angle, mouse.getImage().getWidth() / 2, mouse.getImage().getHeight() / 2);
                 canvas.drawBitmap(mouse.getImage(), matrix, new Paint());
+                mouse.setMouseAngle(angle);
                 mouse.setRotatedImage(targetBitmap);
             }
         }
