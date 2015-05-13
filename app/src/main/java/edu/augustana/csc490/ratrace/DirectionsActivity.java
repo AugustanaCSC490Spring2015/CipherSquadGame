@@ -13,7 +13,7 @@ import android.widget.TextView;
 import edu.augustana.csc490.ratrace.R;
 
 /**
- * @author CypherSquad
+ * @author CipherSquad
  * DirectionsActivity gets called from IntroActivity and displays the directions.
  * It also has a button to go to the IntroActivity again.
  */

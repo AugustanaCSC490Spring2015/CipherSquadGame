@@ -32,7 +32,7 @@ import java.util.List;
 import edu.augustana.csc490.ratrace.game.*;
 
 /**
- * @author CypherSquad
+ * @author CipherSquad
  *         MainGameView creates the gamethread, mainactivity, timer, and an instance of the actual game.
  */
 public class MainGameView extends SurfaceView implements SurfaceHolder.Callback {
@@ -70,8 +70,16 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
     private Game game;
 
-
+    // flightofthebumblebee.mp3 came from
+    // https://archive.org/details/FlightOfTheBumblebee
+    //  This file is a work of a sailor or employee of the U.S. Army, taken or made during the
+    // course of the person's official duties. As a work of the U.S. federal government,
+    // the file is in the public domain.
     private MediaPlayer music = MediaPlayer.create(getContext(), R.raw.flightofthebumblebee);
+
+    // These three audio files came from soundbible.com
+    // They are Royalty Free Sounds:
+    // http://soundbible.com/about.php
     private MediaPlayer bite = MediaPlayer.create(getContext(), R.raw.bite_sound);
     private MediaPlayer applause = MediaPlayer.create(getContext(), R.raw.audience_applause);
     private MediaPlayer allPowerUpsSound = MediaPlayer.create(getContext(), R.raw.a_tone);

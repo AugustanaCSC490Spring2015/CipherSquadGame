@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import edu.augustana.csc490.ratrace.maze.Maze;
 
 /**
- * @author CypherSquad
+ * @author CipherSquad
  */
 public abstract class Mouse {
 
