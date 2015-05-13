@@ -1,7 +1,7 @@
-package game;
+package edu.augustana.csc490.ratrace.game;
 
 
-import maze.Maze;
+import edu.augustana.csc490.ratrace.maze.Maze;
 
 /**
  * Created by Ethan Halsall on 3/30/2015.

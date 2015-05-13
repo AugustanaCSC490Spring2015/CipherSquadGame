@@ -1,16 +1,8 @@
-package game;
+package edu.augustana.csc490.ratrace.game;
 
 
+import edu.augustana.csc490.ratrace.maze.Line;
 
-import edu.augustana.csc490.ratrace.MainGameView;
-import maze.Line;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -18,11 +10,10 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.MediaPlayer;
-import android.os.Bundle;
 import android.util.Log;
 
 
-import maze.*;
+import edu.augustana.csc490.ratrace.maze.*;
 
 import java.util.Random;
 

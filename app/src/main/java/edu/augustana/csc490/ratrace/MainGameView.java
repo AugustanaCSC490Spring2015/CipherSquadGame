@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-import game.*;
+import edu.augustana.csc490.ratrace.game.*;
 
 /**
  * @author CypherSquad

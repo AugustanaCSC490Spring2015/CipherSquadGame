@@ -1,5 +1,5 @@
 
-package maze;
+package edu.augustana.csc490.ratrace.maze;
 
 import android.graphics.Point;
 

@@ -1,13 +1,12 @@
-package game;
+package edu.augustana.csc490.ratrace.game;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Point;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import maze.Maze;
+import edu.augustana.csc490.ratrace.maze.Maze;
 
 /**
  * Created by Ethan Halsall on 3/30/2015.
@@ -33,6 +32,7 @@ public class PowerUpMap {
 
     /**
      * Constructor, which adds the powerups to the powerup list
+     *
      * @param maze
      * @param scaledPowerUpImages
      */
@@ -51,7 +51,7 @@ public class PowerUpMap {
         allPowerUps[1] = new BreadPowerUp(screenWidth,screenHeight,width,height);
         allPowerUps[2] = new GarbagePowerUp(screenWidth,screenHeight,width,height);*/
 
-        for (int i = 0; i < (width / 2) + 1 ; i++) {
+        for (int i = 0; i < (width / 2) + 1; i++) {
             randX = rand.nextInt(width);
             randY = rand.nextInt(height);
             // This is just so the cheese does not start at point 0,0 with the mouse
@@ -97,6 +97,7 @@ public class PowerUpMap {
     /**
      * adds the selected powerup to the mouse array of powerups
      * as well as removes it from the array of powerups that the powerupmap object has.
+     *
      * @param locationInPowerUpArray
      * @return
      */

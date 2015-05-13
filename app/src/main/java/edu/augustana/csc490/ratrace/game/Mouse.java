@@ -1,4 +1,4 @@
-package game;
+package edu.augustana.csc490.ratrace.game;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -6,7 +6,7 @@ import android.graphics.Point;
 
 import java.util.ArrayList;
 
-import maze.Maze;
+import edu.augustana.csc490.ratrace.maze.Maze;
 
 /**
  * @author CypherSquad
@@ -133,7 +133,7 @@ public abstract class Mouse {
         mousePoints = mousePoints + points;
     }
 
-    public int getPoints(){
+    public int getPoints() {
         return mousePoints;
     }
 
@@ -141,8 +141,8 @@ public abstract class Mouse {
         totalTime = time;
     }
 
-    public double getTotalTime(){
-        return (double) totalTime/1000;
+    public double getTotalTime() {
+        return (double) totalTime / 1000;
     }
 
     public boolean getFinished() {
