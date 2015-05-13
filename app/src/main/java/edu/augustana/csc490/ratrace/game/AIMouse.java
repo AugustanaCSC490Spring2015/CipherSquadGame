@@ -1,4 +1,4 @@
-package game;
+package edu.augustana.csc490.ratrace.game;
 
 import android.graphics.Point;
 
