@@ -19,7 +19,8 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="edu.augustana.csc490.ratrace.IntroActivity"
-            android:label="@string/title_activity_intro">
+            android:label="@string/title_activity_intro"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,7 +29,8 @@
         </activity>
         <activity
             android:name="edu.augustana.csc490.ratrace.ScoresActivity"
-            android:label="@string/title_activity_scores"></activity>
+            android:label="@string/title_activity_scores"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="edu.augustana.csc490.ratrace.DirectionsActivity"
             android:label="@string/title_activity_directions">

@@ -33,7 +33,7 @@ public class DirectionsActivity extends Activity {
         //playButton.setOnClickListener(playButtonListener);
         objectiveTextView.setText("Objective: Guide the mouse through the maze!");
         howToPlayTextView.setText("How to Play: Use your finger to move the mouse from the upper " +
-                "right corner to the lower left corner and collect power ups along the way");
+                "left corner to the lower right corner and collect power ups along the way");
         powerUpsTextView.setText("Power ups: Move the mouse over a power up to increase your score");
     }
 
