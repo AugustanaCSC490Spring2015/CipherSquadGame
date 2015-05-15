@@ -25,11 +25,12 @@ public class ScoresActivity extends Activity {
         //Retrieve high scores
         SharedPreferences scorePrefs = getSharedPreferences(MainActivity.GAME_SCORES, 0);
         String[] savedScores = scorePrefs.getString("highScores", "").split("\\|");
-        for(int i  = 0; i<savedScores.length;i++){
-            String[] noUUID = savedScores[i].split(" - ");  //Splits up each string
-            savedScores[i] = noUUID[1]+" - "+noUUID[2];     //eliminates the UUID
+        if(savedScores.length>0) {
+            for (int i = 0; i < savedScores.length; i++) {
+                String[] noUUID = savedScores[i].split(" - ");  //Splits up each string
+                savedScores[i] = noUUID[1] + " - " + noUUID[2];     //eliminates the UUID
+            }
         }
-
         //iterate through the scores
         StringBuilder scoreBuild = new StringBuilder("");
         for(String score : savedScores){
